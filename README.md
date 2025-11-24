@@ -16,8 +16,8 @@ Summary of missing entities:
 
 ## Scripts
 
-* exists_in_both.py: Python scripts that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-* missings statements.py: Calculate possible statements from the deckenmalerei.eu db and checks their existance in Wikidata
+* **exists_in_both.py**: Python scripts that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
+* **missings statements.py**: Calculate possible statements from the deckenmalerei.eu db and checks their existance in Wikidata
 
 ## Helpers
 
@@ -35,9 +35,11 @@ item,deckenmalerei_eu_ID
 http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e
 http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce
 
-entities.json examples:
+### entities.json examples
 
 People:
+
+```json
 {
   "modificationDate": 1671024043543,
   "creationDate": 1671024043543,
@@ -47,9 +49,11 @@ People:
   "sType": "ACTOR_PERSON",
   "gender": "MALE"
 }
+```
 
 Painting:
 
+```json
 {
   "verbaleDating": "1543",
   "modificationDate": 1658160540972,
@@ -68,9 +72,11 @@ Painting:
     "23O31"
   ]
 }
+```
 
 Building:
 
+```json
 {
   "addressState": "Bayern",
   "addressLocality": "München",
@@ -97,5 +103,6 @@ Building:
   "addressZip": "81541",
   "sType": "OBJECT_BUILDING"
 }
+```
 
-For formatting Links: https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18
+For formatting links: https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18

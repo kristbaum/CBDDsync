@@ -1,0 +1,387 @@
+appellation,verbaleDating,addressState,addressLocality,addressZip,addressStreet,locationLng,locationLat,ID
+"Bad Buchau, Abteigebäude","1220-2020, 1709-1773",Baden-Württemberg,Bad Buchau,88422,Schloßplatz 2,9.610800099999999,48.06731,843e2427-35b0-41ef-9299-0b44fb61e495
+"Berlin, Schloss Köpenick, Corps de Logis",1680-90,Berlin,Berlin,12557,Schlossinsel 1,13.572739362716677,52.443850610572916,54fcdab0-c973-11e9-a536-2d7c06292cf7
+"Polling, ehem. Augustiner-Chorherrenstift, Studienseminar",18. Jh.,Bayern,Polling,82398,Kirchplatz 3,11.131510734558107,47.8121205961754,4ed2d50b-7aff-43b2-aeb7-7fa26e50410d
+"Polling, ehem. Augustiner-Chorherrenstift, ehem. Klosterbibliothek",1776-1777,Bayern,Polling,82398,Kirchplatz 3,11.131580471992494,47.81145772287623,f3726837-4cbb-4474-b3f5-17ae168ee0d4
+"Veitshöchheim, Treillagenpavillon Herbst",,Bayern,Veitshöchheim,97209,Echterstraße 10,9.874788522720337,49.82882698766957,59cf5f39-8767-4ac2-adf8-487e7fc03dc8
+"Veitshöchheim, Treillagenpavillon Frühling",,Bayern,Veitshöchheim,97209,Echterstraße 10,9.874455928802492,49.83041184457589,a7112dd6-7640-49e0-b8a2-0213812409be
+"Bad Iburg, ehem. Benediktinerkloster",,Niedersachsen,Bad Iburg,49186,Schloß Iburg,8.042861349688902,52.15774613507071,666aba20-7b88-41c3-9fd4-d90500df0061
+"Stuttgart, Schloss Solitude, Lustschloss",1763-1769,Baden-Württemberg,Stuttgart,70197,Solitude 1,9.0844142,48.7868271,bd70e3d0-c5b7-11e9-b6fd-d99e1ba53a95
+"Aicholding, Schlosskirche St. Martin","12. Jahrhundert, Umbau 18. Jahrhundert",Bayern,Riedenburg,93339,Neuenkehrsdorferstraße 3,11.698583408953088,48.95965847677759,98a9cf50-af60-4886-b491-b3cd848fca1c
+"Altshausen, Kirche St. Michael","1413, 1748–1753, 1763–1767",Baden-Württemberg,Altshausen,88361,Schloßstraße 6,9.536427893469979,47.9352247699406,b0ecbad7-2ccc-4eec-868b-08423cd45153
+"Altshausen, Landkomturei, Vorhofanlage",1731-1734,Baden-Württemberg,Altshausen,88361,Schloßstraße 6,9.537634833368244,47.93542244079876,ffe17bf7-ed12-4462-8936-4f47e2b53363
+"Mannheim, Kurfürstliches Residenzschloss, Corps de Logis",,Baden-Württemberg,Mannheim,68161,Bismarckstraße,8.461787185869564,49.482958967674286,93c0c646-3684-4d6f-818e-4ad74c567084
+"Bad Krozingen, Schlosskapelle","1600-1608, um 1750",Baden-Württemberg,Bad Krozingen,79189,Am Schloßpark 7,7.697752099908019,47.91511602382322,178b2e8e-1a7d-41e7-864c-c0c9c4d72f80
+"Pflugdorf, Filialkirche St. Laurentius",vor 1756,Bayern,Vilgertshofen,86946,Kirchsteig 1,10.919406919752845,47.966565740267434,3e2ed962-aeca-4c13-91ac-41c7f6f16335
+"Weißenfels, sog. Fürstenhaus",,Sachsen-Anhalt,Weißenfels,06667,Leipziger Straße 9,11.9737993,51.2007081,f1dd23de-913e-49f5-bf2f-1388e35c6cb3
+"Rostock, Neuer Markt 16",,Mecklenburg-Vorpommern,Rostock,18055,Neuer Markt 16,12.1394687539098,54.08892722936736,294354ed-5443-4a76-a158-4620e8cff35f
+"Schmidham, Filialkirche St. Sebastian u. St. Rochus",1634,Bayern,Valley,83626,Maxi-Klaus Straße,11.754539383629787,47.850829961224306,97bef0de-0b44-4e0b-9e6e-dac3c5a2bc6c
+"Abtsgmünd, Gartenpavillon Schloss Hohenstadt",um 1760,Baden-Württemberg,Abtsgmünd,73453,Amtsgasse 19,9.938088646678755,48.90145148808611,cd5bfb12-1087-42ec-807b-6d85a7fd08b0
+"Kleinhöhenkirchen, Marienwallfahrt Mariä Heimsuchung","24.8.1723, 1773",Bayern,Weyarn,83629,Gruber Straße 5,11.79128586266265,47.91250569872718,111cc3db-9237-4c36-9ca1-2a4ab48d4614
+"Wies bei Steingaden, Wieskapelle",1739,Bayern,Steingaden,86989,,10.899698170076492,47.68164204987495,a154d370-9dc6-4bc2-a2c6-c1ce3a2bcf4e
+"Altenburg, Haus Moritzstraße 6",,Thüringen,Altenburg,04600,Moritzstraße 6,12.4327653,50.9842034,65c3c6b4-cfdd-4d3c-84df-b938aae19bf4
+"Mammendorf, Pfarrkirche St. Jakobus Maior","1. Hälfte 15. Jh., 1796/97, 1800",Bayern,Mammendorf,82291,Am Pult,11.164867273157848,48.208294711618834,8dde2f55-36dc-44c0-8332-cd0fee13b865
+"Regensburg, Fischgässl 4",Frühes 14. Jahrhundert,Bayern,Regensburg,93047,Fischgässel 4,12.095271359007766,49.02070701475312,928525ad-f544-4840-aca5-595c10267032
+"Wegscheid, Pestkapelle St. Anton",1688,Bayern,Lenggries,83661,Wegscheider Straße,11.569966112093258,47.67415468336118,1358841e-dd56-4fae-a56d-470b96d65e8d
+"Nürnberg, Äußerer Laufer Platz 5, Decke mit „Grillen“, heute im Stadtmuseum Fembohaus","1535, 1617",Bayern,Nürnberg,90403,Äußerer Laufer Platz 5,11.0863251,49.4572011,751bfff2-1346-4463-b90d-33e6882d0135
+"Oberau, Filialkirche St. Georg","gotisch, 1664",Bayern,Oberau,82496,Am Kirchbichl 6,11.134193058685,47.558699782202964,e1e256ab-e565-47e4-a9c7-b5ef31d60f74
+"Passau, Große Messergasse 6",ab 1679,Bayern,Passau,94032,Große Messergasse 6,13.466362923022446,48.57471182575231,284af00a-294b-4ccf-9f49-925b86aec3dd
+"Günzlhofen, Pfarrkirche St. Margareta","vor 1500, Anfang 18. Jh., 1908/21",Bayern,Oberschweinbach,82294,Kirchstraße,11.143714510659338,48.24462148929056,b8dbc76c-ef88-40e6-9625-b05c9dddb4fe
+"Hamburg, ehem. Haus Steinstraße 85",,Hamburg,Hamburg,20095,Steinstraße 85,10.003953685941363,53.550265043757314,d516c6a2-2a76-4515-9604-ebc12ad1538b
+"Stralsund, Katharinenberg 14",,Mecklenburg-Vorpommern,Stralsund,18439,Katharinenberg 14,13.0874107,54.312119,6b1f1ef2-da2e-4f2b-be81-dea27ce15156
+"Stade, Haus Bungenstraße 2",,Niedersachsen,Stade,21682,Bungenstraße 2,9.475541710853578,53.603274609773344,bfc13db5-e23e-4b5f-a40f-5244b0f842fc
+"Oberweikertshofen, Pfarrkirche St. Johannes der Täufer","2. Hälfte 15. Jh., 1. Hälfte 18. Jh., 1778 1918/19",Bayern,Egenhofen,82281,Gartenstraße 3,11.182000741572239,48.264605404166225,cd147842-a846-40cb-9e4f-6a0214253cc0
+"Bauerbach, Filialkirche St. Leonhard","1548, 1709",Bayern,Wielenbach,82407,Dorfstraße 3,11.230929503858194,47.85994401359749,a4297cc3-be24-4f64-8e0b-3c7fff51c7ef
+"Lüneburg, Haus Am Markt 3",,Niedersachsen,Lüneburg,21335,Am Markt 3,10.4080548153272,53.2498798653913,cf3ef344-c6b0-4f33-8fc3-dd291315ddde
+"Erlangen, Haus Göckel, heute Leimbergerhaus",1713,Bayern,Erlangen,91054,Friedrichstraße 9,11.006015533515475,49.595388700160235,a243f7bc-091c-4d4c-a6aa-3135d08067a2
+"Heilbad Heiligenstadt, Café Central",,Thüringen,Heilbad Heiligenstadt,37308,Wilhelmstraße 37,10.1359849,51.3774919,d6598c80-7b40-4e35-80ac-638af2268ad3
+"Kassel, ehem. Jägerhaus",1686,Hessen,Kassel,34125,Mühlengasse,9.50763677279195,51.31494252772597,f8b0067b-bfdb-47d3-935e-85f6c1ff8dd8
+"Siegertshofen, Kapelle St. Elisabeth","spätgotisch, 1797",Bayern,Egling,82544,Eichenweg 4,11.522952332886694,47.889010444359315,f0e530d6-4b23-497b-864f-7c02aba6fd1a
+"Wall, Pfarrkirche St. Margareta","16. Jahrhundert, 18. Jahrhundert",Bayern,Warngau,83627,Sankt Margarethenweg 4,11.772483516238474,47.78911322450345,c5015188-9d2c-4b7c-833b-ae2d6edd05c1
+"Kiel, ehem. Gasthof Stadt Kopenhagen",1550-1600,Schleswig-Holstein,Kiel,24103,Schuhmacherstraße 24,10.1410777,54.32211969999999,c66af656-8dc6-477c-b126-7adcdc721eba
+"Königsdorf, Pfarrkirche St. Laurentius","spätgotisch, 1785-1786",Bayern,Königsdorf,82549,Beuerberger Straße 6,11.479945813135433,47.81652272480446,30269049-9f60-4ffc-868e-95be487c2dc6
+"Unterammergau, Pfarrkirche St. Nikolaus",1709-1710,Bayern,Unterammergau,82497,Pfarrgasse 2,11.027328761423064,47.61419898666358,4bc97856-d293-400a-930a-d62304aa602d
+"Greifswald, Johann-Sebastian-Bach Straße 20",1732–1734,Mecklenburg-Vorpommern,Greifswald,17489,Johann-Sebastian-Bach-Straße 20,13.380832664578254,54.09673267913824,454ab358-36f8-470e-8585-ac7ac02a19d0
+"Utting, Filial- und Wallfahrtskirche St. Leonhard",1707-12,Bayern,Utting am Ammersee,86919,Dießener Straße 14,11.08268906962546,48.025104372869144,63662f20-a683-42e0-a83f-a5ed7ce9d9f0
+"Hamburg, das ehem. Haus Sachsentor 21",1620-1630,Hamburg,Hamburg,21029,Sachsentor 21,10.2129065,53.4882558,3395535d-4909-413e-9e96-723dc258b203
+"Rheda-Wiedenbrück, Domhof",1616,Nordrhein-Westfalen,Rheda-Wiedenbrück,33378,Am Domhof 1,8.2938485,51.853804,7939aa17-3d16-4cad-8d25-4b31d13ffb4c
+"Salzdahlum, ehem. erstes Lusthaus",1673-1674,Niedersachsen,Wolfenbüttel,38302,,10.584511997419495,52.1930348512808,f8680019-77b6-459d-99f9-5e95a6baf8ef
+"Weindorf, Filialkirche St. Martin","mittelalterlich, 1730-1734",Bayern,Murnau am Staffelsee,82418,Dorfstraße 35,11.2110754,47.6797861,03e8eac8-bdf2-4c9f-8a6f-b5674f08495c
+"Oberhausen, Filialkirche St. Mauritius",Beginn 18. Jh.-ca. 1750,Bayern,Oberhausen,82386,Kirchplatz 8-9,11.129793971645638,47.77565360436841,a9246376-956c-403e-b04a-e7c5fb5f904d
+"Bad Kohlgrub, Votivkapelle St. Rochus","1633, 1733",Bayern,Bad Kohlgrub,82433,St.-Rochus-Straße,11.047590063006325,47.67108068732996,16f472eb-9d51-44e6-ac5c-e18b9a144507
+"Riegsee, Filialkirche St. Stephan","mittelalterlich, 1740",Bayern,Riegsee,82418,Am Kirchplatz 3,11.233144969160128,47.698223842230526,c7f5ee28-d41a-4716-90ac-e3bd486d25d4
+"Kempfenhausen, Schlosskapelle St. Anna","bis 1719, 1774",Bayern,Berg,82335,Milchberg 11,11.365721233322061,47.987871623944905,85a7d0d2-66c2-4aa5-9355-f3967e75478b
+"Bremen, Haus Domshof 21",,Bremen,Bremen,28195,Domshof 21,8.8100828,53.0771556,d5c22077-e661-4ef5-bb81-a7bb01cb7c08
+"Wolfenbüttel, ehem. Voigt-Rhetzsches Haus",1425-1735,Niedersachsen,Wolfenbüttel,,,10.538785481853413,52.162244724789815,a337946e-f2bf-48ea-b711-2607b527e1e2
+"Rammertshofen, Filialkirche Inventio Crucis","15. Jh., 1715/29",Bayern,Egenhofen,82281,,11.19251535925741,48.22650242109718,1aaf1591-48f0-4d56-ba8e-44788e4d5bee
+"Stralsund, Johanniskirchhof 5",um 1648,Mecklenburg-Vorpommern,Stralsund,18439,Am Johanniskloster 5,13.0905199,54.3174648,2a2b8d2c-f868-4bed-9b48-90bcd5a02c9d
+"Untereglfing, Filialkirche Mariä Himmelfahrt","mittelalterlich, 17.-18. Jahrhundert",Bayern,Eglfing,82436,Talstraße 16,11.17681335013488,47.7302530738055,dc5e94a8-5702-475c-bf46-9e96b0fcbaff
+"Potsdam, Lordmarschallhaus","1764, 2009",Brandenburg,Potsdam,14471,Lennestraße 9,13.0391263,52.39865349999999,ab20d2e3-4fa1-4655-b029-00da0ff4c600
+"Hamburg, ehem. Haus Katharinenstraße 9","1630-1640, 1710-1720",Hamburg,Hamburg,20457,Katharinenstraße 9,9.99195850394672,53.54575187832854,050a655a-7da4-401c-85d3-15f4febe811d
+"Flensburg, ehem. Haus Große Straße 41",,Schleswig-Holstein,Flensburg,24937,Große Straße 41,9.43270150412467,54.787571933480166,1f08aeaf-4e46-40bb-967c-d879cd2b3780
+"Esslingen, Haus Schloßberger, Webergasse 12","um 1540, um 1600, um 1700",Baden-Württemberg,Esslingen am Neckar,73728,Webergasse 12,9.309673856943641,48.742723232977745,a432973c-48b3-46dd-8e80-f06ae066a10f
+"Greifswald, Lange Straße 49",um  1740,Mecklenburg-Vorpommern,Greifswald,17489,Lange Straße 49,13.376020937450715,54.09586757670223,581d0548-a5c7-4aad-b51f-521414ac5a00
+"Zittau, Heffter-Bau des ehem. Franziskanerklosters",1652–58,Sachsen,Zittau,02763,Klosterplatz 5,14.8076,50.897658,f82d63be-b17d-4074-868b-517f18c46156
+"Bamberg, Unterer Kaulberg 3","1595, 1700, 1735",Bayern,Bamberg,96049,Unterer Kaulberg 3,10.885010497363625,49.88972700584554,fe76071c-7079-4d02-b804-54474f5a545e
+"Frauenried, Filialkirche Mariä Geburt","1. Hälfte 15. Jahrhundert, 1763",Bayern,Irschenberg,83737,,11.876113404967642,47.79941285036846,6015b698-48f1-47f1-a9c0-6bf4cd67d1af
+"Westenhofen, Filialkirche St. Martin","1734-1737, ",Bayern,Schliersee,83727,Perfallstraße 40,11.853958116034708,47.73697115531815,dcddd9be-3f71-4132-8eb9-84ff550af411
+"Augsburg, Domherrenhaus, Hoher Weg 22",,Bayern,Augsburg,86152,Hoher Weg 22,10.89763285740461,48.37288605128223,a86d080a-0176-4469-8e76-b93f3868e645
+"Köln, Haus Peters. gen. Vitalmershof",1653,Nordrhein-Westfalen,Köln,50676,Marienplatz 26,6.9586424,50.9340729,ca938abd-3906-433b-9bb8-3ace4c623628
+"Schlehdorf, ehem. Augustiner-Chorherrenstift",18. Jahrhundert,Bayern,Schlehdorf,82444,Kirchstraße,11.318283644750377,47.65785068526767,7c5adcb4-6e46-45b8-896c-57d637d5ba8b
+"Naundorf (Hof), Altes Schloss",,Sachsen,Naundorf,04769,Am Dorfplatz 3,13.189467819911444,51.2373395373723,94fadcd5-ca1e-4d47-b78e-b816380af806
+"Grossberghofen, Kuratiekirche St. Georg","1709, 1740, 1774, 1858",Bayern,Erdweg,85253,St.-Georgs-Weg 5,11.312811601955929,48.32218821089594,17e6e203-d001-45d9-af96-54a69ad82960
+"Heilbad Heiligenstadt, Haus des ehem. Reichshofs",,Thüringen,Heilbad Heiligenstadt,37308,Wilhelmstraße 43,10.1371148,51.3774801,d4c1a94f-14c7-4c9d-befc-39837c518aae
+"Regensburg, Minoritenweg 20",1730–1735,Bayern,Regensburg,93047,Minoritenweg 20,12.104551807226553,49.01688289807566,9b247811-9688-4f88-93d6-9f75a72f07ff
+"Willebadessen-Niesen, Kapelle von Haus Niesen","1674, 1500-1600",Nordrhein-Westfalen,Willebadessen,34439,Kirchberg 4B,9.131537781970424,51.62371847601602,c1a1e57a-c566-4736-9596-3863abdc2c28
+"Niederjahna, Herrenhaus","1580, 1691, 1724, 1820, 1999-2017",Sachsen,Käbschütztal,01665,Dorfstraße 3,13.4354729,51.1651032,c5b99b5f-950d-4a0a-8f12-fc92f41dcee1
+"Rott, Pfarrkirche St. Johannes Baptist",spätgotisch,Bayern,Rott,86935,Weilheimer Straße 4,10.970824946782532,47.90537517277618,c60a6fb2-92fa-418d-a72e-d49b5c306cbd
+"Gern, St. Georg","14. Jahrhundert, 1418, um 1500, 1750, 1900-04",Bayern,Eggenfelden,84307,Hofmark 47,12.7774573,48.4004743,b2c20302-4710-40e1-9fa6-f2f58a6f5d67
+"Augsburg, Maximiliansstraße 83",,Bayern,Augsburg,86150,Maximilianstraße 83,10.900309704515099,48.36366650511171,c63b9064-2aa4-4227-9b95-94fade482b91
+"Hamburg, ehem. Haus Katharinenstraße 1",,Hamburg,Hamburg,20457,Katharinenstraße 1,9.992752771425309,53.54576462806128,9e12c90a-848f-41d9-968a-c0b450bd225e
+"Reisch, Filialkirche Mariä Himmelfahrt","spätgotisch, 1730",Bayern,Landsberg am Lech,86899,Kirchenstraße 2,10.916027426719666,48.04341299218886,54694a63-4297-4ecb-a0e8-1c2437d285c4
+"Osnabrück, Haus Marienstraße 17",,Niedersachsen,Osnabrück,49074,Marienstraße 17,8.0408908,52.27652,6e612daf-b929-4390-98e6-c0bb1a4b01ab
+"Görlitz, Napoleonhaus",nach 1717,Sachsen,Görlitz,02826,Obermarkt 29,14.9881,51.1558,91cf53c8-924c-4bce-8ad5-78b52b1ce858
+"Stade, Rathaus",,Niedersachsen,Stade,21682,Hökerstraße 12,9.476137146188577,53.60141882159125,4ced495a-ba0a-4e40-b648-2e565ac66464
+"Bremen, Focke-Museum - Bremer Landesmuseum für Kunst und Kulturgeschichte",,Bremen,Bremen,28213,Schwachhauser Heerstraße 240,8.8641738,53.0915885,0afed019-8824-439b-8986-3067c2055b72
+"Weyarn, ehem. Augustiner-Chorherrenstift",17. Jahrhundert,Bayern,Weyarn,83629,Ignaz-Günther-Straße 5,11.796258935341351,47.85738849702897,5f522a37-5377-4ba8-b57e-9f945386aa75
+"Gundelsheim, Schloss Horneck",1527-1533; 1724-1730,Baden-Württemberg,Gundelsheim,74831,,9.156187231491662,49.286801138042115,55ff2964-e0e3-47d5-9042-d4d827f59d52
+"Lüneburg, Haus Apothekenstr. 17",,Niedersachsen,Lüneburg,21335,Apothekenstraße 17,10.407207029762606,53.24900361588408,aa967c66-ba4a-4543-b861-76c7c4fa0a81
+"Wessobrunn, Kreuzbergkapelle Hl. Kreuz","1595, 1771",Bayern,Wessobrunn,82405,St2057,11.012458202773885,47.87985832849509,ce94ef8e-aab1-4ae8-8818-6532fd12c6b5
+"Oldenburg, sog. Degodehaus",,Niedersachsen,Oldenburg,26122,Markt 24,8.2136964,53.13912020000001,f5191536-c8a8-4987-acca-f4d0b06d8d14
+"Stade, Museum Stade, Schwedenspeicher",,Niedersachsen,Stade,21682,Wasser West 39,9.4771318,53.604,a94c2fa3-3e6a-429e-aec4-c55255774d1f
+"Hagenwerder, Ehemaliges Herrenhaus","17. Jahrhundert, 18. Jahrhundert",Sachsen,Görlitz,02827,Thomas-Müntzer-Straße 10,14.9649357,51.07088359999999,7a447f91-3de0-4464-b8ac-9d2d18333bdb
+"Oland, Haus Nanning Petersen",,Schleswig-Holstein,Oland,,Oland 16,8.68775016436802,54.6742652252932,a69ef906-2314-4624-b520-c22a5fbaf4fe
+"Celle, Haus Neumarkt 1",,Niedersachsen,Celle,29221,Neumarkt 1,10.0804374,52.6265839,d8c5508c-f7e7-42f8-8faa-d987e38218dd
+"Dammfleth, ehem. Hof Schröder in Rothenmeer",1720,Schleswig-Holstein,Dammfleth,25554,Rothenmeer,9.370179449533188,53.875885165598625,8ab13093-d305-4f16-9278-de48a00258ae
+"Grunertshofen, Pfarrkirche St. Laurentius","15. Jh., 1754/58",Bayern,Moorenweis,82272,Von-Pfetten-Füll-Straße 3,11.085886267575928,48.18570658478935,907c63f3-1010-4ce5-9b9b-027f067963c0
+"Prem, Pfarrkirche St. Michael","gotisch, 1754-1756",Bayern,Prem,86984,Kirchplatz 4,10.803315899973091,47.67758968677661,1b55480e-a983-4d4d-b94e-d4f0c26e6f42
+"Salzwedel, ehem. Königlich-Preußische Posthalterei",,Sachsen-Anhalt,Salzwedel,29410,Große St.-Ilsen-Straße 22,11.156176412026051,52.85141983008071,986d790b-95ab-4698-80ad-e4fece4a278b
+"Das sog. Frommannsche Anwesen in Jena, Fürstengraben 18",,Thüringen,Jena,07743,Fürstengraben 18,11.5886099,50.9304075,4261600b-c8e1-40b8-8eb2-71cd8235d4da
+"Herzhorn, ehem. Hof Bahlmann",1597,Schleswig-Holstein,Herzhorn,25379,Moorhufen 7,9.519009857457503,53.76407378231738,4e75016e-d092-40f0-a80a-941f22444ab3
+"Elmau, Kapelle",1778,Bayern,Krün,82493,In Elmau,11.179033949788158,47.45932099290722,be743d56-5bff-4fa3-a5f5-a7dbeb220594
+"Wismar, Mecklenburger Straße 12",1660–1680,Mecklenburg-Vorpommern,Wismar,23966,Mecklenburger Straße 12,11.466706362472014,53.89072107486363,a86be026-4214-414f-a95c-ac140139eaa2
+"Keitum, Haus Alter Kirchenweg 24","1735-1765, 1790-1800",Schleswig-Holstein,Sylt-Ost,25980,Alter Kirchenweg 24,8.3691154,54.897828,d7d7d56d-7005-4ee0-89dd-69ce02448b1c
+"Bayrischzell, Seelen- u. Wallfahrtskirche Sieben Schmerzen Mariä",1785-1786,Bayern,Bayrischzell,83735,Kirchplatz 2,12.014724528963516,47.67277845135565,f820d351-2ac1-4e0d-95b9-f7614e8f8b02
+"Meißen, Bennohaus",1470/80 (Umbau 1640),Sachsen,Meißen,01662,Markt 9,13.4700715,51.1630164,d8a981d4-8633-4797-8849-031b6b8cc3fa
+"Osterwarngau, Manhartskapelle",1642,Bayern,Warngau,83627,Dorfstraße 9,11.73318896313339,47.838574579477815,bb4e2621-d7c4-474e-bc62-848f0d29ea18
+"Oberammergau, Pfarrkirche St. Peter u. Paul","1736-1738, 1739-40",Bayern,Oberammergau,82487,Frühmessergasse 1,11.065925352378391,47.59609648269607,9128ca1e-add7-4613-9d54-697d097b225a
+"St. Georgen, ehem. Prälatenwohnhaus des Augustinerchorherrenstiftes Dießen",,Bayern,Dießen am Ammersee,86911,St. Georgen,11.08909,47.9446675,d1df6bc5-df20-41c5-8bd9-a4e4571363a1
+"Kottgeisering, Pfarrkirche Hl. Valentin von Terni","1774, 1842",Bayern,Kottgeisering,82288,Ammerseestraße 17,11.131285120424453,48.11672209575793,0f099767-39a9-485f-a26c-45ba852901b3
+"Hamburg, ehem. Haus Steckelhörn 19",,Hamburg,Hamburg,20457,Steckelhörn,9.992939701700687,53.54573275372222,10190a81-ad78-402b-ad8a-ed67c0b6095a
+"Pansfelde, Burg Falkenstein",,Sachsen-Anhalt,Falkenstein/Harz,06543,Burg Falkenstein 1,11.265310047848976,51.68169618971213,8ce9c7c2-b512-4164-ae28-c5ffe1275e3e
+"Weimar, Palais Schardt",,Thüringen,Weimar,99423,Scherfgasse 3,11.32687210233145,50.98135070025324,5a66e864-803b-4af1-bf1d-2253c1b302da
+"Flensburg, Flensburger Schifffahrtsmuseum",,Schleswig-Holstein,Flensburg,24939,Schiffbrücke 39,9.4331298,54.79299830000001,94bef523-4479-4fcc-904c-793934bf0438
+"Wessobrunn, ehem. Benediktinerabtei",,Bayern,Wessobrunn,82405,Klosterhof 4,11.02653976581342,47.87642586814803,e2ea93c2-1de5-4c9a-a34d-9d9c4797b44b
+"Aufhofen, Filialkirche St. Valentin","1408, 1558, 1770",Bayern,Egling,82544,Hauptstraße 15,11.527013175292515,47.937255344461,d4cc89bf-98c2-4651-b0e9-b9b202a06311
+"Herzhorn, Hof Schacht",1751,Schleswig-Holstein,Herzhorn,25379,Landweg 1,9.5168786,53.77909289999999,9e75ddb4-bf57-490d-ae94-44b4f3f1fd08
+"Berlin, Theaterbau (Charlottenburg)",1787-1791,Berlin,Berlin,14059,Spandauer Damm 10,13.2920837554078,52.5205950035378,8bc5d37d-fa94-408c-b9ad-99b8c7fb27e7
+"Birkenstein, Wallfahrtskirche Mariä Himmelfahrt","1710, um 1760",Bayern,Fischbachau,83730,Kapellenweg 11,11.964015089444496,47.714894204282395,6ae3d627-60a8-4008-abc5-92cc7b0929ee
+"Erfurt, Haus ""Zur güldenen Flechte""",1590-1600,Thüringen,Erfurt,99084,Regierungsstraße 73,11.02980154556819,50.97430512955881,9979053d-5117-4215-8f0a-56114a065fd1
+"St. Johannisrain, Filialkirche St. Johannes Baptist","spätmittelalterlich, 1717-1717, 1733-1735",Bayern,Penzberg,82377,St. Johannisrain 2,11.38208173020687,47.73856215294285,b84ef2e9-1762-4d4d-952d-a5ee64c4cb3a
+"Unterbrunn, Pfarrkirche St. Laurentius","Spätgotik, 1720/30, 1758",Bayern,Gauting,82131,Kirchstraße 17,11.322188948148362,48.065558297460186,a3fab7ff-a360-4e70-8855-67c637f8b15d
+"Esslingen, Rathaus, heute Amtsgericht",1705–1715,Baden-Württemberg,Esslingen am Neckar,73728,Ritterstraße 8,9.3077845,48.7408376,783318c7-6362-401d-a062-4ae517cff118
+"Marburg, Haus Markt 8",,Hessen,Marburg,35037,Markt 8,8.770320800000002,50.8087789,a9bb2284-7dfe-410f-9998-84369f6303d0
+"Grafing, Kapelle St. Ulrich",1780,Bayern,Königsdorf,82549,St2064,11.483577661296286,47.80718126622571,95022eb9-76fd-4216-bf4a-576a7b80ae44
+"Pirna, Markt 14",um 1500,Sachsen,Pirna,01796,Am Markt 14,13.9411838,50.9624798,c6bbcee7-15ea-447f-97a2-2e38b3cfa5ea
+"Mittenwald, Pilgerhaus Hl. Geist","um 1491, 17. Jahrhundert",Bayern,Mittenwald,82481,Obermarkt 6-22,11.260095866571548,47.44177811080412,a0845e06-4ed7-41b4-a326-b61fcadb6428
+"Hamburg, sog. Nähmaschinenhaus",,Hamburg,Hamburg,20099,Lange Reihe 61,10.01142,53.5577689,a9592375-f802-41a2-9182-f7ad844014bd
+"Indersdorf, Stiftskirche Mariä Himmelfahrt","1128, 1264, 1673/93, 1691, 1754/55",Bayern,Markt Indersdorf,,,11.383605945831183,48.35726137720964,d99e96d6-00b8-46cf-aa3d-10b679881647
+"Allgau bei Piesenkam, Kapelle St. Gregor der Große","1679-1689, 1772",Bayern,Waakirchen,83666,Warngauer Straße 80,11.685183058045057,47.811072243751624,53f295e8-fb9e-44f6-b4d2-1b7568f88237
+"Unterweikertshofen, Filialkirche St. Gabinus","1608, 1709, 1910",Bayern,Erdweg,85253,St.-Gabinus-Weg 4,11.27550340596428,48.33129757249408,42025928-f566-42eb-8259-117fabab5c56
+"Salzdahlum, ehem. Eremitage",1693-1698,Niedersachsen,Wolfenbüttel,38302,,10.582108540064798,52.19290331489002,e7661a20-cd3c-42fb-b178-58bd60528697
+"Augsburg, Maximilianstraße 33, Haus des Goldschmiedes Johann Martin Biller",frühes 15. Jahrhundert,Bayern,Augsburg,86150,Maximilianstraße 33,10.898877425010184,48.36709863787733,78db7327-a590-4236-b02d-2b5787505b6f
+"Deutenhausen, Filialkirche St. Johann Baptist","1668, 1709, 1747",Bayern,Weilheim in Oberbayern,82362,Von-Tuto-Straße 2,11.174265426846485,47.827324730377924,201b89f7-a10f-451c-9455-e84c1fae8f03
+"Kirchberg (Wildsteig), Pfarrkirche St. Jakobus Major","Mittelalter, 1780-1784",Bayern,Wildsteig,82409,Kirchbergstraße 37,10.936637432315475,47.701668091518876,a1e8bf2b-0535-42d8-86f6-a8e94dee426e
+"Rheine, sog. Falkenhof",,Nordrhein-Westfalen,Rheine,48431,Tiefe Straße 22,7.436657500000001,52.2808643,53b9b590-c784-4995-885f-e9798a3dee3b
+"Einöd, Kapelle Schmerzhafter Heiland und Schmerzensmutter Maria",um 1652,Bayern,Dietramszell,83623,,11.522828343872558,47.8464343421085,0db25ff2-be36-4fa9-9900-2be3d2dbd9bb
+"Regensburg, Silberne Fischgasse 13",13. -17. Jahrhundert,Bayern,Regensburg,93047,Silberne-Fisch-Gasse 13,12.091789846679177,49.01737544108633,00d65dca-0885-4001-a130-9b4c99eb7334
+"Dietramszell, ehem. Augustiner-Chorherrenstift",ab 1729,Bayern,Dietramszell,83623,Klosterplatz 1,11.595946,47.8491715,c25e25c6-efe3-44dc-b1ec-77a1fe6f4258
+"Stade, sog. Goebenhaus",,Niedersachsen,Stade,21682,Wasser West 19-21,9.476142532703848,53.603888943643405,c1198589-5b91-4aeb-bace-0bd4bf55f481
+"Gern, St. Sebastian","1612, Mitte 18. Jahrhundert",Bayern,Eggenfelden,84307,Sankt Sebastian,12.765685009238945,48.39889277918907,31ed4977-ed7b-4f6c-bc91-f3da0f421d71
+"St. Leonhard i. Forst, Pfarr- und Wallfahrtskirche St. Leonhard",1724- ca. 1735,Bayern,Wessobrunn,82405,St. Leonhard im Forst,11.029420497521796,47.846362338694284,9fefd4f5-3e3e-45ab-a563-b6c37a51c128
+"Münster, ehem. Prinzipalmarkt 39",,Nordrhein-Westfalen,Münster,48143,Prinzipalmarkt 39,7.62801,51.96241,a267621e-7010-4736-abb1-f74415151aee
+"Dürmentingen, einstiges Forst- und Jagdhaus ""Schütte""",,Baden-Württemberg,Dürmentingen,88525,Fasanenhofweg,9.551925972249778,48.10897855993567,ed9d7ff6-fcff-4c38-bda1-9fd9eb8a610c
+"Stadl, Pfarrkirche St. Johann Baptist","spätgotisch, vor 1750",Bayern,Vilgertshofen,86946,Schmiedberg 2,10.90685959333338,47.963343775467585,881131c0-6bd3-48e2-a9e0-bf4d79562333
+"Krempe, Alte Apotheke",,Schleswig-Holstein,Krempe,25361,Reichenstraße 1,9.490020295225042,53.83658189231032,fdba394a-acb0-4d49-990d-acfa43c5d923
+"Müden, ehem. Gut Dieckhorst",1711,Niedersachsen,Müden (Aller),38539,,10.370320835203797,52.51833617387861,0cac8fdb-56bf-45a8-a0d4-bbcafb5b5fb8
+"Flensburg, Haus Angelburger Str. 22",1609,Schleswig-Holstein,Flensburg,24937,Angelburger Straße 22,9.438366,54.7825682,1370fabd-d8c5-4107-a1d2-5572f43a55aa
+"Nürnberg, Fembohaus, Tanzsaal",1591-1596,Bayern,Nürnberg,90403,Burgstraße 15,11.0772063,49.4565053,0d888ec1-dbc6-47c8-ac98-a05d5aee7b38
+"Wismar, Am Markt  14, Haus des  Bürgermeisters Johann Kuhlmann",1702,Mecklenburg-Vorpommern,Wismar,23966,Am Markt 14,11.4653385540151,53.8909328879572,e83ad129-2dfa-427d-86a1-0d3f68dad3d4
+"Vilgertshofen, Wirtshaus",1690,Bayern,Vilgertshofen,86946,Ulrichstraße 11,10.916907211499337,47.95157129942622,e84b4617-4662-4541-977c-c9be1229fe01
+"Regensburg, Weiße-Hahnengasse 1/3",,Bayern,Regensburg,93047,Weiße-Hahnen-Gasse 1/3,12.097824827017202,49.02067535353977,42abd99c-9bd8-4b28-89eb-7bc77d423084
+"Sindelfingen, Haus Gußmann, Stumpengasse 1, Stube heute Landesmuseum Württemberg",1435,Baden-Württemberg,Sindelfingen,71063,Stumpengasse 1,9.000865,48.7093219,e001914b-4ba9-43c0-806e-51d26dfe2e74
+"Ludwigslust,  Schlossfreiheit 6a",1772–1776,Mecklenburg-Vorpommern,Ludwigslust,19288,Schloßfreiheit 6A,11.487241218953887,53.324305111655065,0a4b917f-4e67-4596-b9fd-ab5e90ddb3ed
+"Königsbronn, Klosterverwaltung und Jagdsitz, heute Torbogenmuseum",,Baden-Württemberg,Königsbronn,89551,Paul-Reusch-Straße 10,10.115359,48.73966919999999,e78d0fde-e85a-4476-aa44-7c2e62c18c58
+"Hadorf, Filialkirche St. Johann Baptist","Mittelalter, 18 Jh.",Bayern,Starnberg,82319,Dorfstraße 24,11.286381480550148,48.01603374483774,a35f2946-1322-4c99-be73-dc5b565638b1
+"Fürstenfeld, Ehem. Klostergebäude",1691-1700,Bayern,Fürstenfeldbruck,82256,Fürstenfeld 7,11.249806104737957,48.170257110236705,a01daf33-1af4-4e24-a7fb-786d6317d59b
+"Perchting, Kalvarienberg",1774,Bayern,Starnberg,82319,Seefelder Straße 11,11.269800079587188,48.00143773573031,f18ef7a2-112d-4fb4-a492-c23c4646aee5
+"Strassbach, Filialkriche St. Ottilia von Hohenburg","1652, 1716-20, 1765",Bayern,Markt Indersdorf,85229,Straßbach 4,11.40934563580742,48.34590339438853,2c8ed7b8-f388-4c7f-9594-6c200c2d63e1
+"Wewelsfleth, ehem. Hof Hein","1697, 1778-1779",Schleswig-Holstein,Wewelsfleth,25599,Uhrendorf 18,9.425540699999999,53.8452413,a8946087-b5ce-4e5d-af24-ede21b7a543c
+"Idstein, Grotte Residenzschloss","1566,1651/52,1766",Hessen,Idstein,65510,Schloßgasse 2,8.268832077186643,50.22225922728519,dd4d7b6a-3eb0-4edc-bc36-cb2e49c71d76
+"Ellwangen, Schwarzer Adler, Thurn- und Taxis'sche Posthalterei","1550, 1731, um 1750",Baden-Württemberg,Ellwangen (Jagst),73479,Marienstraße 2,10.130435206217362,48.96103212541468,5083d5e2-07e7-44ad-810a-f6eb3e9ddf17
+"Thalham, Kapelle St. Florian",1769,Bayern,Weyarn,83629,Gotzinger Straße 3,11.8157332,47.8343829,56f74432-0da0-45a0-b37c-a715efa04716
+"Beuerberg, ehem. Augustiner-Chorherrenstift",,Bayern,Eurasburg,82547,Königsdorfer Straße 7,11.412601012055546,47.82830072618671,7d916d5f-8406-4ae7-b1c8-9c8b12964e5d
+"Tinnum, Alte Landvogtei",1649,Schleswig-Holstein,Sylt-Ost,25980,Kampende 17,8.3246335,54.8999204,6cd04578-ad57-40d0-a845-d26942906e94
+"Parsberg, Pfarrkirche St. Laurentius",1724,Bayern,Miesbach,83714,Laurenziweg 4,11.865347076762445,47.784391579998534,58ca4d66-0d43-4bde-a0ae-dbb0cec924dd
+Ehem. Steinburger Hof in der Krempermarsch,,Schleswig-Holstein,Krempermarsch,,Unbekannt,9.518574599999999,53.84900099999999,8d8915d4-9c32-4ab5-8436-b6c897470825
+"Pipinsried, Wallfahrtskapelle St. Wolfgang","1694, 1696, 1746/47, 1755,",Bayern,Altomünster,85250,DAH2,11.301219420897867,48.40171353195225,a77985de-6a1d-4e6b-8f20-53c728ba028c
+"Meersburg, Gartenpavillon",1712,Baden-Württemberg,Meersburg,88709,Schloßplatz 12,9.271811689054715,47.69341812053019,bfd71b09-40a1-44c7-92af-b9842f15dc8a
+"Schliersee, Kapelle St. Nikolaus","spätgotisch, 1635",Bayern,Schliersee,83727,Seestraße,11.864789199330074,47.73348955102012,73a7ca44-bd25-49b9-a310-e5429538cb9b
+"Salzdahlum, Parnass","1694, 1705-1713",Niedersachsen,Wolfenbüttel,38302,,10.58103530274922,52.191640545735886,83788554-a2aa-400d-b51b-33433b58ee84
+"Unterigling, Pfarrkirche St. Johann Baptist",1748-1755,Bayern,Igling,86859,,10.814532626249848,48.07780297011055,60c09f95-5f37-40c6-89bd-bd03e5d7f145
+"Lauterbach, Pfarrkirche St. Alban",1760,Bayern,Altomünster,85250,Lauterbach 2,11.249076775476333,48.43389180329225,39975baf-1aca-4cd9-8d7c-3e0d57f89918
+"Burggen, Kapelle St. Anna","17., 18. Jh.",Bayern,Burggen,86977,St.-Anna-Straße 50,10.8091231,47.7758712,00e1625e-0ac7-4230-a151-c46a4718b3fd
+"Hamburg, ehem. Haus Grimm 15-16",,Hamburg,Hamburg,20457,Grimm 15,9.993637200544049,53.5463415494487,c3889208-4fd6-4efc-ab5e-3ef902c0c6fd
+"Greifswald, Lange Straße 77",1307d,Mecklenburg-Vorpommern,Greifswald,17489,Lange Straße 77,13.3786869124481,54.0959430772698,b4499299-f3ee-41ab-89f9-041b958513a7
+"Regenburg, Lederergasse 25",Umbau: 1732,Bayern,Regensburg,93047,Lederergasse 25,12.085808560794074,49.02212119507423,4058484c-28f9-4f7c-8b76-341d3df27932
+"Romenthal, Kapelle St. Anna",1756/1757,Bayern,Dießen am Ammersee,86911,Romenthal 1,11.096529405031445,47.95869905114908,1f39f266-17a2-4ea7-8a93-614015b0117d
+"Keitum, Haus Uwe Peters (Sylt Museum)",1759,Schleswig-Holstein,Sylt,25980,Am Kliff 13,8.373470566670647,54.894787386385985,23e122c9-08c6-450a-9476-6c4efc2c0c6f
+"Gotha, Gebäude des ehemaligen Amtshauses",,Thüringen,Gotha,99867,Augustinerstraße 15,10.700593,50.9471297,bb4a5d91-c26f-47b0-a264-df9ec3242b2e
+"Lüneburg, Haus Bardowicker Str. 7",,Niedersachsen,Lüneburg,21335,Bardowicker Straße 7,10.409347,53.2509992,e143188e-176f-4ff0-8590-b0fddf7985b2
+"Augsburg, von Stetten'sches Gartengut, Schießgrabenstraße 20",,Bayern,Augsburg,86150,Schießgrabenstraße 20,10.8959204,48.3620911,55a16744-f491-43d1-8a34-597348dc14e9
+"Obereglfing, Pfarrkirche St. Martin","Mittelalter, Mitte d. 18. Jh.",Bayern,Eglfing,82436,Hauptstraße 19,11.177312221643183,47.73505900768108,08b33786-9de1-4d8b-b61a-b9ce8e8fe157
+"Morsum, Haus Michelsen",1762,Schleswig-Holstein,Sylt-Ost,25980,Uasterhörn 31,8.445485999999999,54.8678408,ed3ba219-4f53-409c-beba-496a7a2dcfb2
+"Aurach, Kapelle",18. Jahrhundert,Bayern,Fischbachau,83730,Benzingstraße 16,11.923357548000581,47.69911200375619,20d863c4-44f8-43fe-a5f6-65aea39b730d
+"Bayrischzell, Pfarrkirche St. Margareta","1476, 1733",Bayern,Bayrischzell,83735,Tiroler Straße 10,12.014917231650085,47.67294822472043,056eccdc-183a-4740-a0bd-673b937f889f
+"Weilheim, Leichenhaus","1661, 1761",Bayern,Weilheim in Oberbayern,82362,Angerkapellenstraße,11.145560779718654,47.840317295650884,6b028326-e216-4191-ba76-7d93ac3c1bc0
+"Stade, Haus Sattelmacherstraße 10",,Niedersachsen,Stade,21682,Sattelmacherstraße 10,9.475852820507177,53.60080126850691,58e88d56-310c-4db0-9b40-453ed154d407
+Der nordöstliche Anbau an der Hauptkirche St. Jacobi,"1434-1438, 1495-1505",Hamburg,Hamburg,20095,Jakobikirchhof 22,10.001125961032615,53.55050088803992,a62ff52e-f23e-407d-ae7d-da1feaed1a41
+"Schweinfurt, Hofanlage Metzgergasse 16","1570, 1595, 1732",Bayern,Schweinfurt,97421,Metzgergasse 16,10.2355102,50.0435268,68ae9aca-51af-425f-a85c-4c05c3d8832c
+"Lüneburg, Haus Große Bäckerstraße 28",,Niedersachsen,Lüneburg,21335,Große Bäckerstraße 28,10.4092058,53.2497159,5af3ef6d-e8b8-4d4a-9d2a-c24638177282
+"Monschau, Rotes Haus",,Nordrhein-Westfalen,Monschau,52156,Laufenstraße 10,6.2408201,50.55498249999999,eed1ff12-cd4a-44f8-9486-d3bc2b8d0fd0
+"Wolfenbüttel, Haus Reichsstraße 3",,Niedersachsen,Wolfenbüttel,38300,Reichsstraße 3,10.5377972,52.1624938,71cd8216-0654-46a7-a814-8126e8b129f9
+"Kleinpienzenau, Filialkirche St. Georg","1496, um 1766",Bayern,Weyarn,83629,,11.837720022658544,47.822588549155675,9a3fd70d-b4a6-49e3-87d6-77400b0882f8
+"Neukirchen, Pfarrkirchen St. Dionysius","15. Jahrhundert, 1763",Bayern,Weyarn,83737,Reichersdorfer Straße 3,11.826395900293488,47.84697076439816,55e798a1-3a1b-4b78-b73b-201e36e30fec
+"Düsseldorf, ehem. Gemäldegalerie",1710-1714,Nordrhein-Westfalen,Düsseldorf,40213,Burgplatz,6.77153170761669,51.22669141807647,9f5b71d0-95e2-4e88-a8b7-cf8062964d12
+"Lüneburg, Museum Lüneburg",,Niedersachsen,Lüneburg,21335,Willy-Brandt-Straße 1,10.415757898033219,53.24681772845674,e1ee3e97-f6f6-4dac-83f8-4eba27353214
+"Frankfurt-Hoechst, Bolongaro-Palast",,Hessen,Frankfurt am Main,65929,,8.552653,50.1018529,708e6298-0778-4a55-9cde-68a2df2f892b
+"Ratingen, Haus Cromford","um 1784 Vorgängerbau (im Ostflügelaufgegangen), 1787-1790 mindestens Rohbau,  erste Innenausstattung bis 1800",Nordrhein-Westfalen,Ratingen,40878,Cromforder Allee 26,6.853043400000001,51.3060723,1af187fb-8f81-4fa2-8573-03727173c1a4
+"Lenggries, Pfarrkirche St. Jakobus Major",1721-1728,Bayern,Lenggries,83661,Kirchstraße 4,11.577197340249805,47.68330335553552,8c85b1c2-942a-4709-ba26-663cc22b86e0
+"Vierkirchen, Pfarrkirche St. Jakobus der Ältere","Mittelalterlich, 1763, 1767, 1779",Bayern,Vierkirchen,85256,Gröbmaierstraße 8,11.459383650630755,48.36601877057349,d40d5b36-63ca-4585-8281-027fda6c024d
+"Klösterl am Walchensee, Hauskapelle St. Anna, Maria und Joseph","1686-1689, 1728",Bayern,Kochel am See,82432,Zwergern 1,11.321486131798883,47.58757655367821,c558f013-c636-4c60-9c89-b8bb563e5cab
+"Lippstadt, sog. Haus Köppelmann",,Nordrhein-Westfalen,Lippstadt,59555,Lange Straße 30,8.347091299999999,51.6745402,b219d5cc-b819-4755-8aef-8153495b7688
+"Nordstrand,  Hof Jacobsen, Neuer Koog",1705,Schleswig-Holstein,Nordstrand,25845,,8.87891,54.473943,b972d7b7-d022-4cee-91bd-9fce02b4e3ef
+"Wismar, Hinter dem Rathaus 9",nach 1648,Mecklenburg-Vorpommern,Wismar,23966,Hinter dem Rathaus 9,11.466706309685756,53.89236813048923,c879dde6-ed2b-4cd2-a605-7468dbad5f66
+"Grünsink, Filial- und Wallfahrtskirche Mariahilf",1762,Bayern,Weßling,82234,Grünsinker Straße 1,11.232469175409008,48.08065581836235,9402b6d8-b722-4988-8a2c-9d50895a18d5
+"Lüdinghausen, Burg Vischering",,Nordrhein-Westfalen,Lüdinghausen,59348,Berenbrock 1,7.443256499999999,51.7762015,a9a61238-ff09-4153-bde5-ed24cb71fbf2
+"Haimhausen, Klausenkapelle Maria von Loreto",1701,Bayern,Haimhausen,85778,Hauptstraße 1,11.54581819094717,48.313013004312246,0347889d-8e8c-4582-8330-d8edc398cfdb
+"Biburg (Alling), Filialkirche Mariä Geburt","Spätgotik, 1740",Bayern,Alling,82239,Am Kirchberg 5,11.2979611,48.1414755,549b559d-2b3a-4524-a18e-6ef5f25ad048
+"Wurmannsau, Kapelle St. Joseph",1779,Bayern,Saulgrub,82442,Alte Römerstraße 16,11.028234943953517,47.64502211369834,aa6ed980-607b-443a-8c58-9e6fdfffc8d7
+"Schorndorf, Rathaus, Gerichtsstube, heute im Stadtmuseum",1726–1730,Baden-Württemberg,Schorndorf,73614,Marktplatz 1,9.527238611095026,48.80583888041298,73714900-e664-4c6a-a0b5-39276b50b488
+"Kappel, Filial- u. Wallfahrtskirche Hl. Blut u. hl. Magdalena","1618-1619, 1680, 1750-1751, 1779",Bayern,Unterammergau,82497,Kappel,11.034436678991472,47.626272278300554,686ed7c6-0da6-49d6-9b0f-790ac5711830
+"München, Vier, nicht lokalisierbare Deckenbilder aus dem Hofbereich",um 1670,Bayern,München,80639,Bayerische Schlösserverwaltung,11.50417685761514,48.15628454537823,9e10ddd1-d9d5-4ba3-8103-46b1c8cf95de
+"Ellingen, Weißenburger Straße 17, sogenannter Gasthof ""Römischer Kaiser""",vermutlich 1724,Bayern,Ellingen,91792,Weißenburger Straße 17,10.9677961,49.0598079,d75d0396-cf1a-4b54-a16c-aad6dca385c1
+"Bremen, ehem. sog. Löningischen Haus",,Bremen,Bremen,28195,Obernstraße 12,8.8063068,53.07678259999999,0d81fce6-2182-4f2e-95af-fc0469430812
+"Wismar, Lübsche Straße  72",16. Jahrhundert,Mecklenburg-Vorpommern,Wismar,23966,Lübsche Straße 72,11.458804486737034,53.89146715800653,b49cca48-eb47-4555-92af-12750c5c4e19
+"Bamberg, Haus Justus Heinrich Dientzenhofer, Nonnenbrücke 1",1736,Bayern,Bamberg,96047,Nonnenbrücke 1,10.891120450130918,49.88965788411445,9a13cac4-0975-4075-bcf3-351defd4f955
+"Hooge, Stube aus dem Haus Diedrichsen von der Ockelützwarft",1700-1800,Schleswig-Holstein,Hooge,25859,Ockelützwarft,8.537004676206315,54.5690638542117,8feb2544-ead9-4fee-98fe-72b184aa868a
+"Fischbachau, Pfarrkirche St. Martin","um 1100, 17. Jahrhundert, 1737-1738",Bayern,Fischbachau,83730,Martinsweg 3,11.950528278786827,47.720149063970176,6353b9af-7876-4269-bab3-14b35ddca060
+"Wilster, Doos'sches Palais",1784,Schleswig-Holstein,Wilster,25554,Rathausstraße 4,9.37677741553446,53.921678652134084,acf11f37-85f9-491d-949f-035988fd1f30
+"Unterweilbach, Schlosskapelle St. Martin","1692, 1805, 1845, 1926",Bayern,Hebertshausen,85241,Graf-Spreti-Straße 3,11.4485313,48.3049858,76e1ef45-4435-4213-8097-cde8bd4bd631
+"Franzburg, Petersstraße 1–2",,Mecklenburg-Vorpommern,Franzburg,18461,Petersstraße 1,12.877510781029262,54.1864479076692,25e744c7-c7a4-45e0-a6d1-4b784eea004f
+"Ainhofen, Filial- und Wallfahrtskirche Mariä Empfängnis","Mittelalterlich, 1682, 1717",Bayern,Markt Indersdorf,85229,Bürgermeister-Hefele-Straße 15,11.378118378550921,48.39960154364948,3a6d0d3d-587a-4e86-b4a1-5f233b155cb2
+"Königsbronn, Gasthaus Goldener Löwe, Haus Blezinger, heute Rathaus",um 1775,Baden-Württemberg,Königsbronn,89551,Herwartstraße 2,10.11338,48.73724,7bbc7215-3b53-403c-9df1-ec1d93ab3057
+"Leutstetten, Filialkirche St. Alto","spätgotisch, 17. Jh., 1789",Bayern,Starnberg,82319,Altostraße 7A,11.3669186,48.0290844,5b6521ac-13e3-4ddc-9e38-93e5d00b4a84
+"Unterdießen, Pfarrkirche St. Nikolaus",1773/1774,Bayern,Unterdießen,86944,Kirchweg 16,10.824848640973622,47.977131799556815,ce31e8ce-bb73-4199-bb7b-56cd09073525
+"Bremen, sog. Haus Heineken",,Bremen,Bremen,28195,Sandstraße 3,8.8109827,53.0751839,80c79e89-a5d3-4600-85b7-158c7198e049
+"Kiel, das ehem. Haus Markt 21",1630-1630,Schleswig-Holstein,Kiel,24103,Alter Markt 21,10.139565392425515,54.32311885974881,364c2791-b713-49fb-81b0-77452f089b2f
+"Schwabstadl, Kapelle St. Johannes",17. Jh.,Bayern,Obermeitingen,86836,Schwabstadl,10.858671059033814,48.152519710647994,8230bf2a-7dbb-4358-983e-d05c29154b21
+"Fürstenfeld, Ehem. Stiftskirche Mariä Himmelfahrt","um 1700, 1723, 1731",Bayern,Fürstenfeldbruck,82256,Fürstenfeld 7,11.249623816421634,48.169691840906886,a3b564c8-469d-40f1-944b-6fe17722d36b
+"Lüneburg, Haus Auf dem Kauf 13",,Niedersachsen,Lüneburg,21335,Auf dem Kauf 13,10.4119223919002,53.251109152217126,85234f89-6e1b-4353-a627-5218ffbad8f4
+"München, Fünf nicht lokalisierbare Deckenbilder aus dem Hofbereich",um 1615,Bayern,München,80333,Residenzstraße 1,11.57903215661401,48.14114121676118,b150ede9-bead-4e44-a112-9421797ac742
+"Sachsenkam, Pfarrkirche St. Andreas","spätgotisch, 1787",Bayern,Sachsenkam,83679,Kirchstraße,11.641581298522922,47.80705156195442,368cc142-a561-487a-a992-546c6640b36b
+"Windeby, Gut Windeby","1500-1550, 1761, 1773",Schleswig-Holstein,Windeby,24340,Eichenallee 7,9.813387299999999,54.4620512,a0835724-2b96-4abf-aa82-715d16f7b477
+"Bamberg, Haus Hofrat Georg Dientzenhofer, Schillerplatz 16",1745-1746,Bayern,Bamberg,96047,Schillerplatz 16,10.890766357732115,49.89014173415326,74dc9351-b327-4cd6-9a57-a50f3e68acaa
+"Dickelschwaig, Kapelle St. Gertrud","1698, 1755",Bayern,Ettal,82488,Dickelschwaig 1,11.032032849052612,47.569461217496304,0f641fe5-f428-45c4-aeb4-f26e676254b8
+"Bremen, sog. Brasilhaus",,Bremen,Bremen,28195,Schnoor 15,8.8096,53.0729,d08a3b53-ed7c-4819-877c-637d5cdd9454
+"Lüneburg, sog. Heinrich-Heine-Haus",,Niedersachsen,Lüneburg,21335,Am Ochsenmarkt 1a,10.4076402,53.2506675,ac84fcb6-c85c-4726-9d9c-7f6a1b87a1f8
+"Groitzsch, Berndorfer Mühle",,Sachsen,Groitzsch,04539,Berndorf 28,12.336046,51.1127899,72029e1f-ef79-43ba-a491-016b4f8c2a48
+"Augsburg, Domherrenhaus, Peutingerstraße 12",,Bayern,Augsburg,86152,Peutingerstraße 12,10.8959356,48.3718513,ca26c3ef-6703-4c91-81f8-f85f4b64fbae
+"Hamburg, ehem. Haus Grimm 31",1500-1550,Hamburg,Hamburg,20457,Grimm,9.993460197714976,53.54702683259118,274329be-30d5-4104-8c7d-14f8fd92ebbb
+"Grimma, Stadthaus (Markt 17)","16. Jahrhundert, 19. Jahrhundert",Sachsen,Grimma,04668,Markt 17,12.7888817,51.26947329999999,7c004d1b-fa4b-442c-be26-3817857ddb34
+"Hessental, Hällische Erbschänke, Gasthaus Krone","1558, 1573, 1754–1755",Baden-Württemberg,Schwäbisch Hall,74523,Schmiedsgasse 1,9.773588703944949,49.108088979019634,02f7125d-cfb1-4fa3-ad18-56ec5e901cb6
+"Landrecht, Hof Witt",,Schleswig-Holstein,Landrecht,25554,Steindamm 20,9.39770889835219,53.92579785708412,d473d70d-e1cb-404f-9142-96e3a59fd97c
+"Pöring, Schlosskirche St. Maria von der Versöhnung",1739/1742,Bayern,Landsberg am Lech,86899,Pöringer Straße 5,10.883787374722417,48.0183087279143,89333002-25ad-45b2-a227-43d78973a7f7
+"Schirgiswalde, Hauptstr. 5",frühes 18. Jahrhundert,Sachsen,Wilthen,02681,Hauptstraße 5,14.361722,51.0984158,07f4e211-c3d6-4565-935b-2f683eb0affb
+"Husum, Schwanapotheke",1656,Schleswig-Holstein,Husum,25813,Großstraße 21,9.050449117837537,54.477110420102186,a626cbb6-cd51-48ee-a426-add27856fb09
+"Grainau, Pfarrkirche St. Johann Baptist","1697-1749, 1782",Bayern,Grainau,82491,Kirchbichl 6,11.025193316481468,47.470541595368594,0086766a-24d6-437e-ae2c-8c554335904a
+"Büren, ehemalige Jesuitenkirche & Katholische Kirche Maria Immaculata",,Nordrhein-Westfalen,Büren,33142,Burgstraße 4,8.558442099999999,51.5546907,3783c3ad-4a3a-4fc8-8b9a-3920918c8018
+"Bamberg, Gartenhaus der Mang‘schen Wachsbleiche",1745,Bayern,Bamberg,96052,Letzengasse 5,10.891796209597581,49.89836989646131,945cb1e0-0e54-4757-9d69-327a65efbf8e
+"Arnried, Filialkirche St. Hilaria und Afra",1759,Bayern,Eberfing,82390,Arnried 31/2,11.247941008891232,47.80609318146721,6b3a64ea-f90e-4db4-ae5e-04bc9aeb3b24
+"Lüneburg, Haus Am Berge 18",,Niedersachsen,Lüneburg,21335,Am Berge 18,10.410801237325023,53.24891695286971,c9ea0c38-6849-4514-8e34-98dd16ec9f6c
+"Luttenwang, Filialkirche Mariä Himmelfahrt","Beginn 15. Jh., 1780, 1870er",Bayern,Adelshofen,82276,Denkmalstraße,11.08904611092918,48.1967533765642,b8646048-d10d-4547-81da-480fb480c02d
+"Duttenstein, Jagdschloss",1564–1572,Baden-Württemberg,Duttenstein,,,10.372263167994163,48.691417198575266,72320fe6-5f20-4f93-bd90-914e23544978
+"Schwabhausen, Kapelle St. Leonhard","1478, 16. Jh.",Bayern,Weil,86947,Dorfstraße 32,10.97960652437575,48.10868846040561,25e28079-64d8-4432-9a47-3f8650ce64ff
+"Schwabbruck, Pfarrkirche St. Salvator","um 1493, 1686-1687, 1795",Bayern,Schwabbruck,86986,Kirchgasse 3,10.836510815012415,47.825776064677484,8936eaf0-db2e-4987-90fe-ca7d433ac4ed
+"Monheim, Rathaus, ehemaliges Wohnhaus von Abraham Elias Model",1722-1741,Bayern,Monheim,86653,Marktplatz 23,10.856605758149222,48.84285183001222,fde63a0b-67cd-4fb9-96d8-d8d346e856d9
+"Erlangen, Haus Buck, heute Besoldsches Haus",1733-1734,Bayern,Erlangen,91054,Hauptstraße 26,11.004373902867695,49.59699857776865,33992d57-444c-4b8b-a0f7-eb4c947c1fc7
+"Gleschendorf, Haus Wiesenweg 4",1763,Schleswig-Holstein,Scharbeutz,23684,Wiesenweg 4,10.660176785487062,54.03005123277612,00c6a927-3e65-43f1-896d-137656ee6fcb
+"Hamburg, Valentinskamp 34",,Hamburg,Hamburg,20355,Valentinskamp 34,9.983287299999999,53.5554848,2630ce19-0bcf-4ac5-95d0-df23ea662b8e
+"Holzhausen, Filialkirche Inventio Crucis","1400, 1698",Bayern,Alling,82239,Holzhausen 9,11.234271561175923,48.13871414648389,2c58cd1b-fddf-466b-bd6e-c8051f0282bc
+"Güstrow, Mühlenstraße 17",1607,Mecklenburg-Vorpommern,Güstrow,18273,Mühlenstraße 17,12.179052854878766,53.794478705850764,63da4343-9032-467c-ad21-648477906989
+"Partenkirchen, Wallfahrts- u. Votivkirche St. Antonius",1704,Bayern,Garmisch-Partenkirchen,82467,Sankt-Anton 1,11.111469254103664,47.49831805268119,83dc3b4d-3087-46fa-a5e8-35455143735e
+"Adelshofen, Kuratiekirche St. Michael","1452, 1605, 1705",Bayern,Adelshofen,82276,Kirchstraße 5,11.113990241931237,48.18360710323144,8b133aea-ac6e-4d71-b194-12750f15ab33
+"Wewelsfleth, Hof Ehlers",,Schleswig-Holstein,Wewelsfleth,25599,Kleinwisch 5,9.398374663011674,53.862815592968815,f8909d33-07b9-4688-99e9-0408d7808360
+"Minden, Simeonstraße 19",,Nordrhein-Westfalen,Minden,32423,Simeonstraße 19,8.9133538,52.2854783,f5c8e610-3dda-44ef-9153-37b4aba0125b
+"St. Ottilien bei Rott, Kapelle St. Ottilie","1483, 1723/1724, 1770er, 1823",Bayern,Rott,86935,Landsberger Straße 30,10.971232786640055,47.91107463817936,b228855c-53e7-429e-b6f0-642ed2dbe519
+"Welden, Filialkirche St. Stephan","spätgotisch,  1780/84",Bayern,Fuchstal,86925,,10.792393239486172,47.91802461939592,15c970a4-afe5-4452-b9fb-f9649d71aa75
+"Perchting, Pfarrkirche Mariä Heimsuchung",um 1770,Bayern,Starnberg,82319,Maurusstraße 1,11.274810415692832,48.00043987392119,81edefc7-22df-4c39-8e2b-5995b4a0edd3
+"Berlin, Orangerie (Charlottenburg)","1709-1712, 1956-1962, 1977",Berlin,Berlin,14059,Spandauer Damm 22,13.2940566,52.5207219,dc50243b-187b-4f2d-8b8f-031360ee66f0
+"Kirchberg an der Jagst, Gartenhaus Hochheimer (Tischbeinhäuschen)",1753,Baden-Württemberg,Kirchberg an der Jagst,74592,,9.980360265143872,49.20265740672202,41c88914-d8f2-4d61-924f-97f8e37967cc
+"Wismar, Lübsche Straße  56",1700–1720,Mecklenburg-Vorpommern,Wismar,23966,Lübsche Straße 56,11.460226173142,53.8915619981299,1d10dd48-f91a-4dd3-9113-eea5605b5716
+"Orthofen, Filialkirche Hl. Kreuzauffindung","1733/34, 1845",Bayern,Sulzemoos,85254,Ringstraße 22,11.234120460312822,48.30878157944336,b1ff147d-3134-448e-b068-f71e5051ea63
+"Wewelsfleth, Hof Haß, Großwisch 9",1759,Schleswig-Holstein,Wewelsfleth,25599,Großwisch 9,9.369529499999999,53.8486939,4cf00064-cff1-4b96-9d2b-2fe55f4532f9
+"Sittenbach, Pfarrkirche St. Laurentius","1464, 1680, 1760, 1932",Bayern,Odelzhausen,85235,Kirchstraße 7,11.23360126706359,48.327731062468594,b4615384-6bf6-4975-a7f6-19bd292a69dd
+"Indersdorf, Klostergebäude","1128, 1264, 1673/93, 1691, 1754/55",Bayern,Markt Indersdorf,,,11.384238266380505,48.35724711893145,3344e432-04b2-4254-9d4b-8312f004a953
+"Hirtlbach, Pfarrkirche St. Valentin","1716, 1804, 1845, 1863",Bayern,Markt Indersdorf,85229,St.-Valentin-Straße 6,11.328250723896797,48.350370599278875,d753a7b1-ab4f-4f8c-a6e9-5a2449067fe4
+"Holzkirchen, Pfarrkirche St. Laurentius","1711, 1758, 1838-1840",Bayern,Holzkirchen,83607,Marktplatz 8C,11.701849,47.8768804,a922951e-b347-4e1f-8a20-5d1182824ffd
+"Wismar, Altwismarstraße 14",nach 1648,Mecklenburg-Vorpommern,Wismar,23966,Altwismarstraße 14,11.4687501630096,53.8922638083539,2f46f457-9a5c-4612-bbda-fd35c7358a1e
+"Landstetten, Filialkirche St. Jakobus d. Ä.",1768,Bayern,Starnberg,82319,St.-Jakob-Straße 5-7,11.247559159462273,47.9863098023796,906fa994-8a1e-445c-9904-17227314cc2c
+"Wismar, Schweinbrücke 6–8, sog. Schabbellhaus",,Mecklenburg-Vorpommern,Wismar,23966,Schweinsbrücke 6–8,11.466545296708606,53.895048803915444,b38a2e9e-7188-4ff3-8955-db463d7ab109
+"Esting, Ehem. Benefiziatenhaus","vor 1744, 1750",Bayern,Olching,82140,Schloßstraße 108,11.3092276,48.2011279,4bc40894-aa94-4185-a346-f604208b4931
+"Hamburg, Deichstraße 45",,Hamburg,Hamburg,20459,Deichstraße 45,9.98709794092613,53.5453821344086,6adf5ed6-71fe-4352-b13a-655469c5ecb7
+"Gundelsheim, Pfarrkirche St. Nikolaus",1500-1515; 1701; 1736-1737,Baden-Württemberg,Gundelsheim,74831,Schloßstraße 3,9.158692374677916,49.28499908346346,f3b41d22-4cd7-4951-8763-bdc19a26c6d0
+"Kollmar, Hof Rave in Moorhusen",1750,Schleswig-Holstein,Kollmar,25377,Moorhusen 51,9.5290912,53.7584326,e083d887-7b02-4634-8571-ce9f89a91ace
+"Wensin, Gut Wensin",1635 - 1642,Schleswig-Holstein,Wensin,23827,Am Gutshof 1,10.4089462,53.9787499,cb392259-d43b-4f64-bda9-b43440faa833
+"Nieblum, Haus Jacob Harresen",1751,Schleswig-Holstein,Nieblum,25938,Jens-Jacob-Eschel-Straße 15,8.491996799999999,54.69211139999999,25da2329-5966-4c88-8f9e-ed85c9fe16a0
+"Puchschlagen, Filialkirche St. Kastulus","1647, 1663, 1695, 1729",Bayern,Schwabhausen,85247,St.-Kastulus-Straße 1,11.3428953,48.2898636,92192c2a-99bf-40be-bae6-913f6b71f95d
+"Beuerberg, ehem. Pfarrkirche St. Johannes u. Paulus","ab 1643, spätes 18. Jahrhundert",Bayern,Eurasburg,82547,Herrnleitenweg 4,11.414118990508083,47.82778211815278,827f4c61-81e0-4122-8fb6-006bee3b07aa
+"Hanshofen, Filialkirche St. Katharina","spätgotisch, 1720",Bayern,Mittelstetten,82293,Ringstraße,11.132582885053292,48.253419660297254,7e7a37f9-6c5e-4934-bf04-acb324702c99
+"Quedliburg, sog. Fleischhof",,Sachsen-Anhalt,Quedlinburg,06484,Wordgasse 4,11.139927443592759,51.78779723200126,387ab475-458b-4fd3-bb39-ba49792d1c27
+"Aachen, Wespienhaus","1734-37, Innenausbau bis nach 1740",Nordrhein-Westfalen,Aachen,52062,Kleinmarschierstraße 45,6.084666336270092,50.772992283352764,d2ebfb58-493d-4f8c-a449-6a61a3f98910
+"Morsum, Haus Hansen",1680,Schleswig-Holstein,Sylt-Ost,25980,Uasterhörn 8,8.4478104,54.8652409,3b2c8096-0d6a-457b-85fc-69b49788cd13
+"Schlehdorf, Friedhofskirche Schmerzhafte Mutter Maria",1693,Bayern,Schlehdorf,82444,Kocheler Straße 15,11.315730214118958,47.65757969169238,5fa0e420-eefd-4127-bdbc-d9f7f35ee647
+"Pirna, Markt 16",1589,Sachsen,Pirna,01796,Am Markt 16,13.9415339,50.9630223,3ee49181-44c1-4f84-9bba-d96a446899be
+"Gotzing, Filialkirche St. Jakobus Major","15. Jahrhundert, 1761",Bayern,Weyarn,83629,Gotzing 1,11.80595237749139,47.82810264734097,ae91079f-f010-421e-ba39-2c3dceb5424d
+"Eutin, Alte Hofapotheke",1704,Schleswig-Holstein,Eutin,23701,Königstraße 13,10.616124335656414,54.13754813680005,83ff482d-08a9-40e5-a615-11ea8ba3de80
+"Reutberg, Klosterkirche Mariä Verkündigung","1606, 1733",Bayern,Sachsenkam,83679,Am Reutberg 4,11.636367255641389,47.81325898927182,1ae0dafc-5f04-469f-927c-8054b34c5252
+"Stördorf, Hof Reimers",1750-1800,Schleswig-Holstein,Stördorf,25554,Stördorf 3,9.420454637841857,53.910904883478366,43be7386-1d7f-4ec3-8637-eae52e976030
+"Bayersoien, Pfarrkirche St. Georg","spätgotisch, 1717",Bayern,Bad Bayersoien,82435,Brandstatt 4,10.995501341060715,47.69124799886364,62f7c11c-ca72-4c57-bf0c-15cc98364b22
+"Nürnberg, Pellerhaus, Schönes Zimmer, heute im Stadtmuseum Fembohaus",1602-1607,Bayern,Nürnberg,90403,Egidienplatz 23,11.080972543164409,49.456942614170806,1e2d2204-e851-4484-a5d6-3d47d204039d
+"Piesenkam, Filialkirche St. Jakobus Major","spätgotisch, 18. Jahrhundert",Bayern,Waakirchen,83666,Piesenkam,11.666681065148328,47.81249525994956,0b346c44-3c61-4972-aca4-43de268ed736
+"Sigmertshausen, Filialkirche St. Vitalis","1735, 1754, 1755, 1846/49, 1857",Bayern,Röhrmoos,85244,Kirchenstraße 15,11.414521880662402,48.319116912179965,53da720b-6c7a-4a42-ad37-0c81fd70a472
+"Seefeld, Schlosskapelle St. Johann Baptist","1479, 1776",Bayern,Seefeld,82229,Schloßhof 9,11.202879043028855,48.03044625463083,401423e5-5045-467e-a264-63c4bc24917d
+"Hamburg, Altonaer Museum",,Hamburg,Hamburg,22765,Museumstraße 23,9.934242399999999,53.5490341,1f489ca7-56c4-4a81-bf85-75623a018ac7
+"Thankirchen, Pfarrkirche St. Katharina",1777-1778,Bayern,Dietramszell,83623,Thankirchen 3,11.568120842911085,47.85554196793859,f323cb48-d1ad-4294-ab4c-de4c5f6fd743
+"Rottenbuch, ehem. Klosterkirche des Augustinerchorherrenstifts","1455, 1735-1745",Bayern,Rottenbuch,82401,Klosterhof 32,10.9659338,47.73581280000001,188eef43-6dc9-4918-a0b8-f0ee604a8ae3
+"Odelzhausen, Pfarrkirche St. Benedikt","1735, 1891/92",Bayern,Odelzhausen,85235,Marktstraße 9,11.194977391194572,48.31143250471048,a97a4059-2399-4bc3-babb-a8ecfd571bf1
+"Puttgarden, ehem. Bauernhof Wilder",,Schleswig-Holstein,Fehmarn,23769,,11.2123327,54.49659819999999,6d1cda2b-2ec6-4a5e-bbb6-185f90f67d3d
+"Flensburg, Holm 17","1550-1560, 1550-1650, 1650-1750, 1750-1760",Schleswig-Holstein,Flensburg,24937,Holm 17,9.435260537176616,54.78520249226813,9ab5fc4d-f7df-4a53-80be-a8f5e815b914
+"Leipzig, Webers Hof","1662, 1845, 1872, 1995, 1997",Sachsen,Leipzig,04109,Hainstraße 3,12.3736032,51.3413114,f9a494fd-4a3b-4066-9a93-6e2febdb2f97
+"Bad Tennstedt, Markt 15",,Thüringen,Bad Tennstedt,99955,Markt 15,10.838361392026444,51.15387228087134,050f6e19-f3dd-44c2-a08f-5bad46573e21
+"Ramsach, Filialkirche St. Georg",1739-1744,Bayern,Murnau am Staffelsee,82418,Ramsachstraße 2,11.185948858521128,47.666048479296364,4c54ad72-7130-43db-bcd7-6d9f210e4004
+"Kreuzberg, Kapelle Hl. Kreuz","1564, ca. 1715-1745",Bayern,Steingaden,86989,Kreuzberg 4,10.865618309002475,47.67783529350019,2c4cdabc-1567-4137-a57a-73ad8300d1b5
+"Rumeltshausen, Filialkirche St. Laurentius","Mittelalterlich, 1670, 1694, 1733, 1748, 1839, 1857",Bayern,Schwabhausen,85247,Dorfstraße 25,11.384174712149308,48.30185213114182,0ed23e6e-09de-4ed1-a99d-af6534b54240
+"Schongau, Kreuzkapelle Hl. Kreuz","1617, 1690-1693, 1725",Bayern,Schongau,86956,Augsburger Straße 2-4,10.894489513655678,47.814581079045794,2995b27f-0cce-4e6f-96c2-6764e3c381b5
+"Kochel, Pfarrkirche St. Michael","gotisch, 1688-1689, 1725-1735, um 1780",Bayern,Kochel am See,82431,Pfarrer-Hartmann-Weg 5,11.36538842608861,47.65892380601266,5b32c261-e990-4856-818d-9ca50a1ec001
+"Obersöchering, Pfarrkirche St. Maria","Mittelalter, 17. Jh.",Bayern,Obersöchering,82395,Alpenstraße 10,11.220463390463525,47.736581515835866,bfc30aab-4f22-47f2-ad78-d90dcb4f7b13
+"Güstrow, Gleviner Straße 2",Baus 17. Jhd; Ausstattung 1670–1671; Umbau um 1800,Mecklenburg-Vorpommern,Güstrow,18273,Gleviner Straße 2,12.177336208432013,53.79298306561014,f099c883-8db9-4956-b180-8d65ce39b1af
+"Waabs, ehem. Gut Kohöved","1590, 1673",Schleswig-Holstein,Waabs,24369,Ludwigsburg,9.932670221511131,54.51322842715084,79fbde93-aec5-43dc-bc22-5ba31d8a617f
+"Hamburg, ehem. Haus Deichstraße 53",1585-1595,Hamburg,Hamburg,20459,Deichstraße 53,9.987001441690088,53.54505063711365,9a775a8a-bd8b-4d2c-b830-33db1e07dadc
+"Erfurt, sog. ""Haus zum Sonneborn""",,Thüringen,Erfurt,99084,Große Arche 6,11.026539796022533,50.97699040841629,ab719ea7-94da-4fbb-b702-4bc21d8c330c
+"Egenburg, Pfarrkirche St. Stephanus","1704, 1707, 1740, 19. Jahrhundert",Bayern,Pfaffenhofen an der Glonn,85235,Hauptstraße 14,11.156535406024101,48.2927696326789,b0095ca1-53c3-467d-ae5c-3d0fcbbe99c8
+"Münster, Dechaneistr. 14",,Nordrhein-Westfalen,Münster,48145,Dechaneistraße 14,7.650606599999999,51.9639943,12741cf4-99b6-42d4-a334-4fbb7978082a
+"Hamburg, Krayernkamp 10 a",,Hamburg,Hamburg,20459,Krayenkamp 10A,9.980161784572772,53.54808501546229,5c578c4f-bb1e-4823-8724-6ceda6d1f58d
+"Celle, Haus Schuhstraße 22",,Niedersachsen,Celle,29221,Schuhstraße 22,10.0843566,52.6256837,bda38299-a807-4f86-aad5-f53418ea1eeb
+"Gehlensiel, Loofthof","1772-1774, 1776",Schleswig-Holstein,Herzhorn,25379,Gehlensiel 10,9.532677902186842,53.77212727215831,7f5082cd-0a6a-4aa5-9b96-d81872ee95d5
+"Schlagenhofen, Filialkirche St. Michael","Mittelalter, 2. H. 17. Jh.",Bayern,Inning am Ammersee,82266,Dorfstraße 9,11.1614784,48.0421861,8f016127-98b9-4f7a-942d-bce608633e98
+"Bamberg, Pfahlplätzchen 2","1700, 1735",Bayern,Bamberg,96049,Pfahlplätzchen 2,10.884887149672007,49.890438953914966,6d83e99b-9011-467a-9e20-dd79a0374b9f
+"Schongau, Stadtpfarrkirche Mariä Himmelfahrt","gotisch, 1667, 1748, 1752-ca. 1753",Bayern,Schongau,86956,Kirchenstraße 7,10.896774371213352,47.81204134003064,b278db5f-f13f-4fbd-aa21-3e2613936359
+"Wilparting, Wallfahrtskirche St. Marinus u. Anianus","15. Jahrhundert, 1724, 1759",Bayern,Irschenberg,83737,,11.919645620541495,47.822080689623036,15f770b6-9059-4b45-902e-953657b557c2
+"Hamburg, ehem. Haus Steckelhörn 18",,Hamburg,Hamburg,20457,Steckelhörn,9.99307384236974,53.54566900497215,3ed9ecbf-64de-4ee6-aedc-e72fb13187bb
+"Flensburg, ehem. Haus Große Straße 30",1500-1600,Schleswig-Holstein,Flensburg,24937,Große Straße 30,9.432801,54.7878471,e4bd995a-403e-413b-ba1e-aa53a2781162
+"Aufkirchen, Pfarrkirche St. Georg","1667, Ausmalung und Stuckierung 1710/20",Bayern,Egenhofen,82281,Pfarrstraße 6,11.190761166256474,48.24145620659734,a1c8d257-3e97-4835-b626-e3e56b4db7ef
+"Caputh, Schloss","1662, 1761",Brandenburg,Schwielowsee-Caputh,14548,Straße der Einheit 2,13.000087341882361,52.348999116223894,2a1c36e9-b84b-4c8f-ad4b-6367ce19a3bd
+"Grund, Kapelle",Mitte 18. Jahrhundert,Bayern,Irschenberg,83737,,11.913659010843563,47.796252545474154,f94d8eac-31f0-4f75-ae81-5a80a543cd8a
+"Dünzelbach, Pfarrkirche St. Nikolaus","um 1500, um 1725, 1767",Bayern,Moorenweis,82272,Dünzelbach 87,11.021159278824788,48.164618448663795,ee8e198d-9dc6-4f2e-a16e-cc01c9820ead
+"Uetersen, Mühlenstraße 5",1745-1755,Schleswig-Holstein,Uetersen,25436,Mühlenstraße 5,9.653734300000002,53.68353279999999,9ee08802-f9cb-440b-887c-cb40d11dada4
+"Preetz, Mühlenstraße 6",,Schleswig-Holstein,Preetz,24211,Mühlenstraße 6,10.2814955,54.23596939999999,06b4136d-1385-4576-a4ae-ba5a57afe845
+"Bad Tölz, Kreuzkirche auf dem Kalvarienberg",1718-1732,Bayern,Bad Tölz,83646,Aufgang zum Kalvarienberg 20,11.5559677,47.763697,88b2030d-a10f-4ab0-b864-5bbccc0415d4
+"Neustrelitz,  Schlossstraße 11",ab 1743,Mecklenburg-Vorpommern,Neustrelitz,17235,Schloßstraße 11,13.059793564917962,53.361750845485055,da1b3081-717a-4034-9874-4a6dfa48a9d0
+"Beidenfleth, Groß Kampen 20",1735-1745,Schleswig-Holstein,Beidenfleth,25573,Groß Kampen 20,9.413852,53.9013029,ba161b04-9a59-4f11-833f-78b2964f3f62
+"Schönbrunn, Filialkirche Hl. Kreuzauffindung","1723, 1726",Bayern,Röhrmoos,85244,Kirchweg 4,11.475230274029602,48.330562891827896,65b53cfb-a312-4ff2-af9f-32edc011574a
+"Freiberg, Schönlebehaus","1525, nach 1624, 1975/76",Sachsen,Freiberg,09599,Erbische Straße 19,13.3438661,50.9168763,f1b2bbee-1434-4376-a0de-df00a2d219cf
+"Pfedelbach, Witwenpalais, später Gasthaus Sonne",1745,Baden-Württemberg,Pfedelbach,74629,Hauptstraße 38,9.503926282015078,49.17633111077247,ac30e84d-6cf4-41ab-9468-7a7f89e134c1
+"Pirna, Abtshaus / Stadtbibliothek","13 Jh. (Keller 14.-15. Jh., Portal 1620)",Sachsen,Pirna,01796,Dohnaische Straße 76,13.9395553,50.9630781,cd52561b-95f8-4f12-a13d-2138ab4ba9ec
+"Rötha, 1969 gesprengtes und abgetragenes Herrenhaus Rötha",1662-1668,Sachsen,Rötha,04571,Johann-Sebastian-Bach-Platz,12.4082248,51.196201,d10df47e-b911-4fee-8250-6c4455ddb5c9
+"Lauchheim, Pfarrhaus",1728,Baden-Württemberg,Lauchheim,73466,Pfarrer-Bestlin-Straße 16,10.245716617038601,48.872220221224204,03414469-1219-4fcc-a5a2-88742b6ef1b5
+"Walchensee, Alte Pfarrkirche St. Jakobus Major","1603, 1712-1714",Bayern,Kochel am See,82432,Seestraße 58,11.314426704623175,47.588542577128955,988cb495-b970-422e-9b69-5ba1e998bd8c
+"​​Pirna, Kirchplatz 4",16. Jahrhundert,Sachsen,Pirna,01796,Kirchplatz 4,13.9435343,50.9628153,45113303-6ec4-4d6a-a077-cbde9dd6e599
+"Freiberg, Alnpeck-Haus","1511, Mitte 16. Jahrhundert, 17. Jahrhundert",Sachsen,Freiberg,09599,Korngasse 1,13.3428847,50.91644119999999,e7fcf46c-ecd2-429b-89b3-d1daea35aa3c
+"Passau, ,Bürgerliches Waisenhaus‘ (heute Lukas-Kern-Kinderheim)",1749,Bayern,Passau,94032,Ort 10,13.4738302306244,48.5735902253639,f78eccec-c1cc-4f5f-85a1-6c3e50818c5f
+"Weichs, Pfarrkirche St. Martin","Spätgotisch, 1720, 1723, 1724/25",Bayern,Weichs,85258,Freiherrnstraße 19,11.414489631372644,48.377789157754776,e161b3c8-f91a-4bf4-819b-c656e6a9d7be
+"Tetenbüll, sog. Staatshof","1600-1700, 1747-1760",Schleswig-Holstein,Tetenbüll,25882,Osterkoogsdeich 18,8.8720903,54.3558245,6ae0e8fd-dede-46fa-a003-632d6cde8b50
+"Schwäbisch Hall, Haus Sandel, Marktstraße 9",um 1730,Baden-Württemberg,Schwäbisch Hall,74523,Marktstraße 9,9.73637042008328,49.1134651479672,3bcea1f7-b333-4a68-98a6-b0120e04357d
+"Weilheim, Pfarrkirche St. Pölten","mittelalterlich, 1782",Bayern,Weilheim in Oberbayern,82362,Admiral-Hipper-Straße 13,11.143677161173914,47.839204700553104,15678c43-2d36-43a6-b307-1318fb65b7c1
+"Blieschendorf, ehem. Haus Höper","1575-1600, 1765-1775",Schleswig-Holstein,Fehmarn,23769,,11.14623097915864,54.42492244518254,284b91ae-6603-4f9f-bf5d-35a373cbb9ab
+"Erfurt, Katholische Neuwerkskirche Sankt Crucis (Ehemalige Augustinerchorfrauenkirche)",,Thüringen,Erfurt,99084,Klostergang 2,11.0249227,50.9723513,26cf033d-cb0e-47b3-bf1b-67a1a4eabd6f
+"Aich, Kuratiekirche St. Peter und Paul",30.06.1728 Grundsteinlegung barocker Neubau,Bayern,Fürstenfeldbruck,82256,Brucker Straße 5,11.187225604191157,48.17966900215539,c387eedd-e74e-471c-8892-de5444389cea
+"Bamberg, Obere Sandstraße 7, ehemaliger Domherrenhof","um 1600, 1722/23",Bayern,Bamberg,96049,Obere Sandstraße 7,10.883905312428658,49.891617443962545,ff8a3985-b4f6-496e-ad68-a9c0d3ab1c0a
+"Lüneburg, Kloster Lüne, sog. Kornhaus",,Niedersachsen,Lüneburg,21337,Am Domänenhof,10.421422354164728,53.260117494903035,c6ecab2d-3a9a-4c74-b6d6-cc85965fcaa3
+"Pirna, Lange Straße 30",spätgotische Zeit (vor dem 16. Jahrhundert),Sachsen,Pirna,01796,Lange Straße 30,13.9440249,50.9631501,1fc5e22f-8b7d-456c-b47a-68e11653ccdf
+"Vechta, sog. Altes Rathaus",,Niedersachsen,Vechta,49377,Kapitelplatz 3,8.288480000000002,52.7277,d8289123-6569-41cd-a223-b930cf8b7d46
+"Torgau, Breite Straße 9",,Sachsen,Torgau,04860,Breite Straße 9,13.0025911,51.559101,9688a659-6472-4766-8207-304c2e450b34
+"Goslar, sog. Mönchehaus",,Niedersachsen,Goslar,38640,Mönchestraße 3,10.4243677,51.9070532,73325fce-e1ed-4601-9853-f45937756483
+"Schleswig, Heespenhof",1754,Schleswig-Holstein,Schleswig,24837,Lollfuß 78,9.549677802125474,54.513947783694526,2cf1c2e9-6da6-4af0-925b-f5d3b00fc275
+"Ludwigslust,  Am  Bassin 8",1772-1776,Mecklenburg-Vorpommern,Ludwigslust,19288,Am Bassin 8,11.4879977074686,53.3225716657585,39c86c91-5682-44e8-b044-9486136229a0
+"Lenggries, Kapelle Maria Hilf","14. Jahrhundert, 1745",Bayern,Lenggries,83661,Herwarthstraße 28,11.57725097218418,47.683021659604925,14298b90-c2f3-4a4c-b135-05bc9d03384b
+"Nürnberg, Rathaus, Wolff’scher Bau",1616–1622,Bayern,Nürnberg,90403,Rathausplatz 2,11.0773055,49.4552154,d16f69bc-c26d-412c-a946-a7e6dbc46ab8
+"Schwerin, Schelfmarkt 2",1740,Mecklenburg-Vorpommern,Schwerin,19055,Schelfmarkt 2,11.417294723081477,53.63325513308636,6ad34366-d81d-4032-9082-c28f130089ee
+"Reichersdorf, Filialkirche St. Leonhard","mittelalterlich, 18. Jahrhundert",Bayern,Weyarn,83737,Reichersdorf,11.83475365868549,47.84185112549862,4b9489f7-166b-43a1-885c-ac6f0a289b24
+"Diemendorf, Filialkirche St. Margareta",vor 1739,Bayern,Tutzing,82327,Diemendorf 15,11.221718798258367,47.88521164917013,650bdafe-6fb7-415e-9559-f7b6ebe41f15
+"Schorndorf, Haus Vaihinger, Gottlieb-Daimler-Straße 18",,Baden-Württemberg,Schorndorf,73614,Gottlieb-Daimler-Straße 18,9.525591732915679,48.80534778025911,85cc403e-860d-48d6-a2e9-178a93291a26
+"Kreuzholzhausen, Pfarrkirche Hl. Kreuzauffindung/Inventio Crucis","erste Hälfte 17. Jhd., 1643, 1663/65, 1690, 1693, 1723, 1736, 1740, 1834, 1846",Bayern,Bergkirchen,85232,Am Kirchberg,11.329146861883812,48.2736179328329,2971411b-4ad0-44e7-84b6-52b946683778
+"Hamburg, Krayenkamp 10 m",,Hamburg,Hamburg,20459,Krayenkamp 10 m,9.980065228563705,53.548040393827364,8e8a5211-fb87-43b8-86cb-d6f1c8f6210c
+"Walleshausen, Pfarrkirche Mariä Himmelfahrt","1466, 1732",Bayern,Geltendorf,82269,Waberner Straße 2,10.976640016372384,48.151632142832426,68b4b52a-7308-4906-9e65-3b3a91b2d99d
+"Kiel, Stadtmuseum Warleberger Hof",,Schleswig-Holstein,Kiel,24103,Dänische Straße 19,10.141013,54.3243945,10bf38ee-2774-4ca9-997c-45ce80ea0d6a
+"Greifswald, Domstraße 58",1503,Mecklenburg-Vorpommern,Greifswald,17489,Domstraße 58,13.3757671,54.0951336,1a394607-cf9b-40e0-a1cd-b785f2c1909d
+"Freiberg, Paul-Klotz-Haus (fälschl. Martin-Planer-Haus)","1546-1553, 1571, 18. Jahrhundert, 19. Jahrhundert, 1990er",Sachsen,Freiberg,09599,Pfarrgasse 20,13.3493119,50.9187509,f51a0c9e-d437-4e0c-8d5d-01fd8f5449e6
+"Görlitz, Nikolaistraße 13",um 1715,Sachsen,Görlitz,02826,Nikolaistraße 13,14.9909401,51.1582997,90f2b521-2a26-49f5-ad62-6d4fd1b6dc90
+"Kaub, vormaliges Gasthaus Stadt Mannheim",,Rheinland-Pfalz,Kaub,56349,Metzgergasse 6,7.7638653,50.08725570000001,a023308a-d656-443f-ab4f-e36381dc7334
+Decke aus Süddithmarschen aus der Nähe von Dingen,,Schleswig-Holstein,Dingen,,,9.1282388,53.9563254,4f31c621-2435-4bf4-a0eb-a113fbba8eb7
+"Bremervörde, ehem. Haus Alte Straße 4",,Niedersachsen,Bremervörde,27432,Alte Straße 4,9.147063,53.4850782,9b0f3100-5f14-4560-bf22-0ddeaf4b45ad
+"Westerland, ehem. Haus Lorens Petersen de Hahn",1699,Schleswig-Holstein,Westerland,25980,Süderende 11,8.307797899999999,54.89657589999999,766547ae-938d-4e66-a5ff-c84d0604333d
+"Bad Tölz, Stiegenkirche auf dem Kalvarienberg","1718-1722, ab 1723",Bayern,Bad Tölz,83646,Aufgang zum Kalvarienberg 20,11.555986397071385,47.76374466708101,0b2ca5ae-584b-4747-8155-768876dcd0ed
+"Langeneß, Bandixwarf, ehem. Haus Holtmann",1710,Schleswig-Holstein,Langeneß,25863,,8.655718,54.647068,7e660fcd-c3da-4213-bf6d-651b49e421c2
+"Alb, Kapelle St. Anianus","1373, 18. Jahrhundert, 1765",Bayern,Irschenberg,83737,,11.92147487974205,47.81649750909113,28e21f9d-3fac-4720-8b40-5608a077f5c2
+"Bamberg, Marschalk von Ostheimsches Haus, Karolinenstraße 18","nach 1602, 1720/1730",Bayern,Bamberg,96049,Karolinenstraße 18,10.885128370706353,49.89111633164889,8c312c75-4cc4-4c99-9272-a3c0549bb5a6
