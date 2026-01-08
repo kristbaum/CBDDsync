@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-exists_in_both.py (simplified)
+exists_in_both.py
 
-Reads fixed inputs from the current directory:
+Reads inputs from the current directory:
   - query.csv (columns: item, deckenmalerei_eu_ID)
   - entities.json (list of entity dicts)
 
@@ -46,7 +46,7 @@ COLUMNS = {
 
 def load_query_ids() -> set[str]:
     ids: set[str] = set()
-    with open("query.csv", newline="", encoding="utf-8") as f:
+    with open("sources/query.csv", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             internal_id = (row.get("deckenmalerei_eu_ID") or "").strip()
@@ -56,7 +56,7 @@ def load_query_ids() -> set[str]:
 
 
 def load_entities() -> list[dict]:
-    with open("entities.json", encoding="utf-8") as f:
+    with open("sources/entities.json", encoding="utf-8") as f:
         data = json.load(f)
     # Expect a list of dicts
     return [e for e in data if isinstance(e, dict)]
@@ -73,7 +73,7 @@ def filter_missing(
 
 
 def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
-    cols = COLUMNS.get(stype, ["appellation", "ID"])  # fallback minimal
+    cols = COLUMNS.get(stype, ["appellation", "ID"])
     with open(filename, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(cols)
@@ -89,7 +89,7 @@ def main() -> None:
     for stype, label in CATEGORIES.items():
         missing = filter_missing(entities, present_ids, stype)
         results[label] = missing
-        write_missing_csv(stype, missing, f"missing_{label}.csv")
+        write_missing_csv(stype, missing, f"missing/missing_{label}.csv")
 
     print("Summary of missing entities (not in query.csv):")
     total = 0
