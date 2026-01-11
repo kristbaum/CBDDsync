@@ -28,19 +28,21 @@ CATEGORIES = {
 
 # Columns to export per sType (order matters for CSV header)
 COLUMNS = {
-    "ACTOR_PERSON": ["appellation", "gender", "ID"],
+    "ACTOR_PERSON": ["url", "appellation", "gender", "ID"],
     "OBJECT_BUILDING": [
+        "url",
         "appellation",
         "verbaleDating",
         "addressState",
         "addressLocality",
         "addressZip",
         "addressStreet",
+        "wikishootme",
         "locationLng",
         "locationLat",
         "ID",
     ],
-    "OBJECT_PAINTING": ["appellation", "verbaleDating", "ID"],
+    "OBJECT_PAINTING": ["url", "appellation", "verbaleDating", "ID"],
 }
 
 
@@ -78,7 +80,21 @@ def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
         w = csv.writer(f)
         w.writerow(cols)
         for e in entities:
-            w.writerow([e.get(c) for c in cols])
+            row = []
+            for c in cols:
+                if c == "url":
+                    entity_id = e.get("ID", "")
+                    row.append(f"https://www.deckenmalerei.eu/{entity_id}")
+                elif c == "wikishootme":
+                    lat = e.get("locationLat", "")
+                    lng = e.get("locationLng", "")
+                    row.append(
+                        f"https://wikishootme.toolforge.org/#lat={lat}&lng={lng}&zoom=18"
+                    )
+
+                else:
+                    row.append(e.get(c))
+            w.writerow(row)
 
 
 def main() -> None:
