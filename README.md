@@ -106,3 +106,7 @@ Building:
 ```
 
 For formatting links: https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18
+
+TODO:
+position default to deckenmalerei
+description string in German and English
