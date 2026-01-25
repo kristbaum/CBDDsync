@@ -17,6 +17,7 @@ Also prints a brief summary.
 
 import csv
 import json
+import re
 
 
 # sType -> output suffix
@@ -50,15 +51,16 @@ COLUMNS = {
         "iconography",
         "productionMethods_wd",
         "productionMaterials_wd",
+        "position",
+        "normdata",
         "width",
         "length",
         "height",
-        "ID",
+        "diameterID",
     ],
 }
 
 
-# Partial Wikidata mappings (as far as available). Unknown keys fall back to original value.
 PRODUCTION_METHOD_MAP = {
     # technique -> Wikidata Q id
     "FRESCO_PAINTING_TECHNIQUE": "Q134194",
@@ -69,6 +71,36 @@ PRODUCTION_MATERIAL_MAP = {
     "CANVAS_TEXTILE_MATERIAL": "Q12321255",
     "OIL_PAINT_PAINT": "Q296955",
 }
+
+POSITION_MAP = {
+    "ceiling": "Q1181933",
+    "wall": "Q3305213",
+    "equipment": "Q3305213",
+}
+
+
+def _map_position_to_wd(pos):
+    """Map a position dict (or list/str) to semicolon-separated Q ids."""
+    if not pos:
+        return ""
+    keys = []
+    if isinstance(pos, dict):
+        for k, v in pos.items():
+            if v:
+                keys.append(k)
+    elif isinstance(pos, list):
+        keys = [str(x) for x in pos]
+    else:
+        keys = [str(pos)]
+
+    # Return only the first mapped/true position (these values are exclusive)
+    for k in keys:
+        key_normal = str(k).strip().lower()
+        q = POSITION_MAP.get(key_normal)
+        if q:
+            return f"{q}"
+        return key_normal
+    return ""
 
 
 def _join_list_field(value):
@@ -89,6 +121,29 @@ def _map_and_join(items, mapping):
     for it in items:
         mapped.append(mapping.get(it, str(it)))
     return ";".join(mapped)
+
+
+def _extract_bildindex(normdata):
+    """Extract numeric bildindex from normdata['bildindex'].
+
+    Handles values like 'obj23829038?part=3' and returns '23829038'.
+    Returns empty string if missing or malformed.
+    """
+    if not normdata or not isinstance(normdata, dict):
+        return ""
+    val = normdata.get("bildindex")
+    if not val:
+        return ""
+    s = str(val)
+    # Prefer explicit 'obj' prefix followed by digits
+    m = re.search(r"(?i)obj(\d+)", s)
+    if m:
+        return m.group(1)
+    # fallback: first run of digits (will ignore '?part=..')
+    m2 = re.search(r"(\d+)", s)
+    if m2:
+        return m2.group(1)
+    return ""
 
 
 def load_query_ids() -> set[str]:
@@ -151,9 +206,13 @@ def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
                                 e.get("productionMaterials"), PRODUCTION_MATERIAL_MAP
                             )
                         )
+                    elif c == "normdata":
+                        row.append(_extract_bildindex(e.get("normdata")))
+                    elif c == "position":
+                        row.append(_map_position_to_wd(e.get("position")))
                     elif c == "iconography":
                         row.append(_join_list_field(e.get("iconography")))
-                    elif c in ("width", "length", "height"):
+                    elif c in ("width", "length", "height", "diameter"):
                         dim = e.get("dimension") or {}
                         val = dim.get(c)
                         row.append(val if val is not None else "")
