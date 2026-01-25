@@ -1,0 +1,383 @@
+{
+    "name": "paintings",
+    "schema": {
+        "entityEdits": [
+            {
+                "type": "wbitemeditexpr",
+                "subject": {
+                    "type": "wbentityvariable",
+                    "columnName": "appellation"
+                },
+                "statementGroups": [
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P31",
+                            "label": "instance of",
+                            "datatype": "wikibase-item"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbentityvariable",
+                                    "columnName": "position"
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P571",
+                            "label": "inception",
+                            "datatype": "time"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbdatevariable",
+                                    "columnName": "processedDating"
+                                },
+                                "qualifiers": [],
+                                "references": [
+                                    {
+                                        "snaks": [
+                                            {
+                                                "prop": {
+                                                    "type": "wbpropconstant",
+                                                    "pid": "P248",
+                                                    "label": "stated in",
+                                                    "datatype": "wikibase-item"
+                                                },
+                                                "value": {
+                                                    "type": "wbentityidvalueconstant",
+                                                    "id": "Q122397435",
+                                                    "label": "CbDD –  Corpus of Baroque Ceiling Painting in Germany"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P10626",
+                            "label": "deckenmalerei.eu ID",
+                            "datatype": "external-id"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbstringvariable",
+                                    "columnName": "ID"
+                                },
+                                "qualifiers": [],
+                                "references": [
+                                    {
+                                        "snaks": [
+                                            {
+                                                "prop": {
+                                                    "type": "wbpropconstant",
+                                                    "pid": "P248",
+                                                    "label": "stated in",
+                                                    "datatype": "wikibase-item"
+                                                },
+                                                "value": {
+                                                    "type": "wbentityidvalueconstant",
+                                                    "id": "Q122397435",
+                                                    "label": "CbDD –  Corpus of Baroque Ceiling Painting in Germany"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P1257",
+                            "label": "depicts Iconclass notation",
+                            "datatype": "string"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbstringvariable",
+                                    "columnName": "iconography"
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P170",
+                            "label": "creator",
+                            "datatype": "wikibase-item"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbentityvariable",
+                                    "columnName": "painter"
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P88",
+                            "label": "commissioned by",
+                            "datatype": "wikibase-item"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbentityvariable",
+                                    "columnName": "commissioner"
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P2049",
+                            "label": "width",
+                            "datatype": "quantity"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbquantityexpr",
+                                    "amount": {
+                                        "type": "wbstringvariable",
+                                        "columnName": "width"
+                                    },
+                                    "unit": {
+                                        "type": "wbentityidvalueconstant",
+                                        "id": "Q11573",
+                                        "label": "metre"
+                                    }
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P2043",
+                            "label": "length",
+                            "datatype": "quantity"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbquantityexpr",
+                                    "amount": {
+                                        "type": "wbstringvariable",
+                                        "columnName": "length"
+                                    },
+                                    "unit": {
+                                        "type": "wbentityidvalueconstant",
+                                        "id": "Q11573",
+                                        "label": "metre"
+                                    }
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P2048",
+                            "label": "height",
+                            "datatype": "quantity"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbquantityexpr",
+                                    "amount": {
+                                        "type": "wbstringvariable",
+                                        "columnName": "height"
+                                    },
+                                    "unit": {
+                                        "type": "wbentityidvalueconstant",
+                                        "id": "Q11573",
+                                        "label": "metre"
+                                    }
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P2386",
+                            "label": "diameter",
+                            "datatype": "quantity"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbquantityexpr",
+                                    "amount": {
+                                        "type": "wbstringvariable",
+                                        "columnName": "diameter"
+                                    },
+                                    "unit": {
+                                        "type": "wbentityidvalueconstant",
+                                        "id": "Q11573",
+                                        "label": "metre"
+                                    }
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "property": {
+                            "type": "wbpropconstant",
+                            "pid": "P2092",
+                            "label": "Bildindex der Kunst und Architektur ID",
+                            "datatype": "external-id"
+                        },
+                        "statements": [
+                            {
+                                "value": {
+                                    "type": "wbstringvariable",
+                                    "columnName": "normdata"
+                                },
+                                "qualifiers": [],
+                                "references": [],
+                                "mode": "add_or_merge",
+                                "mergingStrategy": {
+                                    "type": "snak",
+                                    "valueMatcher": {
+                                        "type": "lax"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "nameDescs": [
+                    {
+                        "type": "wbnamedescexpr",
+                        "name_type": "ALIAS",
+                        "value": {
+                            "type": "wbmonolingualexpr",
+                            "language": {
+                                "type": "wblanguageconstant",
+                                "id": "de",
+                                "label": "de"
+                            },
+                            "value": {
+                                "type": "wbstringvariable",
+                                "columnName": "appellation"
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "siteIri": "http://www.wikidata.org/entity/",
+        "entityTypeSiteIRI": {
+            "item": "http://www.wikidata.org/entity/",
+            "property": "http://www.wikidata.org/entity/"
+        },
+        "mediaWikiApiEndpoint": "https://www.wikidata.org/w/api.php"
+    }
+}
