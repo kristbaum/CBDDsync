@@ -1,0 +1,85 @@
+{
+    "verbaleDating": "1673",
+    "productionMaterials": [
+        "WOOD_PLANT_MATERIAL"
+    ],
+    "condition": {
+        "translocated": true
+    },
+    "modificationDate": 1711264635741,
+    "creationDate": 1711263506040,
+    "appellation": "L 85 \u2013 \u201eCHANGE D'AMOUR QVI S'Y PLElRA, IAMAIS MON COEUR NE CHANGERA\u201c",
+    "primaryIconography": "31A222101",
+    "productionMethods": [
+        "OIL_PAINTING_TECHNIQUE",
+        "TEMPERA_PAINTING_TECHNIQUE"
+    ],
+    "mType": "ENT",
+    "ID": "4ffad8cb-2198-482a-89b3-715bccf12b12",
+    "sType": "OBJECT_PAINTING",
+    "position": {
+        "wall": true
+    },
+    "iconography": [
+        "92D18(ARROW)",
+        "24A"
+    ],
+    "dimension": {
+        "width": 12,
+        "length": 2.5,
+        "height": 1.2
+    }
+}
+position:
+cieling: true --> P31 Q1181933 (Deckengemälde)
+wall: true --> P31 Q3305213 (painting)
+equipment: true --> P31 Q3305213 (painting)
+
+"normdata" {
+    "bildindex": "obj1412341324" -> P2092 without the obj
+}
+
+P2079 fabrication method =
+productionMethods:
+CASEIN_PAINTING_TECHNIQUE 40
+COLORING_PROCESS 1
+DISTEMPER_TECHNIQUE 77
+FRESCO_PAINTING_TECHNIQUE 1222 Q134194
+FRESCO_SECCO 251
+GILDING_TECHNIQUE 2
+MIXED_TECHNIQUE 244
+OIL_PAINTING_TECHNIQUE 1288 Q174705
+STUCCO_LUSTRO_TECHNIQUE 3
+STUCCOING 35
+TEMPERA_PAINTING_TECHNIQUE 231
+
+made from material (P186)
+productionMaterials:
+ARRICCIO 2
+CANVAS_TEXTILE_MATERIAL 833 -> canvas (Q12321255)
+CASEIN_PAINT 15
+CHALK 69
+CLAY 1
+DISTEMPER_PAINT 59
+GOLD_LEA 1
+GOLD_METAL 2
+HESSIAN 2
+INTONACO 12
+OIL_PAINT_PAINT 370 -> oil paint (Q296955)
+PLASTER_COMPOSITE_COATING 1074 Q572879
+STUCCO 100
+TEMPERA 37
+WOOD_PLANT_MATERIAL 548
+
+
+fabrication method
+
+inception (P571) 	eventually complete (Q21873974) 	Every painting should have a date attached to it. Preferably precise and well sourced, but otherwise an approximation based on the available sources 	
+
+    Top collections missing inception
+
+height (P2048) & width (P2049) 	eventually complete (Q21873974) 	We should be able to add the dimensions to every painting.
+
+copyright status (P6216) - > public domain (Q19652) For all with qualifiers:[
+ applies to jurisdiction (P1001) -> countries with 100 years pma or shorter (Q60332278)
+ determination method or standard (P459) ->  100 years or more after author(s) death (Q29940705) 
