@@ -42,8 +42,53 @@ COLUMNS = {
         "locationLat",
         "ID",
     ],
-    "OBJECT_PAINTING": ["url", "appellation", "verbaleDating", "ID"],
+    "OBJECT_PAINTING": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "primaryIconography",
+        "iconography",
+        "productionMethods_wd",
+        "productionMaterials_wd",
+        "width",
+        "length",
+        "height",
+        "ID",
+    ],
 }
+
+
+# Partial Wikidata mappings (as far as available). Unknown keys fall back to original value.
+PRODUCTION_METHOD_MAP = {
+    # technique -> Wikidata Q id
+    "FRESCO_PAINTING_TECHNIQUE": "Q134194",
+}
+
+PRODUCTION_MATERIAL_MAP = {
+    # material -> Wikidata Q id
+    "CANVAS_TEXTILE_MATERIAL": "Q12321255",
+    "OIL_PAINT_PAINT": "Q296955",
+}
+
+
+def _join_list_field(value):
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        # join list values into a semicolon-separated string
+        return ";".join(str(x) for x in value)
+    return str(value)
+
+
+def _map_and_join(items, mapping):
+    if not items:
+        return ""
+    if isinstance(items, str):
+        items = [items]
+    mapped = []
+    for it in items:
+        mapped.append(mapping.get(it, str(it)))
+    return ";".join(mapped)
 
 
 def load_query_ids() -> set[str]:
@@ -91,6 +136,29 @@ def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
                     row.append(
                         f"https://wikishootme.toolforge.org/#lat={lat}&lng={lng}&zoom=18"
                     )
+
+                # Special handling for painting fields that need mapping/formatting
+                elif stype == "OBJECT_PAINTING":
+                    if c == "productionMethods_wd":
+                        row.append(
+                            _map_and_join(
+                                e.get("productionMethods"), PRODUCTION_METHOD_MAP
+                            )
+                        )
+                    elif c == "productionMaterials_wd":
+                        row.append(
+                            _map_and_join(
+                                e.get("productionMaterials"), PRODUCTION_MATERIAL_MAP
+                            )
+                        )
+                    elif c == "iconography":
+                        row.append(_join_list_field(e.get("iconography")))
+                    elif c in ("width", "length", "height"):
+                        dim = e.get("dimension") or {}
+                        val = dim.get(c)
+                        row.append(val if val is not None else "")
+                    else:
+                        row.append(e.get(c, ""))
 
                 else:
                     row.append(e.get(c))
