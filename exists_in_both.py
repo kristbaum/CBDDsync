@@ -53,10 +53,13 @@ COLUMNS = {
         "productionMaterials_wd",
         "position",
         "normdata",
+        "commissioner",
+        "painter",
         "width",
         "length",
         "height",
-        "diameterID",
+        "diameter",
+        "ID",
     ],
 }
 
@@ -123,6 +126,20 @@ def _map_and_join(items, mapping):
     return ";".join(mapped)
 
 
+def build_internal_to_q() -> dict:
+    d = {}
+    with open("sources/query.csv", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            item = (row.get("item") or "").strip()
+            internal = (row.get("deckenmalerei_eu_ID") or "").strip()
+            if item and internal:
+                # item is a Wikidata URL like http://www.wikidata.org/entity/Q12345
+                q = item.rsplit("/", 1)[-1]
+                d[internal] = q
+    return d
+
+
 def _extract_bildindex(normdata):
     """Extract numeric bildindex from normdata['bildindex'].
 
@@ -135,7 +152,7 @@ def _extract_bildindex(normdata):
     if not val:
         return ""
     s = str(val)
-    # Prefer explicit 'obj' prefix followed by digits
+    # Explicit 'obj' prefix followed by digits
     m = re.search(r"(?i)obj(\d+)", s)
     if m:
         return m.group(1)
@@ -174,7 +191,13 @@ def filter_missing(
     ]
 
 
-def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
+def write_missing_csv(
+    stype: str,
+    entities: list[dict],
+    filename: str,
+    relations_by_source: dict | None = None,
+    internal_to_q: dict | None = None,
+) -> None:
     cols = COLUMNS.get(stype, ["appellation", "ID"])
     with open(filename, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -210,6 +233,30 @@ def write_missing_csv(stype: str, entities: list[dict], filename: str) -> None:
                         row.append(_extract_bildindex(e.get("normdata")))
                     elif c == "position":
                         row.append(_map_position_to_wd(e.get("position")))
+                    elif c == "commissioner":
+                        qids = []
+                        rels = (relations_by_source or {}).get(e.get("ID"), [])
+                        for r in rels:
+                            if (
+                                r.get("relDir") == "->"
+                                and r.get("sType", "").upper() == "COMMISSIONERS"
+                            ):
+                                q = (internal_to_q or {}).get(r.get("relTar"))
+                                if q:
+                                    qids.append(q)
+                        row.append(";".join(qids))
+                    elif c == "painter":
+                        qids = []
+                        rels = (relations_by_source or {}).get(e.get("ID"), [])
+                        for r in rels:
+                            if (
+                                r.get("relDir") == "->"
+                                and r.get("sType", "").upper() == "PAINTERS"
+                            ):
+                                q = (internal_to_q or {}).get(r.get("relTar"))
+                                if q:
+                                    qids.append(q)
+                        row.append(";".join(qids))
                     elif c == "iconography":
                         row.append(_join_list_field(e.get("iconography")))
                     elif c in ("width", "length", "height", "diameter"):
@@ -228,11 +275,27 @@ def main() -> None:
     present_ids = load_query_ids()
     entities = load_entities()
 
+    with open("sources/relations.json", encoding="utf-8") as f:
+        relations = json.load(f)
+    relations_by_source: dict[str, list[dict]] = {}
+    for r in relations:
+        src = r.get("ID")
+        if src:
+            relations_by_source.setdefault(src, []).append(r)
+
+    internal_to_q = build_internal_to_q()
+
     results: dict[str, list[dict]] = {}
     for stype, label in CATEGORIES.items():
         missing = filter_missing(entities, present_ids, stype)
         results[label] = missing
-        write_missing_csv(stype, missing, f"missing/missing_{label}.csv")
+        write_missing_csv(
+            stype,
+            missing,
+            f"missing/missing_{label}.csv",
+            relations_by_source=relations_by_source,
+            internal_to_q=internal_to_q,
+        )
 
     print("Summary of missing entities (not in query.csv):")
     total = 0
