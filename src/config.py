@@ -12,7 +12,7 @@ CATEGORIES = {
 }
 
 # Columns to export per sType (order matters for CSV header)
-COLUMNS = {
+COLUMNS_MISSING = {
     "ACTOR_PERSON": ["url", "appellation", "gender", "ID"],
     "OBJECT_BUILDING": [
         "url",
@@ -53,6 +53,49 @@ COLUMNS = {
     ],
 }
 
+COLUMNS_EXISTING = {
+    "ACTOR_PERSON": ["url", "appellation", "gender", "wikidata_qid", "ID"],
+    "OBJECT_BUILDING": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
+        "addressState",
+        "addressLocality",
+        "addressZip",
+        "addressStreet",
+        "wikishootme",
+        "locationLng",
+        "locationLat",
+        "wikidata_qid",
+        "ID",
+    ],
+    "OBJECT_PAINTING": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
+        "primaryIconography",
+        "iconography",
+        "productionMethods_wd",
+        "productionMaterials_wd",
+        "position",
+        "normdata",
+        "commissioner",
+        "painter",
+        "width",
+        "length",
+        "height",
+        "diameter",
+        "description_en",
+        "description_de",
+        "location",
+        "condition",
+        "wikidata_qid",
+        "ID",
+    ],
+}
+
 PRODUCTION_METHOD_MAP = {
     # technique -> Wikidata Q id
     "FRESCO_PAINTING_TECHNIQUE": "Q134194",
@@ -74,10 +117,10 @@ POSITION_MAP = {
 
 CONDITION_MAP = {
     # condition -> Wikidata Q id
-    "destroyed": "Q56556915",     
-    "damaged": "Q106379705",         
-    "translocated": "",    # translocation
-    "paintedOver": "",    # overpainted
-    "restored": "Q75505084",       
-    "missing": "Q62077203",        
+    "destroyed": "Q56556915",
+    "damaged": "Q106379705",
+    "translocated": "",  # translocation
+    "paintedOver": "",  # overpainted
+    "restored": "Q75505084",
+    "missing": "Q62077203",
 }

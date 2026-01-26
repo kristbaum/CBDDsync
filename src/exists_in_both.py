@@ -19,7 +19,8 @@ import json
 
 from .config import (
     CATEGORIES,
-    COLUMNS,
+    COLUMNS_EXISTING,
+    COLUMNS_MISSING,
     CONDITION_MAP,
     PRODUCTION_MATERIAL_MAP,
     PRODUCTION_METHOD_MAP,
@@ -116,16 +117,27 @@ def filter_missing(
     ]
 
 
-def write_missing_csv(
+def filter_existing(
+    entities: list[dict], present_ids: set[str], stype: str
+) -> list[dict]:
+    return [
+        e
+        for e in entities
+        if e.get("sType") == stype and e.get("ID") in present_ids
+    ]
+
+
+def write_csv(
     stype: str,
     entities: list[dict],
     filename: str,
+    columns: dict,
     relations_by_source: dict | None = None,
     relations_by_target: dict | None = None,
     internal_to_q: dict | None = None,
     entities_by_id: dict | None = None,
 ) -> None:
-    cols = COLUMNS.get(stype, ["appellation", "ID"])
+    cols = columns.get(stype, ["appellation", "ID"])
     with open(filename, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(cols)
@@ -145,6 +157,11 @@ def write_missing_csv(
                 # Special handling for painting fields that need mapping/formatting
                 elif c == "processedDating":
                     row.append(process_verbal_dating(e.get("verbaleDating")))
+                elif c == "wikidata_qid":
+                    # Get Wikidata QID from internal_to_q mapping (applies to all entity types)
+                    entity_id = e.get("ID", "")
+                    qid = (internal_to_q or {}).get(entity_id, "")
+                    row.append(qid)
                 elif stype == "OBJECT_PAINTING":
                     if c == "productionMethods_wd":
                         row.append(
@@ -274,14 +291,32 @@ def main() -> None:
 
     internal_to_q = build_internal_to_q()
 
-    results: dict[str, list[dict]] = {}
+    missing_results: dict[str, list[dict]] = {}
+    existing_results: dict[str, list[dict]] = {}
+    
     for stype, label in CATEGORIES.items():
+        # Generate missing CSVs
         missing = filter_missing(entities, present_ids, stype)
-        results[label] = missing
-        write_missing_csv(
+        missing_results[label] = missing
+        write_csv(
             stype,
             missing,
             f"missing/missing_{label}.csv",
+            COLUMNS_MISSING,
+            relations_by_source=relations_by_source,
+            relations_by_target=relations_by_target,
+            internal_to_q=internal_to_q,
+            entities_by_id=entities_by_id,
+        )
+        
+        # Generate existing CSVs
+        existing = filter_existing(entities, present_ids, stype)
+        existing_results[label] = existing
+        write_csv(
+            stype,
+            existing,
+            f"existing/existing_{label}.csv",
+            COLUMNS_EXISTING,
             relations_by_source=relations_by_source,
             relations_by_target=relations_by_target,
             internal_to_q=internal_to_q,
@@ -289,11 +324,18 @@ def main() -> None:
         )
 
     print("Summary of missing entities (not in query.csv):")
-    total = 0
-    for label, ents in results.items():
+    total_missing = 0
+    for label, ents in missing_results.items():
         print(f"  {label:10s}: {len(ents)}")
-        total += len(ents)
-    print(f"  {'total':10s}: {total}")
+        total_missing += len(ents)
+    print(f"  {'total':10s}: {total_missing}")
+    
+    print("\nSummary of existing entities (in query.csv):")
+    total_existing = 0
+    for label, ents in existing_results.items():
+        print(f"  {label:10s}: {len(ents)}")
+        total_existing += len(ents)
+    print(f"  {'total':10s}: {total_existing}")
 
 
 if __name__ == "__main__":
