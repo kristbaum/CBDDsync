@@ -1,7 +1,7 @@
 """
 utils.py
 
-Helper functions for data processing and mapping in the CBDDsync project.
+Helper functions
 """
 
 import re

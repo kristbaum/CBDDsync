@@ -1,7 +1,7 @@
 """
 config.py
 
-Configuration mappings.
+Configuration mappings
 """
 
 # sType -> output suffix
@@ -45,6 +45,9 @@ COLUMNS = {
         "length",
         "height",
         "diameter",
+        "description_en",
+        "description_de",
+        "location",
         "ID",
     ],
 }
