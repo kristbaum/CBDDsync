@@ -1,2 +1,4 @@
 sources/*.json
 query.csv
+*.pyc
+__pycache__

@@ -34,7 +34,7 @@ from .utils import (
 
 def build_internal_to_q() -> dict:
     d = {}
-    with open("../sources/query.csv", newline="", encoding="utf-8") as f:
+    with open("sources/query.csv", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             item = (row.get("item") or "").strip()
@@ -48,7 +48,7 @@ def build_internal_to_q() -> dict:
 
 def load_query_ids() -> set[str]:
     ids: set[str] = set()
-    with open("../sources/query.csv", newline="", encoding="utf-8") as f:
+    with open("sources/query.csv", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             internal_id = (row.get("deckenmalerei_eu_ID") or "").strip()
@@ -58,7 +58,7 @@ def load_query_ids() -> set[str]:
 
 
 def load_entities() -> list[dict]:
-    with open("../sources/entities.json", encoding="utf-8") as f:
+    with open("sources/entities.json", encoding="utf-8") as f:
         data = json.load(f)
     # Expect a list of dicts
     return [e for e in data if isinstance(e, dict)]
