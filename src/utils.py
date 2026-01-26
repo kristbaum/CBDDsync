@@ -11,7 +11,7 @@ from src.config import POSITION_MAP
 def map_position_to_wd(pos):
     """Map a position dict (or list/str) to semicolon-separated Q ids."""
     if not pos:
-        return ""
+        return "Q3305213" # Everything is painting by default
     keys = []
     if isinstance(pos, dict):
         for k, v in pos.items():

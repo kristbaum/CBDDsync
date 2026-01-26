@@ -48,6 +48,7 @@ COLUMNS = {
         "description_en",
         "description_de",
         "location",
+        "condition",
         "ID",
     ],
 }
@@ -69,4 +70,14 @@ POSITION_MAP = {
     "ceiling": "Q1181933",
     "wall": "Q3305213",
     "equipment": "Q3305213",
+}
+
+CONDITION_MAP = {
+    # condition -> Wikidata Q id
+    "destroyed": "Q56556915",     
+    "damaged": "Q106379705",         
+    "translocated": "",    # translocation
+    "paintedOver": "",    # overpainted
+    "restored": "Q75505084",       
+    "missing": "Q62077203",        
 }

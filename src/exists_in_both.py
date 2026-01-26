@@ -20,6 +20,7 @@ import json
 from .config import (
     CATEGORIES,
     COLUMNS,
+    CONDITION_MAP,
     PRODUCTION_MATERIAL_MAP,
     PRODUCTION_METHOD_MAP,
 )
@@ -231,6 +232,14 @@ def write_missing_csv(
                             row.append(qid if qid else "")
                         else:
                             row.append("")
+                    elif c == "condition":
+                        # Collect all true condition values and map to Wikidata
+                        condition = e.get("condition") or {}
+                        qids = []
+                        for cond_key, cond_value in condition.items():
+                            if cond_value is True and cond_key in CONDITION_MAP:
+                                qids.append(CONDITION_MAP[cond_key])
+                        row.append(";".join(qids))
                     else:
                         row.append(e.get(c, ""))
 
