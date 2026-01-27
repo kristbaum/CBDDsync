@@ -4,15 +4,21 @@ Set of tools (Python scripts) to syncronize data from deckenmalerei.eu with Wiki
 
 ## Projects Stats
 
-2025-11-24
+2026-01-26
 Summary of missing entities:
 
 | Category  | Count |
 |-----------|-------|
 | people    | 1396  |
-| buildings | 386   |
-| paintings | 5341  |
-| **total** | **7123** |
+| buildings | 373   |
+| paintings | 953   |
+| **total** | **2722** |
+
+Summary of existing entities (in query.csv):
+  people    : 1186
+  buildings : 830
+  paintings : 4389
+  total     : 6405
 
 ## Scripts
 
@@ -32,8 +38,8 @@ SELECT * WHERE {
 ```
 
 item,deckenmalerei_eu_ID
-http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e
-http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce
+<http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e>
+<http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce>
 
 ### entities.json examples
 
@@ -105,8 +111,4 @@ Building:
 }
 ```
 
-For formatting links: https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18
-
-TODO:
-position default to deckenmalerei
-description string in German and English
+For formatting links: <https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18>
