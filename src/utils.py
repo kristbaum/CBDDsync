@@ -1,17 +1,27 @@
 """
 utils.py
 
-Helper functions
+Helper functions for data processing and transformation.
 """
 
 import re
+from typing import Any
+
 from src.config import POSITION_MAP
 
 
-def map_position_to_wd(pos):
-    """Map a position dict (or list/str) to semicolon-separated Q ids."""
+def map_position_to_wd(pos: Any) -> str:
+    """
+    Map a position dict (or list/str) to semicolon-separated Q IDs.
+
+    Args:
+        pos: Position data, can be dict, list, or string
+
+    Returns:
+        Wikidata Q ID string or empty string if no mapping found
+    """
     if not pos:
-        return "Q3305213" # Everything is painting by default
+        return "Q3305213"  # Everything is painting by default
     keys = []
     if isinstance(pos, dict):
         for k, v in pos.items():
@@ -32,8 +42,16 @@ def map_position_to_wd(pos):
     return ""
 
 
-def join_list_field(value):
-    """Join list values into a semicolon-separated string."""
+def join_list_field(value: Any) -> str:
+    """
+    Join list values into a semicolon-separated string.
+
+    Args:
+        value: Value to join, can be None, list, or other type
+
+    Returns:
+        Semicolon-separated string or string representation of value
+    """
     if value is None:
         return ""
     if isinstance(value, list):
@@ -42,8 +60,17 @@ def join_list_field(value):
     return str(value)
 
 
-def map_and_join(items, mapping):
-    """Map items using a mapping dict and join with semicolons."""
+def map_and_join(items: Any, mapping: dict[str, str]) -> str:
+    """
+    Map items using a mapping dict and join with semicolons.
+
+    Args:
+        items: Items to map, can be string, list, or None
+        mapping: Dictionary mapping items to their values
+
+    Returns:
+        Semicolon-separated string of mapped values
+    """
     if not items:
         return ""
     if isinstance(items, str):
@@ -58,11 +85,17 @@ def map_and_join(items, mapping):
     return ";".join(mapped)
 
 
-def extract_bildindex(normdata):
-    """Extract numeric bildindex from normdata['bildindex'].
+def extract_bildindex(normdata: Any) -> str:
+    """
+    Extract numeric bildindex from normdata['bildindex'].
 
     Handles values like 'obj23829038?part=3' and returns '23829038'.
-    Returns empty string if missing or malformed.
+
+    Args:
+        normdata: Dictionary containing bildindex data or None
+
+    Returns:
+        Numeric bildindex string or empty string if missing or malformed
     """
     if not normdata or not isinstance(normdata, dict):
         return ""
@@ -81,14 +114,19 @@ def extract_bildindex(normdata):
     return ""
 
 
-def process_verbal_dating(val: object) -> str:
-    """Validate and normalize `verbaleDating`.
+def process_verbal_dating(val: Any) -> str:
+    """
+    Validate and normalize verbaleDating field.
 
     Accepts:
       - exact four-digit year: "1820" -> "1820"
       - approximate forms like "ca. 1820" (case-insensitive) -> "ca. 1820"
 
-    Returns empty string for anything else.
+    Args:
+        val: Dating value to process
+
+    Returns:
+        Normalized dating string or empty string for invalid formats
     """
     if val is None:
         return ""

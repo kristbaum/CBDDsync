@@ -7,23 +7,23 @@ Set of tools (Python scripts) to syncronize data from deckenmalerei.eu with Wiki
 2026-01-26
 Summary of missing entities:
 
-| Category  | Count |
-|-----------|-------|
-| people    | 1396  |
-| buildings | 373   |
-| paintings | 953   |
+| Category  | Count    |
+| --------- | -------- |
+| people    | 1396     |
+| buildings | 373      |
+| paintings | 953      |
 | **total** | **2722** |
 
 Summary of existing entities (in query.csv):
-  people    : 1186
-  buildings : 830
-  paintings : 4389
-  total     : 6405
+people : 1186
+buildings : 830
+paintings : 4389
+total : 6405
 
 ## Scripts
 
-* **exists_in_both.py**: Python scripts that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-* **missings statements.py**: Calculate possible statements from the deckenmalerei.eu db and checks their existance in Wikidata
+- **exists_in_both.py**: Python scripts that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
+- **missings statements.py**: Calculate possible statements from the deckenmalerei.eu db and checks their existance in Wikidata
 
 ## Helpers
 
@@ -74,9 +74,7 @@ Painting:
   "position": {
     "ceiling": true
   },
-  "iconography": [
-    "23O31"
-  ]
+  "iconography": ["23O31"]
 }
 ```
 
@@ -86,9 +84,7 @@ Building:
 {
   "addressState": "Bayern",
   "addressLocality": "München",
-  "alternativeNames": [
-    "München, Paulanerkloster am Neudeck"
-  ],
+  "alternativeNames": ["München, Paulanerkloster am Neudeck"],
   "buildingInventoryNumber": "cbdd00080",
   "condition": {
     "destroyed": true
@@ -98,9 +94,7 @@ Building:
   "modificationDate": 1649761730167,
   "appellation": "München, Kirche und Kloster der ehem. Paulaner",
   "moduleNumber": 0,
-  "functions": [
-    "MONASTIC_CHURCHES_BUILDINGS"
-  ],
+  "functions": ["MONASTIC_CHURCHES_BUILDINGS"],
   "locationLng": 11.5838047,
   "locationLat": 48.1240115,
   "mType": "ENT",
@@ -112,3 +106,50 @@ Building:
 ```
 
 For formatting links: <https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.5634272&zoom=18>
+
+## Installation
+
+From the project root directory:
+
+```bash
+python sync.py
+```
+
+### Missing required input files error
+
+Ensure all required files exist in the `sources/` directory:
+
+- `query.csv`
+- `entities.json`
+- `relations.json`
+
+The script will provide a clear error message if any files are missing.
+
+## Required Input Files
+
+Before running the tools, ensure the following files are present in the `sources/` directory:
+
+- `query.csv` - List of entities already in Wikidata
+- `entities.json` - Complete entity data from deckenmalerei.eu
+- `relations.json` - Relationship data between entities
+- `resources.json` - Additional resource metadata
+
+## Output Files
+
+The tool generates CSV files in two directories:
+
+### missing/ directory
+
+Contains entities from deckenmalerei.eu that are NOT yet in Wikidata:
+
+- `missing_people.csv` - Missing person entities
+- `missing_buildings.csv` - Missing building entities
+- `missing_paintings.csv` - Missing painting entities
+
+### existing/ directory
+
+Contains entities that exist in both databases:
+
+- `existing_people.csv` - People already in Wikidata
+- `existing_buildings.csv` - Buildings already in Wikidata
+- `existing_paintings.csv` - Paintings already in Wikidata

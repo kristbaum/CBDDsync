@@ -1,23 +1,32 @@
 """
 exists_in_both.py
 
-Reads inputs from the current directory:
+Reads inputs from the sources directory:
   - query.csv (columns: item, deckenmalerei_eu_ID)
   - entities.json (list of entity dicts)
+  - relations.json (list of relationship dicts)
 
-Writes three CSV files with entities missing in query.csv, by sType:
-  - missing_people.csv        (ACTOR_PERSON)
-  - missing_buildings.csv     (OBJECT_BUILDING)
-  - missing_paintings.csv     (OBJECT_PAINTING)
+Writes six CSV files:
+  Missing entities (not in query.csv):
+    - missing/missing_people.csv        (ACTOR_PERSON)
+    - missing/missing_buildings.csv     (OBJECT_BUILDING)
+    - missing/missing_paintings.csv     (OBJECT_PAINTING)
+  
+  Existing entities (in query.csv):
+    - existing/existing_people.csv      (ACTOR_PERSON)
+    - existing/existing_buildings.csv   (OBJECT_BUILDING)
+    - existing/existing_paintings.csv   (OBJECT_PAINTING)
 
-Each output CSV has headers: appellation,ID
+Each output CSV has headers specific to the entity type.
 Also prints a brief summary.
 """
 
 import csv
 import json
+import sys
+from pathlib import Path
 
-from .config import (
+from src.config import (
     CATEGORIES,
     COLUMNS_EXISTING,
     COLUMNS_MISSING,
@@ -25,7 +34,7 @@ from .config import (
     PRODUCTION_MATERIAL_MAP,
     PRODUCTION_METHOD_MAP,
 )
-from .utils import (
+from src.utils import (
     extract_bildindex,
     join_list_field,
     map_and_join,
@@ -266,8 +275,45 @@ def write_csv(
 
 
 def main() -> None:
-    present_ids = load_query_ids()
-    entities = load_entities()
+    """
+    Main function to process entities and generate CSV reports.
+    
+    Checks for required input files, loads data, and generates missing/existing
+    entity reports for people, buildings, and paintings.
+    
+    Raises:
+        SystemExit: If required input files are missing.
+    """
+    # Validate required files exist
+    required_files = [
+        "sources/query.csv",
+        "sources/entities.json",
+        "sources/relations.json",
+    ]
+    
+    missing_files = []
+    for file_path in required_files:
+        if not Path(file_path).exists():
+            missing_files.append(file_path)
+    
+    if missing_files:
+        print("ERROR: Missing required input files:", file=sys.stderr)
+        for f in missing_files:
+            print(f"  - {f}", file=sys.stderr)
+        print("\nPlease ensure all required files are present in the sources/ directory.", file=sys.stderr)
+        sys.exit(1)
+    
+    # Create output directories if they don't exist
+    Path("missing").mkdir(exist_ok=True)
+    Path("existing").mkdir(exist_ok=True)
+    
+    # Load data
+    try:
+        present_ids = load_query_ids()
+        entities = load_entities()
+    except Exception as e:
+        print(f"ERROR: Failed to load input data: {e}", file=sys.stderr)
+        sys.exit(1)
 
     # Build entity lookup dict
     entities_by_id: dict[str, dict] = {}
@@ -276,8 +322,14 @@ def main() -> None:
         if eid:
             entities_by_id[eid] = e
 
-    with open("sources/relations.json", encoding="utf-8") as f:
-        relations = json.load(f)
+    # Load and index relations
+    try:
+        with open("sources/relations.json", encoding="utf-8") as f:
+            relations = json.load(f)
+    except Exception as e:
+        print(f"ERROR: Failed to load relations: {e}", file=sys.stderr)
+        sys.exit(1)
+    
     relations_by_source: dict[str, list[dict]] = {}
     relations_by_target: dict[str, list[dict]] = {}
     for r in relations:

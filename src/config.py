@@ -1,9 +1,3 @@
-"""
-config.py
-
-Configuration mappings
-"""
-
 # sType -> output suffix
 CATEGORIES = {
     "ACTOR_PERSON": "people",
