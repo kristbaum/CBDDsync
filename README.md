@@ -22,20 +22,139 @@ total : 6405
 
 ## Scripts
 
-- **exists_in_both.py**: Python scripts that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-- **missings statements.py**: Calculate possible statements from the deckenmalerei.eu db and checks their existance in Wikidata
+- **entity_check.py**: Python script that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
+- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata. Outputs missing statements in QuickStatements CSV format (`missing/missing_painting_statements.csv`). Requires `sources/query_painting_statements.json` from a Wikidata query.
 
 ## Helpers
 
 query.csv exists to prevent unnessecary queries to the WD-query service and has the following format:
 
-Update Query:
+### Entity Query
 
 ```sparql
 SELECT * WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
 }
 ```
+
+### Paintings Statement Query
+
+This query retrieves all painting data with their associated properties:
+
+```sparql
+SELECT DISTINCT
+  ?item
+  ?itemLabel_en
+  ?itemLabel_de
+  ?deckenmalerei_eu_ID
+  ?inception
+  ?location
+  ?locationLabel_en
+  ?locationLabel_de
+  (GROUP_CONCAT(DISTINCT ?painterQID; separator=";") AS ?painters)
+  (GROUP_CONCAT(DISTINCT ?commissionerQID; separator=";") AS ?commissioners)
+  (GROUP_CONCAT(DISTINCT ?materialQID; separator=";") AS ?materials)
+  (GROUP_CONCAT(DISTINCT ?methodQID; separator=";") AS ?methods)
+  (GROUP_CONCAT(DISTINCT ?depictsQID; separator=";") AS ?iconography)
+  ?height
+  ?width
+  ?length
+  ?diameter
+  ?bildindex
+  ?conditionQID
+  ?positionQID
+WHERE {
+  # Main item with deckenmalerei.eu ID
+  ?item wdt:P10626 ?deckenmalerei_eu_ID.
+  
+  # Get English label directly
+  OPTIONAL { ?item rdfs:label ?itemLabel_en. FILTER(LANG(?itemLabel_en) = "en") }
+  
+  # Get German label directly
+  OPTIONAL { ?item rdfs:label ?itemLabel_de. FILTER(LANG(?itemLabel_de) = "de") }
+  
+  # Inception/dating
+  OPTIONAL { ?item wdt:P571 ?inception. }
+  
+  # Location (typically a building)
+  OPTIONAL { 
+    ?item wdt:P276 ?location.
+    OPTIONAL { ?location rdfs:label ?locationLabel_en. FILTER(LANG(?locationLabel_en) = "en") }
+    OPTIONAL { ?location rdfs:label ?locationLabel_de. FILTER(LANG(?locationLabel_de) = "de") }
+  }
+  
+  # Painters/creators
+  OPTIONAL { 
+    ?item wdt:P170 ?painter.
+  }
+  
+  # Commissioners
+  OPTIONAL { 
+    ?item wdt:P825 ?commissioner.
+  }
+  
+  # Materials
+  OPTIONAL { 
+    ?item wdt:P186 ?material.
+  }
+  
+  # Production methods
+  OPTIONAL { 
+    ?item wdt:P2079 ?method.
+  }
+  
+  # Iconography (depicts)
+  OPTIONAL { 
+    ?item wdt:P180 ?depicts.
+    BIND(STRAFTER(STR(?depicts), "http://www.wikidata.org/entity/") AS ?depictsQID)
+  }
+  
+  # Dimensions
+  OPTIONAL { ?item wdt:P2048 ?height. }
+  OPTIONAL { ?item wdt:P2049 ?width. }
+  OPTIONAL { ?item wdt:P2043 ?length. }
+  OPTIONAL { ?item wdt:P2386 ?diameter. }
+  
+  # Bildindex (Marburg Index)
+  OPTIONAL { ?item wdt:P2092 ?bildindex. }
+  
+  # Condition
+  OPTIONAL { 
+    ?item wdt:P5816 ?condition.
+    BIND(STRAFTER(STR(?condition), "http://www.wikidata.org/entity/") AS ?conditionQID)
+  }
+  
+  # Position (e.g., ceiling painting, wall painting)
+  OPTIONAL { 
+    ?item wdt:P518 ?position.
+    BIND(STRAFTER(STR(?position), "http://www.wikidata.org/entity/") AS ?positionQID)
+  }
+}
+GROUP BY ?item ?itemLabel_en ?itemLabel_de ?deckenmalerei_eu_ID ?inception 
+         ?location ?locationLabel_en ?locationLabel_de
+         ?height ?width ?length ?diameter ?bildindex ?conditionQID ?positionQID
+ORDER BY ?item
+```
+
+**Column mapping:**
+- url: Constructed from `?item`
+- appellation: `?itemLabel_de` or `?itemLabel_en`
+- verbaleDating/processedDating: `?inception`
+- iconography: `?iconography` (grouped depicts QIDs)
+- productionMethods_wd: `?methods`
+- productionMaterials_wd: `?materials`
+- position: `?positionQID`
+- normdata: `?bildindex`
+- commissioner: `?commissioners`
+- painter: `?painters`
+- width/length/height/diameter: respective dimension fields
+- description_en/description_de: Constructed from location labels
+- location: `?location` QID
+- condition: `?conditionQID`
+- wikidata_qid: Extracted from `?item`
+- ID: `?deckenmalerei_eu_ID`
+
+
 
 item,deckenmalerei_eu_ID
 <http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e>
@@ -133,6 +252,7 @@ Before running the tools, ensure the following files are present in the `sources
 - `entities.json` - Complete entity data from deckenmalerei.eu
 - `relations.json` - Relationship data between entities
 - `resources.json` - Additional resource metadata
+- `query_painting_statements.json` - Wikidata statements for existing paintings (for statement check)
 
 ## Output Files
 
@@ -145,6 +265,7 @@ Contains entities from deckenmalerei.eu that are NOT yet in Wikidata:
 - `missing_people.csv` - Missing person entities
 - `missing_buildings.csv` - Missing building entities
 - `missing_paintings.csv` - Missing painting entities
+- `missing_painting_statements.csv` - Missing painting statements in QuickStatements CSV format
 
 ### existing/ directory
 

@@ -1,4 +1,5 @@
 from src.entity_check import main as exists_in_both_main
+from src.statement_check import main as statement_check_main
 import sys
 from pathlib import Path
 
@@ -10,11 +11,13 @@ sys.path.insert(0, str(project_root))
 
 def main():
     """Main entry point for the sync tool."""
-    # For now, just run exists_in_both
-    # Could be extended to support multiple commands via argparse
     print("Running CBDDsync analysis...")
     print("=" * 60)
     exists_in_both_main()
+    print("=" * 60)
+    print("\nRunning statement check for paintings...")
+    print("=" * 60)
+    statement_check_main()
     print("=" * 60)
     print("✓ Analysis complete!")
 
