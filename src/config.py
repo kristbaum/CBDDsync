@@ -122,27 +122,29 @@ CONDITION_MAP = {
 # Mapping from existing_paintings.csv column names to Wikidata property IDs
 # Used for generating QuickStatements commands
 PAINTING_COLUMN_TO_PID = {
-    "processedDating": "P571",           # inception #
-    "iconography": "P1257",              # depicted Iconclass #
-    "productionMethods_wd": "P2079",     # fabrication method #
-    "productionMaterials_wd": "P186",    # made from material #
-    "position": "P518",                  # applies to part
-    "normdata": "P12754",                 # Bildindex der Kunst und Architektur ID #
-    "commissioner": "P88",               # commissioned by #
-    "painter": "P170",                   # creator #
-    "width": "P2049",                    # width #
-    "length": "P2043",                   # length #
-    "height": "P2048",                   # height
-    "diameter": "P2386",                 # diameter
-    "description_en": "Den",             # description English
-    "description_de": "Dde",             # description German
-    "location": "P276",                  # location #
-    "condition": "P5816",               # state of conservation
+    "processedDating": "P571",  # inception #
+    "iconography": "P1257",  # depicted Iconclass #
+    "productionMethods_wd": "P2079",  # fabrication method #
+    "productionMaterials_wd": "P186",  # made from material #
+#    "position": "P518",  # Maybe include later, no good WD property equivalent
+    "normdata": "P12754",  # Bildindex der Kunst und Architektur ID #
+    "commissioner": "P88",  # commissioned by #
+    "painter": "P170",  # creator #
+    "width": "P2049",  # width #
+    "length": "P2043",  # length #
+    "height": "P2048",  # height
+    "diameter": "P2386",  # diameter
+    "description_en": "Den",  # description English
+    "description_de": "Dde",  # description German
+    "location": "P276",  # location #
+    "condition": "P5816",  # state of conservation
 }
 
 # Mapping from Wikidata query JSON keys to property IDs
 # Used when parsing query_painting_statements.json
 WD_QUERY_KEY_TO_PID = {
+    "itemDescription_en": "Den",
+    "itemDescription_de": "Dde",
     "inception": "P571",
     "iconclass": "P1257",
     "method": "P2079",

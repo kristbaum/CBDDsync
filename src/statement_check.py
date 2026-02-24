@@ -248,12 +248,23 @@ def main() -> None:
 
     # Breakdown by property
     print("\n  Missing statements by property:")
-    by_property: dict[str, int] = {}
+    by_property_missing: dict[str, int] = {}
     for props in missing.values():
         for pid, vals in props.items():
-            by_property[pid] = by_property.get(pid, 0) + len(vals)
-    for pid in sorted(by_property.keys()):
-        print(f"    {pid:8s}: {by_property[pid]}")
+            by_property_missing[pid] = by_property_missing.get(pid, 0) + len(vals)
+
+    by_property_potential: dict[str, int] = {}
+    for props in potential.values():
+        for pid, vals in props.items():
+            by_property_potential[pid] = by_property_potential.get(pid, 0) + len(vals)
+
+    all_pids = sorted(set(by_property_missing.keys()) | set(by_property_potential.keys()))
+    print(f"    {'property':8s}  {'missing':>8s} / {'potential':>9s}  {'%':>6s}")
+    for pid in all_pids:
+        m = by_property_missing.get(pid, 0)
+        p = by_property_potential.get(pid, 0)
+        pct = f"{(m / p * 100):.1f}%" if p > 0 else "-"
+        print(f"    {pid:8s}  {m:>8d} / {p:>9d}  {pct:>6s}")
 
     # Write output
     output_path = "missing/missing_painting_statements.csv"
