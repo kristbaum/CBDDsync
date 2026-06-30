@@ -15,7 +15,7 @@ def main():
     print("=" * 60)
     exists_in_both_main()
     print("=" * 60)
-    print("\nRunning statement check for paintings...")
+    print("\nRunning statement checks...")
     print("=" * 60)
     statement_check_main()
     print("=" * 60)

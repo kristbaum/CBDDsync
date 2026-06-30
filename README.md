@@ -27,7 +27,7 @@ total : 6407
 ## Scripts
 
 - **entity_check.py**: Python script that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata. Outputs missing statements in QuickStatements CSV format (`missing/missing_painting_statements.csv`). Requires `sources/query_painting_statements.json` from a Wikidata query.
+- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Statements generated per type: people → sex or gender (P21); buildings → inception (P571), postal code (P281), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
 
 ## Helpers
 
@@ -163,6 +163,44 @@ item,deckenmalerei_eu_ID
 <http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e>
 <http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce>
 
+### People Statement Query
+
+Result keys: `item`, `gender` (mapped to **P21** sex or gender). Save as `sources/query_people_statements.json`.
+
+```sparql
+SELECT DISTINCT ?item ?itemLabel ?gender ?GND_ID WHERE {
+  ?item wdt:P10626 ?deckenmalerei_eu_ID;
+    wdt:P31 wd:Q5.
+  OPTIONAL { ?item wdt:P21 ?gender. }
+  OPTIONAL { ?item wdt:P227 ?GND_ID. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],mul,en". }
+}
+```
+
+### Building Statement Query
+
+Result keys: `item`, `inception` (**P571**), `postalCode` (**P281**), `coordinate` (**P625**, returned as a `Point(lng lat)` WKT literal). Save as `sources/query_building_statements.json`.
+
+```sparql
+SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {
+  ?item wdt:P10626 ?deckenmalerei_eu_ID.
+  OPTIONAL { ?item wdt:P571 ?inception. }
+  OPTIONAL { ?item wdt:P281 ?postalCode. }
+  OPTIONAL { ?item wdt:P625 ?coordinate. }
+}
+```
+
+### Room / Room Sequence Statement Query
+
+Result key: `item`, `inception` (**P571**). Run once per type, filtering on the relevant Wikidata class if desired, and save as `sources/query_room_statements.json` and `sources/query_room_sequence_statements.json`.
+
+```sparql
+SELECT DISTINCT ?item ?inception WHERE {
+  ?item wdt:P10626 ?deckenmalerei_eu_ID.
+  OPTIONAL { ?item wdt:P571 ?inception. }
+}
+```
+
 ### entities.json examples
 
 People:
@@ -255,7 +293,7 @@ Before running the tools, ensure the following files are present in the `sources
 - `entities.json` - Complete entity data from deckenmalerei.eu
 - `relations.json` - Relationship data between entities
 - `resources.json` - Additional resource metadata
-- `query_painting_statements.json` - Wikidata statements for existing paintings (for statement check)
+- `query_<type>_statements.json` - Wikidata statements already present for each entity type, used by the statement check. One file per type: `query_people_statements.json`, `query_building_statements.json`, `query_painting_statements.json`, `query_room_statements.json`, `query_room_sequence_statements.json`. Any type whose file is absent is skipped.
 
 ## Output Files
 
@@ -270,7 +308,7 @@ Contains entities from deckenmalerei.eu that are NOT yet in Wikidata:
 - `missing_paintings.csv` - Missing painting entities
 - `missing_rooms.csv` - Missing room entities
 - `missing_room_sequences.csv` - Missing room sequence entities
-- `missing_painting_statements.csv` - Missing painting statements in QuickStatements CSV format
+- `missing_<type>_statements.csv` - Missing statements in QuickStatements CSV format, one per entity type (`missing_people_statements.csv`, `missing_building_statements.csv`, `missing_painting_statements.csv`, `missing_room_statements.csv`, `missing_room_sequence_statements.csv`)
 
 ### existing/ directory
 

@@ -16,21 +16,25 @@ CBDDsync/
 ├── src/
 │   ├── config.py               # All mappings (sType→label, columns, WD property IDs, value maps)
 │   ├── entity_check.py         # Compares entities between CbDD and Wikidata; writes missing/existing CSVs
-│   ├── statement_check.py      # Compares painting statements; writes QuickStatements CSV
+│   ├── statement_check.py      # Generic statement-comparison engine; runs one check per entity type
 │   └── utils.py                # Pure helper functions (date parsing, field mapping, bildindex extraction)
 ├── sources/                    # Input files (not committed — must be supplied before running)
 │   ├── query.csv               # Wikidata SPARQL result: item URL + deckenmalerei_eu_ID
 │   ├── entities.json           # Full entity export from deckenmalerei.eu
 │   ├── relations.json          # Relationship data (PART, PAINTERS, COMMISSIONERS, …)
 │   ├── resources.json          # Additional resource metadata
-│   └── query_painting_statements.json  # Wikidata SPARQL result for existing painting statements
+│   ├── query_people_statements.json        # Wikidata SPARQL result: existing people statements
+│   ├── query_building_statements.json      # Wikidata SPARQL result: existing building statements
+│   ├── query_painting_statements.json      # Wikidata SPARQL result: existing painting statements
+│   ├── query_room_statements.json          # Wikidata SPARQL result: existing room statements
+│   └── query_room_sequence_statements.json # Wikidata SPARQL result: existing room-sequence statements
 ├── missing/                    # Generated output: entities/statements absent from Wikidata
 │   ├── missing_people.csv
 │   ├── missing_buildings.csv
 │   ├── missing_paintings.csv
 │   ├── missing_rooms.csv
 │   ├── missing_room_sequences.csv
-│   └── missing_painting_statements.csv  # QuickStatements-ready CSV
+│   └── missing_*_statements.csv  # QuickStatements-ready CSV, one per entity type
 ├── existing/                   # Generated output: entities present in both databases
 │   ├── existing_people.csv
 │   ├── existing_buildings.csv
@@ -82,17 +86,20 @@ This runs both analysis steps sequentially and prints a summary to stdout.
 
 ### Prerequisites
 
-All four input files must exist in `sources/` before running:
+These input files must exist in `sources/` before running:
 
 ```text
 sources/query.csv
 sources/entities.json
 sources/relations.json
 sources/resources.json
-sources/query_painting_statements.json   # only needed for statement_check
+sources/query_<type>_statements.json   # one per entity type, only needed for statement_check
 ```
 
-The SPARQL queries to generate `query.csv` and `query_painting_statements.json` are documented in [README.md](README.md).
+`statement_check` runs one check per entity type and skips (with a note) any
+type whose `query_<type>_statements.json` is absent, so missing statement-query
+files are not fatal. The SPARQL queries to generate `query.csv` and the
+`query_<type>_statements.json` files are documented in [README.md](README.md).
 
 ---
 
@@ -150,7 +157,9 @@ QuickStatements CSV format. Columns: `qid` + one column per Wikidata property ID
 
 ## Config (`src/config.py`)
 
-All lookup tables live here. When adding new entity types, production methods, materials, positions, or conditions, update the relevant `*_MAP` dict and the `COLUMNS_MISSING`/`COLUMNS_EXISTING` lists. The `PAINTING_COLUMN_TO_PID` and `WD_QUERY_KEY_TO_PID` dicts control the statement comparison logic.
+All lookup tables live here. When adding new entity types, production methods, materials, positions, or conditions, update the relevant `*_MAP` dict and the `COLUMNS_MISSING`/`COLUMNS_EXISTING` lists.
+
+Statement comparison is driven by the `STATEMENT_CHECKS` dict — one entry per entity type. Each entry wires up an `existing_*.csv` (input), a `query_<type>_statements.json` (cached Wikidata statements), an output `missing_*_statements.csv`, the `column_to_pid` / `wd_query_key_to_pid` mappings, and optional `value_maps` (e.g. `GENDER_MAP`) and a `coordinate` helper (combine two lat/lng columns into one P625 value). `src/statement_check.py` is a generic engine over this config; to add statements for a type, edit only `STATEMENT_CHECKS` (and add the matching SPARQL query). `PAINTING_COLUMN_TO_PID` and `WD_QUERY_KEY_TO_PID` are reused by the `paintings` entry.
 
 ---
 
