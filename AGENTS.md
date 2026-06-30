@@ -10,7 +10,7 @@ The Wikidata property linking entities is **P10626** (`deckenmalerei.eu ID`).
 
 ## Repository Layout
 
-```
+```text
 CBDDsync/
 ├── sync.py                     # Entry point — runs entity_check then statement_check
 ├── src/
@@ -28,11 +28,15 @@ CBDDsync/
 │   ├── missing_people.csv
 │   ├── missing_buildings.csv
 │   ├── missing_paintings.csv
+│   ├── missing_rooms.csv
+│   ├── missing_room_sequences.csv
 │   └── missing_painting_statements.csv  # QuickStatements-ready CSV
 ├── existing/                   # Generated output: entities present in both databases
 │   ├── existing_people.csv
 │   ├── existing_buildings.csv
-│   └── existing_paintings.csv
+│   ├── existing_paintings.csv
+│   ├── existing_rooms.csv
+│   └── existing_room_sequences.csv
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
 ```
@@ -43,11 +47,13 @@ CBDDsync/
 
 ### Entity types (`sType`)
 
-| sType | Label | Description |
-|---|---|---|
-| `ACTOR_PERSON` | people | Painters, commissioners, and other persons |
-| `OBJECT_BUILDING` | buildings | Churches, palaces, and other structures |
-| `OBJECT_PAINTING` | paintings | Ceiling or wall paintings |
+| sType                 | Label          | Description                                                       |
+| --------------------- | -------------- | ----------------------------------------------------------------- |
+| `ACTOR_PERSON`        | people         | Painters, commissioners, and other persons                        |
+| `OBJECT_BUILDING`     | buildings      | Churches, palaces, and other structures                           |
+| `OBJECT_ROOM`         | rooms          | Named rooms within a building                                     |
+| `OBJECT_ROOM_SEQUENCE`| room_sequences | Groups of related rooms (e.g. a suite of representational rooms)  |
+| `OBJECT_PAINTING`     | paintings      | Ceiling or wall paintings                                         |
 
 ### Key ID fields
 
@@ -78,7 +84,7 @@ This runs both analysis steps sequentially and prints a summary to stdout.
 
 All four input files must exist in `sources/` before running:
 
-```
+```text
 sources/query.csv
 sources/entities.json
 sources/relations.json
@@ -98,18 +104,18 @@ Plain CSV files with entity-type-specific columns defined in `src/config.py` (`C
 
 Notable derived/computed columns:
 
-| Column | Source |
-|---|---|
-| `url` | `https://www.deckenmalerei.eu/{ID}` |
-| `wikishootme` | `https://wikishootme.toolforge.org/#lat=…&lng=…` |
-| `processedDating` | Parsed from `verbaleDating` (e.g. `"ca. 1820"` → `"1820"`) |
-| `productionMethods_wd` | CbDD technique codes → Wikidata Q IDs |
-| `productionMaterials_wd` | CbDD material codes → Wikidata Q IDs |
-| `position` | `ceiling`/`wall` → Wikidata Q IDs |
-| `condition` | `destroyed`/`restored`/… → Wikidata Q IDs |
-| `location` | Wikidata QID of the host building (resolved via PART relations) |
-| `description_en/de` | `"painting in {building_name}"` / `"Malerei in {building_name}"` |
-| `painter` / `commissioner` | Semicolon-separated Wikidata QIDs from relations |
+| Column                  | Source                                                                      |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `url`                   | `https://www.deckenmalerei.eu/{ID}`                                         |
+| `wikishootme`           | `https://wikishootme.toolforge.org/#lat=…&lng=…`                            |
+| `processedDating`       | Parsed from `verbaleDating` (e.g. `"ca. 1820"` → `"1820"`)                 |
+| `productionMethods_wd`  | CbDD technique codes → Wikidata Q IDs                                       |
+| `productionMaterials_wd`| CbDD material codes → Wikidata Q IDs                                        |
+| `position`              | `ceiling`/`wall` → Wikidata Q IDs                                           |
+| `condition`             | `destroyed`/`restored`/… → Wikidata Q IDs                                  |
+| `location`              | Wikidata QID of the host building (resolved via PART relations)             |
+| `description_en/de`     | `"painting in {building_name}"` / `"Malerei in {building_name}"`           |
+| `painter` / `commissioner` | Semicolon-separated Wikidata QIDs from relations                         |
 
 ### `missing/missing_painting_statements.csv`
 
@@ -125,20 +131,20 @@ QuickStatements CSV format. Columns: `qid` + one column per Wikidata property ID
 
 ## Wikidata Property Reference
 
-| Property | PID | Used for |
-|---|---|---|
-| deckenmalerei.eu ID | P10626 | Primary link between databases |
-| creator | P170 | Painter |
-| commissioned by | P88 | Commissioner |
-| inception | P571 | Dating |
-| location | P276 | Host building |
-| made from material | P186 | Materials |
-| fabrication method | P2079 | Techniques |
-| depicted Iconclass | P1257 | Iconography codes |
-| width / length / height / diameter | P2049 / P2043 / P2048 / P2386 | Dimensions (cm) |
-| Bildindex ID | P12754 | Marburg art index |
-| state of conservation | P5816 | Condition |
-| applies to part | P518 | Position (ceiling/wall) |
+| Property                             | PID                              | Used for                    |
+| ------------------------------------ | -------------------------------- | --------------------------- |
+| deckenmalerei.eu ID                  | P10626                           | Primary link between databases |
+| creator                              | P170                             | Painter                     |
+| commissioned by                      | P88                              | Commissioner                |
+| inception                            | P571                             | Dating                      |
+| location                             | P276                             | Host building               |
+| made from material                   | P186                             | Materials                   |
+| fabrication method                   | P2079                            | Techniques                  |
+| depicted Iconclass                   | P1257                            | Iconography codes           |
+| width / length / height / diameter   | P2049 / P2043 / P2048 / P2386   | Dimensions (cm)             |
+| Bildindex ID                         | P12754                           | Marburg art index           |
+| state of conservation                | P5816                            | Condition                   |
+| applies to part                      | P518                             | Position (ceiling/wall)     |
 
 ---
 

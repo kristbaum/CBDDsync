@@ -4,21 +4,25 @@ Set of tools (Python scripts) to syncronize data from deckenmalerei.eu with Wiki
 
 ## Projects Stats
 
-2026-01-26
+2026-05-30
 Summary of missing entities:
 
-| Category  | Count    |
-| --------- | -------- |
-| people    | 1396     |
-| buildings | 373      |
-| paintings | 953      |
-| **total** | **2722** |
+| Category       | Count    |
+| -------------- | -------- |
+| people         | 1396     |
+| buildings      | 373      |
+| paintings      | 953      |
+| rooms          | 2215     |
+| room_sequences | 295      |
+| **total**      | **5232** |
 
 Summary of existing entities (in query.csv):
 people : 1186
 buildings : 830
 paintings : 4389
-total : 6405
+rooms : 1
+room_sequences : 1
+total : 6407
 
 ## Scripts
 
@@ -137,6 +141,7 @@ ORDER BY ?item
 ```
 
 **Column mapping:**
+
 - url: Constructed from `?item`
 - appellation: `?itemLabel_de` or `?itemLabel_en`
 - verbaleDating/processedDating: `?inception`
@@ -153,8 +158,6 @@ ORDER BY ?item
 - condition: `?conditionQID`
 - wikidata_qid: Extracted from `?item`
 - ID: `?deckenmalerei_eu_ID`
-
-
 
 item,deckenmalerei_eu_ID
 <http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e>
@@ -265,6 +268,8 @@ Contains entities from deckenmalerei.eu that are NOT yet in Wikidata:
 - `missing_people.csv` - Missing person entities
 - `missing_buildings.csv` - Missing building entities
 - `missing_paintings.csv` - Missing painting entities
+- `missing_rooms.csv` - Missing room entities
+- `missing_room_sequences.csv` - Missing room sequence entities
 - `missing_painting_statements.csv` - Missing painting statements in QuickStatements CSV format
 
 ### existing/ directory
@@ -274,3 +279,5 @@ Contains entities that exist in both databases:
 - `existing_people.csv` - People already in Wikidata
 - `existing_buildings.csv` - Buildings already in Wikidata
 - `existing_paintings.csv` - Paintings already in Wikidata
+- `existing_rooms.csv` - Rooms already in Wikidata
+- `existing_room_sequences.csv` - Room sequences already in Wikidata

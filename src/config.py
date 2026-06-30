@@ -3,6 +3,8 @@ CATEGORIES = {
     "ACTOR_PERSON": "people",
     "OBJECT_BUILDING": "buildings",
     "OBJECT_PAINTING": "paintings",
+    "OBJECT_ROOM": "rooms",
+    "OBJECT_ROOM_SEQUENCE": "room_sequences",
 }
 
 # Columns to export per sType (order matters for CSV header)
@@ -45,6 +47,20 @@ COLUMNS_MISSING = {
         "condition",
         "ID",
     ],
+    "OBJECT_ROOM": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
+        "ID",
+    ],
+    "OBJECT_ROOM_SEQUENCE": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
+        "ID",
+    ],
 }
 
 COLUMNS_EXISTING = {
@@ -85,6 +101,22 @@ COLUMNS_EXISTING = {
         "description_de",
         "location",
         "condition",
+        "wikidata_qid",
+        "ID",
+    ],
+    "OBJECT_ROOM": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
+        "wikidata_qid",
+        "ID",
+    ],
+    "OBJECT_ROOM_SEQUENCE": [
+        "url",
+        "appellation",
+        "verbaleDating",
+        "processedDating",
         "wikidata_qid",
         "ID",
     ],
