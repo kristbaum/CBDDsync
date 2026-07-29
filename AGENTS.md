@@ -12,7 +12,12 @@ The Wikidata property linking entities is **P10626** (`deckenmalerei.eu ID`).
 
 ```text
 CBDDsync/
+├── pyproject.toml              # uv project metadata + ruff/ty/pytest config
 ├── sync.py                     # Entry point — runs entity_check then statement_check
+├── tests/                      # pytest suite for the pure logic (no I/O against sources/)
+│   ├── test_utils.py
+│   ├── test_entity_check.py
+│   └── test_statement_check.py
 ├── src/
 │   ├── config.py               # All mappings (sType→label, columns, WD property IDs, value maps)
 │   ├── entity_check.py         # Compares entities between CbDD and Wikidata; writes missing/existing CSVs
@@ -79,10 +84,25 @@ Relations link entities by `ID` (source) → `relTar` (target) with a `relDir` a
 ## Running the Tool
 
 ```bash
-python sync.py
+uv run sync.py
 ```
 
 This runs both analysis steps sequentially and prints a summary to stdout.
+
+### Development commands
+
+The project is managed with [uv](https://docs.astral.sh/uv/); there are no runtime
+dependencies, only dev tools (declared in `[dependency-groups]` in `pyproject.toml`).
+
+```bash
+uv sync              # create .venv and install dev tools
+uv run pytest        # tests (tests/, pure logic only — no network, no sources/)
+uv run ruff check .  # lint
+uv run ruff format . # format
+uv run ty check      # type check
+```
+
+All four must pass before a change is considered done.
 
 ### Prerequisites
 

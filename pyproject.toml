@@ -1,0 +1,30 @@
+[project]
+name = "cbddsync"
+version = "0.1.0"
+description = "Synchronization tools for deckenmalerei.eu and Wikidata"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "kristbaum"}]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/kristbaum/CBDDsync"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.16",
+    "ty>=0.0.60",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.ty.src]
+include = ["src", "tests", "sync.py"]

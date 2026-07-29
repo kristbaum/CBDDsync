@@ -1,8 +1,8 @@
-from src.entity_check import main as exists_in_both_main
-from src.statement_check import main as statement_check_main
 import sys
 from pathlib import Path
 
+from src.entity_check import main as exists_in_both_main
+from src.statement_check import main as statement_check_main
 
 # Add project root to Python path to enable absolute imports
 project_root = Path(__file__).parent

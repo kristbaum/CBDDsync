@@ -158,7 +158,7 @@ PAINTING_COLUMN_TO_PID = {
     "iconography": "P1257",  # depicted Iconclass #
     "productionMethods_wd": "P2079",  # fabrication method #
     "productionMaterials_wd": "P186",  # made from material #
-#    "position": "P518",  # Maybe include later, no good WD property equivalent
+    #    "position": "P518",  # Maybe include later, no good WD property equivalent
     "normdata": "P12754",  # Bildindex der Kunst und Architektur ID #
     "commissioner": "P88",  # commissioned by #
     "painter": "P170",  # creator #

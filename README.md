@@ -269,10 +269,22 @@ For formatting links: <https://wikishootme.toolforge.org/#lat=48.1591296&lng=11.
 
 ## Installation
 
-From the project root directory:
+The project is managed with [uv](https://docs.astral.sh/uv/) and needs no runtime
+dependencies beyond the standard library. From the project root directory:
 
 ```bash
-python sync.py
+uv sync          # create .venv and install the dev tools
+./setup.sh       # download the source data into sources/
+uv run sync.py   # run the analysis
+```
+
+## Development
+
+```bash
+uv run pytest        # tests
+uv run ruff check .  # lint
+uv run ruff format . # format
+uv run ty check      # type check
 ```
 
 ### Missing required input files error

@@ -11,7 +11,7 @@ Writes six CSV files:
     - missing/missing_people.csv        (ACTOR_PERSON)
     - missing/missing_buildings.csv     (OBJECT_BUILDING)
     - missing/missing_paintings.csv     (OBJECT_PAINTING)
-  
+
   Existing entities (in query.csv):
     - existing/existing_people.csv      (ACTOR_PERSON)
     - existing/existing_buildings.csv   (OBJECT_BUILDING)
@@ -130,9 +130,7 @@ def filter_existing(
     entities: list[dict], present_ids: set[str], stype: str
 ) -> list[dict]:
     return [
-        e
-        for e in entities
-        if e.get("sType") == stype and e.get("ID") in present_ids
+        e for e in entities if e.get("sType") == stype and e.get("ID") in present_ids
     ]
 
 
@@ -167,7 +165,7 @@ def write_csv(
                 elif c == "processedDating":
                     row.append(process_verbal_dating(e.get("verbaleDating")))
                 elif c == "wikidata_qid":
-                    # Get Wikidata QID from internal_to_q mapping (applies to all entity types)
+                    # QID from the internal_to_q mapping (all entity types)
                     entity_id = e.get("ID", "")
                     qid = (internal_to_q or {}).get(entity_id, "")
                     row.append(qid)
@@ -277,10 +275,10 @@ def write_csv(
 def main() -> None:
     """
     Main function to process entities and generate CSV reports.
-    
+
     Checks for required input files, loads data, and generates missing/existing
     entity reports for people, buildings, and paintings.
-    
+
     Raises:
         SystemExit: If required input files are missing.
     """
@@ -290,23 +288,26 @@ def main() -> None:
         "sources/entities.json",
         "sources/relations.json",
     ]
-    
+
     missing_files = []
     for file_path in required_files:
         if not Path(file_path).exists():
             missing_files.append(file_path)
-    
+
     if missing_files:
         print("ERROR: Missing required input files:", file=sys.stderr)
         for f in missing_files:
             print(f"  - {f}", file=sys.stderr)
-        print("\nPlease ensure all required files are present in the sources/ directory.", file=sys.stderr)
+        print(
+            "\nPlease ensure all required files are present in the sources/ directory.",
+            file=sys.stderr,
+        )
         sys.exit(1)
-    
+
     # Create output directories if they don't exist
     Path("missing").mkdir(exist_ok=True)
     Path("existing").mkdir(exist_ok=True)
-    
+
     # Load data
     try:
         present_ids = load_query_ids()
@@ -329,7 +330,7 @@ def main() -> None:
     except Exception as e:
         print(f"ERROR: Failed to load relations: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     relations_by_source: dict[str, list[dict]] = {}
     relations_by_target: dict[str, list[dict]] = {}
     for r in relations:
@@ -345,7 +346,7 @@ def main() -> None:
 
     missing_results: dict[str, list[dict]] = {}
     existing_results: dict[str, list[dict]] = {}
-    
+
     for stype, label in CATEGORIES.items():
         # Generate missing CSVs
         missing = filter_missing(entities, present_ids, stype)
@@ -360,7 +361,7 @@ def main() -> None:
             internal_to_q=internal_to_q,
             entities_by_id=entities_by_id,
         )
-        
+
         # Generate existing CSVs
         existing = filter_existing(entities, present_ids, stype)
         existing_results[label] = existing
@@ -381,7 +382,7 @@ def main() -> None:
         print(f"  {label:10s}: {len(ents)}")
         total_missing += len(ents)
     print(f"  {'total':10s}: {total_missing}")
-    
+
     print("\nSummary of existing entities (in query.csv):")
     total_existing = 0
     for label, ents in existing_results.items():

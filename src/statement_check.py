@@ -154,9 +154,7 @@ def unify_wikidata_results(
     return unified
 
 
-def build_potential_statements(
-    csv_path: str, check: dict
-) -> dict[str, dict[str, set]]:
+def build_potential_statements(csv_path: str, check: dict) -> dict[str, dict[str, set]]:
     """
     Read an existing_*.csv and build the statements it implies, per QID.
 
@@ -355,7 +353,6 @@ def main() -> None:
         return
 
     total_potential = sum(r["potential"] for r in results)
-    total_existing = sum(r["existing"] for r in results)
     total_missing = sum(r["missing"] for r in results)
 
     print(f"\n{'=' * 50}")
