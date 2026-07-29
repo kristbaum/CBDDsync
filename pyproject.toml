@@ -18,13 +18,5 @@ dev = [
     "ty>=0.0.60",
 ]
 
-[tool.uv]
-package = false
-
 [tool.pytest.ini_options]
-testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "-ra"
-
-[tool.ty.src]
-include = ["src", "tests", "sync.py"]

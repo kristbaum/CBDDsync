@@ -76,23 +76,24 @@ class TestBuildInternalToQ:
         assert build_internal_to_q() == {}
 
 
-class TestFilterEntities:
-    ENTITIES = [
-        {"ID": "P-1", "sType": "OBJECT_PAINTING"},
-        {"ID": "P-2", "sType": "OBJECT_PAINTING"},
-        {"ID": "B-1", "sType": "OBJECT_BUILDING"},
-    ]
+ENTITIES = [
+    {"ID": "P-1", "sType": "OBJECT_PAINTING"},
+    {"ID": "P-2", "sType": "OBJECT_PAINTING"},
+    {"ID": "B-1", "sType": "OBJECT_BUILDING"},
+]
 
+
+class TestFilterEntities:
     def test_missing_are_those_absent_from_the_query(self):
-        result = filter_missing(self.ENTITIES, {"P-1"}, "OBJECT_PAINTING")
+        result = filter_missing(ENTITIES, {"P-1"}, "OBJECT_PAINTING")
         assert [e["ID"] for e in result] == ["P-2"]
 
     def test_existing_are_those_present_in_the_query(self):
-        result = filter_existing(self.ENTITIES, {"P-1"}, "OBJECT_PAINTING")
+        result = filter_existing(ENTITIES, {"P-1"}, "OBJECT_PAINTING")
         assert [e["ID"] for e in result] == ["P-1"]
 
     def test_other_entity_types_are_excluded(self):
-        assert filter_missing(self.ENTITIES, set(), "OBJECT_BUILDING") == [
+        assert filter_missing(ENTITIES, set(), "OBJECT_BUILDING") == [
             {"ID": "B-1", "sType": "OBJECT_BUILDING"}
         ]
 

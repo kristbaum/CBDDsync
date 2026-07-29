@@ -104,8 +104,7 @@ def normalize_for_comparison(pid: str, val: str) -> str:
         return normalize_coordinate(val)
     # Normalize dates to just year for comparison
     if pid in DATE_PIDS:
-        if val.startswith("+"):
-            val = val[1:]
+        val = val.removeprefix("+")
         val = val.split("-")[0].split("T")[0]
     return val
 

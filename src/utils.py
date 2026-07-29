@@ -133,7 +133,7 @@ def process_verbal_dating(val: Any) -> str:
     s = str(val).strip()
     if re.match(r"^\d{4}$", s):
         return s
-    m = re.match(r"^(?:ca\.?|c\.?|circa|um\.?)\s*(\d{4})$", s, re.I)
+    m = re.match(r"^(?:ca\.?|c\.?|circa|um\.?)\s*(\d{4})$", s, re.IGNORECASE)
     if m:
         return m.group(1)
     return ""

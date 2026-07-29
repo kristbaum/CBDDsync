@@ -45,25 +45,31 @@ class TestJoinListField:
         assert join_list_field("11H") == "11H"
 
 
-class TestMapAndJoin:
-    MAPPING = {"OIL_PAINT_PAINT": "Q296955", "PLASTER_COMPOSITE_COATING": "Q572879"}
+MATERIAL_MAPPING = {
+    "OIL_PAINT_PAINT": "Q296955",
+    "PLASTER_COMPOSITE_COATING": "Q572879",
+}
 
+
+class TestMapAndJoin:
     def test_falsy_input_is_empty_string(self):
-        assert map_and_join(None, self.MAPPING) == ""
-        assert map_and_join([], self.MAPPING) == ""
+        assert map_and_join(None, MATERIAL_MAPPING) == ""
+        assert map_and_join([], MATERIAL_MAPPING) == ""
 
     def test_single_string_is_treated_as_one_item(self):
-        assert map_and_join("OIL_PAINT_PAINT", self.MAPPING) == "Q296955"
+        assert map_and_join("OIL_PAINT_PAINT", MATERIAL_MAPPING) == "Q296955"
 
     def test_list_is_mapped_and_joined(self):
         result = map_and_join(
-            ["OIL_PAINT_PAINT", "PLASTER_COMPOSITE_COATING"], self.MAPPING
+            ["OIL_PAINT_PAINT", "PLASTER_COMPOSITE_COATING"], MATERIAL_MAPPING
         )
         assert result == "Q296955;Q572879"
 
     def test_unmapped_values_are_dropped(self):
-        assert map_and_join(["UNKNOWN_MATERIAL"], self.MAPPING) == ""
-        assert map_and_join(["UNKNOWN", "OIL_PAINT_PAINT"], self.MAPPING) == "Q296955"
+        assert map_and_join(["UNKNOWN_MATERIAL"], MATERIAL_MAPPING) == ""
+        assert (
+            map_and_join(["UNKNOWN", "OIL_PAINT_PAINT"], MATERIAL_MAPPING) == "Q296955"
+        )
 
 
 class TestExtractBildindex:

@@ -106,9 +106,10 @@ class TestNormalizeForComparison:
         assert normalize_for_comparison("P170", "Q42") == "Q42"
 
 
-class TestUnifyWikidataResults:
-    KEY_TO_PID = {"inception": "P571", "painter": "P170"}
+KEY_TO_PID = {"inception": "P571", "painter": "P170"}
 
+
+class TestUnifyWikidataResults:
     def test_rows_are_grouped_by_item_and_merged_into_sets(self):
         data = [
             {
@@ -120,16 +121,16 @@ class TestUnifyWikidataResults:
                 "painter": "http://www.wikidata.org/entity/Q43",
             },
         ]
-        assert unify_wikidata_results(data, self.KEY_TO_PID) == {
+        assert unify_wikidata_results(data, KEY_TO_PID) == {
             "Q1": {"P170": {"Q42", "Q43"}}
         }
 
     def test_rows_without_an_item_are_skipped(self):
-        assert unify_wikidata_results([{"inception": "1720"}], self.KEY_TO_PID) == {}
+        assert unify_wikidata_results([{"inception": "1720"}], KEY_TO_PID) == {}
 
     def test_empty_values_are_skipped_but_the_item_is_kept(self):
         data = [{"item": "http://www.wikidata.org/entity/Q1", "inception": ""}]
-        assert unify_wikidata_results(data, self.KEY_TO_PID) == {"Q1": {}}
+        assert unify_wikidata_results(data, KEY_TO_PID) == {"Q1": {}}
 
     def test_date_time_suffix_is_stripped(self):
         data = [
@@ -138,7 +139,7 @@ class TestUnifyWikidataResults:
                 "inception": "1720-01-01T00:00:00Z",
             }
         ]
-        assert unify_wikidata_results(data, self.KEY_TO_PID) == {
+        assert unify_wikidata_results(data, KEY_TO_PID) == {
             "Q1": {"P571": {"1720-01-01"}}
         }
 
@@ -150,7 +151,7 @@ class TestUnifyWikidataResults:
                 "itemLabel_en": "ceiling fresco",
             }
         ]
-        assert unify_wikidata_results(data, self.KEY_TO_PID) == {
+        assert unify_wikidata_results(data, KEY_TO_PID) == {
             "Q1": {
                 "itemLabel_de": {"Deckenfresko"},
                 "itemLabel_en": {"ceiling fresco"},

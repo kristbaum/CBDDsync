@@ -312,7 +312,7 @@ def main() -> None:
     try:
         present_ids = load_query_ids()
         entities = load_entities()
-    except Exception as e:
+    except (OSError, csv.Error, ValueError) as e:
         print(f"ERROR: Failed to load input data: {e}", file=sys.stderr)
         sys.exit(1)
 
@@ -327,7 +327,7 @@ def main() -> None:
     try:
         with open("sources/relations.json", encoding="utf-8") as f:
             relations = json.load(f)
-    except Exception as e:
+    except (OSError, ValueError) as e:
         print(f"ERROR: Failed to load relations: {e}", file=sys.stderr)
         sys.exit(1)
 
