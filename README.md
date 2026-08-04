@@ -35,133 +35,51 @@ query.csv exists to prevent unnessecary queries to the WD-query service and has 
 
 ### Entity Query
 
+Result keys: `item`, `deckenmalerei_eu_ID`. Save as `sources/query.csv` (CSV, not JSON).
+
 ```sparql
-SELECT * WHERE {
+SELECT ?item ?deckenmalerei_eu_ID WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
 }
+```
+
+```csv
+item,deckenmalerei_eu_ID
+http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e
+http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce
 ```
 
 ### Paintings Statement Query
 
-This query retrieves all painting data with their associated properties:
+Result keys match `src.config.WD_QUERY_KEY_TO_PID`: `item`, `itemDescription_en`
+(**Den**), `itemDescription_de` (**Dde**), `inception` (**P571**), `iconclass`
+(**P1257**), `method` (**P2079**), `material` (**P186**), `painter` (**P170**),
+`commissioner` (**P88**), `width` (**P2049**), `length` (**P2043**), `height`
+(**P2048**), `diameter` (**P2386**), `location` (**P276**), `condition`
+(**P5816**), `bildindex` (**P12754**). Save as `sources/query_painting_statements.json`.
 
 ```sparql
-SELECT DISTINCT
-  ?item
-  ?itemLabel_en
-  ?itemLabel_de
-  ?deckenmalerei_eu_ID
-  ?inception
-  ?location
-  ?locationLabel_en
-  ?locationLabel_de
-  (GROUP_CONCAT(DISTINCT ?painterQID; separator=";") AS ?painters)
-  (GROUP_CONCAT(DISTINCT ?commissionerQID; separator=";") AS ?commissioners)
-  (GROUP_CONCAT(DISTINCT ?materialQID; separator=";") AS ?materials)
-  (GROUP_CONCAT(DISTINCT ?methodQID; separator=";") AS ?methods)
-  (GROUP_CONCAT(DISTINCT ?depictsQID; separator=";") AS ?iconography)
-  ?height
-  ?width
-  ?length
-  ?diameter
-  ?bildindex
-  ?conditionQID
-  ?positionQID
-WHERE {
-  # Main item with deckenmalerei.eu ID
+SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
+                ?iconclass ?method ?material ?painter ?commissioner
+                ?width ?length ?height ?diameter ?location ?condition ?bildindex WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
-  
-  # Get English label directly
-  OPTIONAL { ?item rdfs:label ?itemLabel_en. FILTER(LANG(?itemLabel_en) = "en") }
-  
-  # Get German label directly
-  OPTIONAL { ?item rdfs:label ?itemLabel_de. FILTER(LANG(?itemLabel_de) = "de") }
-  
-  # Inception/dating
+  OPTIONAL { ?item schema:description ?itemDescription_en. FILTER(LANG(?itemDescription_en) = "en") }
+  OPTIONAL { ?item schema:description ?itemDescription_de. FILTER(LANG(?itemDescription_de) = "de") }
   OPTIONAL { ?item wdt:P571 ?inception. }
-  
-  # Location (typically a building)
-  OPTIONAL { 
-    ?item wdt:P276 ?location.
-    OPTIONAL { ?location rdfs:label ?locationLabel_en. FILTER(LANG(?locationLabel_en) = "en") }
-    OPTIONAL { ?location rdfs:label ?locationLabel_de. FILTER(LANG(?locationLabel_de) = "de") }
-  }
-  
-  # Painters/creators
-  OPTIONAL { 
-    ?item wdt:P170 ?painter.
-  }
-  
-  # Commissioners
-  OPTIONAL { 
-    ?item wdt:P825 ?commissioner.
-  }
-  
-  # Materials
-  OPTIONAL { 
-    ?item wdt:P186 ?material.
-  }
-  
-  # Production methods
-  OPTIONAL { 
-    ?item wdt:P2079 ?method.
-  }
-  
-  # Iconography (depicts)
-  OPTIONAL { 
-    ?item wdt:P180 ?depicts.
-    BIND(STRAFTER(STR(?depicts), "http://www.wikidata.org/entity/") AS ?depictsQID)
-  }
-  
-  # Dimensions
-  OPTIONAL { ?item wdt:P2048 ?height. }
+  OPTIONAL { ?item wdt:P1257 ?iconclass. }
+  OPTIONAL { ?item wdt:P2079 ?method. }
+  OPTIONAL { ?item wdt:P186 ?material. }
+  OPTIONAL { ?item wdt:P170 ?painter. }
+  OPTIONAL { ?item wdt:P88 ?commissioner. }
   OPTIONAL { ?item wdt:P2049 ?width. }
   OPTIONAL { ?item wdt:P2043 ?length. }
+  OPTIONAL { ?item wdt:P2048 ?height. }
   OPTIONAL { ?item wdt:P2386 ?diameter. }
-  
-  # Bildindex (Marburg Index)
-  OPTIONAL { ?item wdt:P2092 ?bildindex. }
-  
-  # Condition
-  OPTIONAL { 
-    ?item wdt:P5816 ?condition.
-    BIND(STRAFTER(STR(?condition), "http://www.wikidata.org/entity/") AS ?conditionQID)
-  }
-  
-  # Position (e.g., ceiling painting, wall painting)
-  OPTIONAL { 
-    ?item wdt:P518 ?position.
-    BIND(STRAFTER(STR(?position), "http://www.wikidata.org/entity/") AS ?positionQID)
-  }
+  OPTIONAL { ?item wdt:P276 ?location. }
+  OPTIONAL { ?item wdt:P5816 ?condition. }
+  OPTIONAL { ?item wdt:P12754 ?bildindex. }
 }
-GROUP BY ?item ?itemLabel_en ?itemLabel_de ?deckenmalerei_eu_ID ?inception 
-         ?location ?locationLabel_en ?locationLabel_de
-         ?height ?width ?length ?diameter ?bildindex ?conditionQID ?positionQID
-ORDER BY ?item
 ```
-
-**Column mapping:**
-
-- url: Constructed from `?item`
-- appellation: `?itemLabel_de` or `?itemLabel_en`
-- verbaleDating/processedDating: `?inception`
-- iconography: `?iconography` (grouped depicts QIDs)
-- productionMethods_wd: `?methods`
-- productionMaterials_wd: `?materials`
-- position: `?positionQID`
-- normdata: `?bildindex`
-- commissioner: `?commissioners`
-- painter: `?painters`
-- width/length/height/diameter: respective dimension fields
-- description_en/description_de: Constructed from location labels
-- location: `?location` QID
-- condition: `?conditionQID`
-- wikidata_qid: Extracted from `?item`
-- ID: `?deckenmalerei_eu_ID`
-
-item,deckenmalerei_eu_ID
-<http://www.wikidata.org/entity/Q167314,3cd82186-8931-4f8c-84de-f831d3fb579e>
-<http://www.wikidata.org/entity/Q113781459,6b7e31d0-c4c3-11e9-8385-59bf93401dce>
 
 ### People Statement Query
 
@@ -273,10 +191,16 @@ The project is managed with [uv](https://docs.astral.sh/uv/) and needs no runtim
 dependencies beyond the standard library. From the project root directory:
 
 ```bash
-uv sync          # create .venv and install the dev tools
-./setup.sh       # download the source data into sources/
-uv run sync.py   # run the analysis
+uv sync            # create .venv and install the dev tools
+uv run setup.py    # download the dumps and run the SPARQL queries into sources/
+uv run sync.py      # run the analysis
 ```
+
+`setup.py` replaces every file in `sources/`: it downloads `entities.json`,
+`relations.json`, and `resources.json` from the deckenmalerei.eu dump on
+GitHub, and runs the SPARQL queries documented below against the Wikidata
+Query Service to (re-)generate `query.csv` and each
+`query_<type>_statements.json`.
 
 ## Development
 
