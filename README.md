@@ -33,6 +33,19 @@ total : 6407
 
 query.csv exists to prevent unnessecary queries to the WD-query service and has the following format:
 
+All queries below run against [QLever's Wikidata endpoint](https://qlever.dev/wikidata)
+(`https://qlever.dev/api/wikidata`), which `setup.py` uses instead of the
+official Wikidata Query Service. Unlike WDQS, QLever has no built-in prefix
+registry or `SERVICE wikibase:label` support, so every prefix used is
+declared explicitly and labels/descriptions are fetched via `schema:description`
+directly rather than the label service.
+
+```sparql
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX schema: <http://schema.org/>
+```
+
 ### Entity Query
 
 Result keys: `item`, `deckenmalerei_eu_ID`. Save as `sources/query.csv` (CSV, not JSON).
@@ -86,18 +99,16 @@ SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
 Result keys: `item`, `gender` (mapped to **P21** sex or gender). Save as `sources/query_people_statements.json`.
 
 ```sparql
-SELECT DISTINCT ?item ?itemLabel ?gender ?GND_ID WHERE {
+SELECT DISTINCT ?item ?gender WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID;
     wdt:P31 wd:Q5.
   OPTIONAL { ?item wdt:P21 ?gender. }
-  OPTIONAL { ?item wdt:P227 ?GND_ID. }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],mul,en". }
 }
 ```
 
 ### Building Statement Query
 
-Result keys: `item`, `inception` (**P571**), `postalCode` (**P281**), `coordinate` (**P625**, returned as a `Point(lng lat)` WKT literal). Save as `sources/query_building_statements.json`.
+Result keys: `item`, `inception` (**P571**), `postalCode` (**P281**), `coordinate` (**P625**, returned as a `POINT(lng lat)` WKT literal — QLever uses uppercase `POINT`, unlike WDQS's `Point`; `normalize_coordinate` in `src/statement_check.py` accepts both). Save as `sources/query_building_statements.json`.
 
 ```sparql
 SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {

@@ -72,6 +72,9 @@ class TestNormalizeCoordinate:
     def test_wkt_point_is_reordered_to_lat_lng(self):
         assert normalize_coordinate("Point(11.5679 48.2482)") == "48.2482,11.5679"
 
+    def test_uppercase_wkt_point_from_qlever_is_supported(self):
+        assert normalize_coordinate("POINT(11.5679 48.2482)") == "48.2482,11.5679"
+
     def test_internal_slash_form_is_converted(self):
         assert normalize_coordinate("48.2482/11.5679") == "48.2482,11.5679"
 

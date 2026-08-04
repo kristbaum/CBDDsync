@@ -6,8 +6,8 @@ Refreshes every input file in sources/, replacing whatever is already there:
   - entities.json, relations.json, resources.json
       Pulled from the deckenmalerei.eu dump mirrored on GitHub.
   - query.csv
-      Live SPARQL query against the Wikidata Query Service: every item
-      carrying a deckenmalerei.eu ID (P10626).
+      Live SPARQL query against QLever's Wikidata endpoint (qlever.dev):
+      every item carrying a deckenmalerei.eu ID (P10626).
   - query_people_statements.json, query_building_statements.json,
     query_painting_statements.json, query_room_statements.json,
     query_room_sequence_statements.json
@@ -31,24 +31,40 @@ DUMP_BASE_URL = (
 )
 DUMP_FILES = ["entities.json", "relations.json", "resources.json"]
 
-WDQS_ENDPOINT = "https://query.wikidata.org/sparql"
+QLEVER_ENDPOINT = "https://qlever.dev/api/wikidata"
 USER_AGENT = "CBDDsync/0.1 (https://github.com/kristbaum/CBDDsync)"
 
-ENTITY_QUERY = """
+# QLever, unlike the official Wikidata Query Service, has no built-in prefix
+# registry — every prefix used below must be declared explicitly.
+PREFIXES = """
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX schema: <http://schema.org/>
+"""
+
+ENTITY_QUERY = (
+    PREFIXES
+    + """
 SELECT ?item ?deckenmalerei_eu_ID WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
 }
 """
+)
 
-PEOPLE_STATEMENTS_QUERY = """
+PEOPLE_STATEMENTS_QUERY = (
+    PREFIXES
+    + """
 SELECT DISTINCT ?item ?gender WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID;
     wdt:P31 wd:Q5.
   OPTIONAL { ?item wdt:P21 ?gender. }
 }
 """
+)
 
-BUILDING_STATEMENTS_QUERY = """
+BUILDING_STATEMENTS_QUERY = (
+    PREFIXES
+    + """
 SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
   OPTIONAL { ?item wdt:P571 ?inception. }
@@ -56,9 +72,12 @@ SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {
   OPTIONAL { ?item wdt:P625 ?coordinate. }
 }
 """
+)
 
 # Result keys match src.config.WD_QUERY_KEY_TO_PID exactly.
-PAINTING_STATEMENTS_QUERY = """
+PAINTING_STATEMENTS_QUERY = (
+    PREFIXES
+    + """
 SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
                 ?iconclass ?method ?material ?painter ?commissioner
                 ?width ?length ?height ?diameter ?location ?condition ?bildindex WHERE {
@@ -80,13 +99,17 @@ SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
   OPTIONAL { ?item wdt:P12754 ?bildindex. }
 }
 """
+)
 
-ROOM_STATEMENTS_QUERY = """
+ROOM_STATEMENTS_QUERY = (
+    PREFIXES
+    + """
 SELECT DISTINCT ?item ?inception WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
   OPTIONAL { ?item wdt:P571 ?inception. }
 }
 """
+)
 
 # Rooms and room sequences share the same shape of query (README.md); they
 # are only distinguished by which entities happen to carry P10626 in each
@@ -118,8 +141,8 @@ def download_dump_files() -> None:
 
 def run_sparql_query(query: str, accept: str) -> bytes:
     # Content negotiation via the Accept header is what the SPARQL protocol
-    # (and WDQS) actually honors; a "format" query param is unreliable.
-    url = f"{WDQS_ENDPOINT}?{urllib.parse.urlencode({'query': query})}"
+    # actually honors; a "format" query param is unreliable.
+    url = f"{QLEVER_ENDPOINT}?{urllib.parse.urlencode({'query': query})}"
     return fetch(url, accept=accept)
 
 

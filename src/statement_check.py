@@ -79,14 +79,14 @@ def normalize_coordinate(val: str) -> str:
     """
     Normalize a coordinate to a comparable "lat,lng" string rounded to 4 decimals.
 
-    Accepts the WKT form Wikidata returns ("Point(lng lat)") and the internal
-    "lat/lng" form built from the CSV. Returns the input unchanged if it cannot
-    be parsed.
+    Accepts the WKT form Wikidata query services return ("Point(lng lat)" from
+    WDQS, "POINT(lng lat)" from QLever) and the internal "lat/lng" form built
+    from the CSV. Returns the input unchanged if it cannot be parsed.
     """
     val = val.strip()
     try:
-        if val.startswith("Point(") and val.endswith(")"):
-            lng, lat = val[len("Point(") : -1].split()
+        if val[:6].upper() == "POINT(" and val.endswith(")"):
+            lng, lat = val[6:-1].split()
         elif "/" in val:
             lat, lng = val.split("/", 1)
         else:
