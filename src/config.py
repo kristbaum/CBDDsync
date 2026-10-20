@@ -9,7 +9,7 @@ CATEGORIES = {
 
 # Columns to export per sType (order matters for CSV header)
 COLUMNS_MISSING = {
-    "ACTOR_PERSON": ["url", "appellation", "gender", "ID"],
+    "ACTOR_PERSON": ["url", "appellation", "gender", "gnd", "ID"],
     "OBJECT_BUILDING": [
         "url",
         "appellation",
@@ -200,6 +200,11 @@ GENDER_MAP = {
     "FEMALE": "Q6581072",  # female
 }
 
+# Reference attached to every statement in the generated .qs batches:
+#   S248 (stated in) CbDD + S10626 (deckenmalerei.eu ID) of the source entity.
+CBDD_SOURCE_QID = "Q107174967"  # Corpus of Baroque Ceiling Painting in Germany
+CBDD_ID_PID = "P10626"  # deckenmalerei.eu ID
+
 # Per-entity-type configuration for statement_check.py.
 #
 # The comparison logic in statement_check.py is generic; everything specific to
@@ -207,6 +212,7 @@ GENDER_MAP = {
 #   existing_csv         entities already linked to Wikidata (input)
 #   wd_query_json        cached SPARQL result of statements already in Wikidata
 #   output_csv           QuickStatements CSV of statements missing from Wikidata
+#                        (a V1 .qs batch is written alongside, same name)
 #   column_to_pid        {existing_csv column: Wikidata property ID}
 #   wd_query_key_to_pid  {SPARQL result key:   Wikidata property ID}
 #   value_maps           optional {pid: {raw_value: wikidata_value}}

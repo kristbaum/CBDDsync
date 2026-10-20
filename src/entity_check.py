@@ -36,6 +36,7 @@ from src.config import (
 )
 from src.utils import (
     extract_bildindex,
+    extract_gnd,
     join_list_field,
     map_and_join,
     map_position_to_wd,
@@ -169,6 +170,8 @@ def write_csv(
                     entity_id = e.get("ID", "")
                     qid = (internal_to_q or {}).get(entity_id, "")
                     row.append(qid)
+                elif c == "gnd":
+                    row.append(extract_gnd(e.get("normdata")))
                 elif stype == "OBJECT_PAINTING":
                     if c == "productionMethods_wd":
                         row.append(

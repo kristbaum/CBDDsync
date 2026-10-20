@@ -156,25 +156,40 @@ class TestWriteCsv:
     def test_person_row_uses_the_configured_columns(self, tmp_path):
         out = tmp_path / "people.csv"
         entities = [
-            {"ID": "A-1", "appellation": "Cosmas Damian Asam", "gender": "MALE"}
+            {
+                "ID": "A-1",
+                "appellation": "Cosmas Damian Asam",
+                "gender": "MALE",
+                "normdata": {"gnd": "118504118"},
+            }
         ]
 
         write_csv("ACTOR_PERSON", entities, str(out), COLUMNS_MISSING)
 
         assert read_csv(out) == [
-            ["url", "appellation", "gender", "ID"],
+            ["url", "appellation", "gender", "gnd", "ID"],
             [
                 "https://www.deckenmalerei.eu/A-1",
                 "Cosmas Damian Asam",
                 "MALE",
+                "118504118",
                 "A-1",
             ],
         ]
 
+    def test_person_without_normdata_gets_an_empty_gnd(self, tmp_path):
+        out = tmp_path / "people.csv"
+        entities = [{"ID": "A-1", "appellation": "Asam", "gender": "MALE"}]
+
+        write_csv("ACTOR_PERSON", entities, str(out), COLUMNS_MISSING)
+
+        header, row = read_csv(out)
+        assert row[header.index("gnd")] == ""
+
     def test_header_is_written_for_an_empty_entity_list(self, tmp_path):
         out = tmp_path / "people.csv"
         write_csv("ACTOR_PERSON", [], str(out), COLUMNS_MISSING)
-        assert read_csv(out) == [["url", "appellation", "gender", "ID"]]
+        assert read_csv(out) == [["url", "appellation", "gender", "gnd", "ID"]]
 
     def test_wikidata_qid_column_is_filled_from_the_mapping(self, tmp_path):
         out = tmp_path / "people.csv"

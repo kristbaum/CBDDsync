@@ -4,6 +4,7 @@ import pytest
 
 from src.utils import (
     extract_bildindex,
+    extract_gnd,
     join_list_field,
     map_and_join,
     map_position_to_wd,
@@ -70,6 +71,18 @@ class TestMapAndJoin:
         assert (
             map_and_join(["UNKNOWN", "OIL_PAINT_PAINT"], MATERIAL_MAPPING) == "Q296955"
         )
+
+
+class TestExtractGnd:
+    def test_missing_or_non_dict_is_empty_string(self):
+        assert extract_gnd(None) == ""
+        assert extract_gnd("118504118") == ""
+
+    def test_gnd_id_is_returned(self):
+        assert extract_gnd({"gnd": "118504118"}) == "118504118"
+
+    def test_normdata_without_gnd_is_empty_string(self):
+        assert extract_gnd({"bildindex": "obj123"}) == ""
 
 
 class TestExtractBildindex:

@@ -10,11 +10,13 @@ from src.statement_check import (
     compute_missing,
     extract_qid,
     format_qs_value,
+    load_cbdd_ids,
     normalize_coordinate,
     normalize_for_comparison,
     run_statement_check,
     unify_wikidata_results,
     write_quickstatements_csv,
+    write_quickstatements_v1,
 )
 
 
@@ -64,8 +66,12 @@ class TestFormatQsValue:
     def test_configured_string_properties_are_quoted(self):
         assert format_qs_value("P281", "85764") == '"85764"'
 
+    def test_iconclass_and_bildindex_are_quoted(self):
+        assert format_qs_value("P1257", "11H") == '"11H"'
+        assert format_qs_value("P12754", "23829038") == '"23829038"'
+
     def test_unconfigured_property_is_left_alone(self):
-        assert format_qs_value("P1257", "11H") == "11H"
+        assert format_qs_value("P9999", "11H") == "11H"
 
 
 class TestNormalizeCoordinate:
@@ -302,6 +308,51 @@ class TestWriteQuickstatementsCsv:
         assert [r[0] for r in rows[1:]] == ["Q1", "Q2"]
 
 
+class TestLoadCbddIds:
+    def test_qids_are_mapped_to_cbdd_ids(self, tmp_path):
+        path = write_csv(
+            tmp_path / "e.csv",
+            ["wikidata_qid", "ID"],
+            [["Q1", "a"], ["", "b"], ["Q2", ""]],
+        )
+        assert load_cbdd_ids(path) == {"Q1": "a"}
+
+    def test_first_cbdd_id_wins_for_duplicate_qids(self, tmp_path):
+        path = write_csv(
+            tmp_path / "e.csv", ["wikidata_qid", "ID"], [["Q1", "a"], ["Q1", "b"]]
+        )
+        assert load_cbdd_ids(path) == {"Q1": "a"}
+
+
+class TestWriteQuickstatementsV1:
+    def test_statements_carry_the_cbdd_reference(self, tmp_path):
+        out = tmp_path / "out.qs"
+        missing = {"Q1": {"P571": ["1720"], "P170": ["Q42"]}}
+
+        assert write_quickstatements_v1(missing, str(out), {"Q1": "abc"}) == 2
+
+        ref = '\tS248\tQ107174967\tS10626\t"abc"'
+        assert out.read_text(encoding="utf-8").splitlines() == [
+            "Q1\tP170\tQ42" + ref,
+            "Q1\tP571\t+1720-00-00T00:00:00Z/9" + ref,
+        ]
+
+    def test_descriptions_are_quoted_and_unreferenced(self, tmp_path):
+        out = tmp_path / "out.qs"
+        missing = {"Q1": {"Den": ["painting in Schloss"]}}
+
+        write_quickstatements_v1(missing, str(out), {"Q1": "abc"})
+
+        assert out.read_text(encoding="utf-8") == 'Q1\tDen\t"painting in Schloss"\n'
+
+    def test_unknown_cbdd_id_omits_the_reference(self, tmp_path):
+        out = tmp_path / "out.qs"
+
+        write_quickstatements_v1({"Q1": {"P170": ["Q42"]}}, str(out), {})
+
+        assert out.read_text(encoding="utf-8") == "Q1\tP170\tQ42\n"
+
+
 class TestRunStatementCheck:
     @pytest.fixture
     def check(self, tmp_path, monkeypatch):
@@ -309,8 +360,8 @@ class TestRunStatementCheck:
         monkeypatch.chdir(tmp_path)
         write_csv(
             tmp_path / "existing.csv",
-            ["wikidata_qid", "processedDating", "addressZip"],
-            [["Q1", "1720", "85764"], ["Q2", "1730", "80333"]],
+            ["wikidata_qid", "processedDating", "addressZip", "ID"],
+            [["Q1", "1720", "85764", "id-1"], ["Q2", "1730", "80333", "id-2"]],
         )
         wd = tmp_path / "wd.json"
         wd.write_text(
@@ -348,6 +399,16 @@ class TestRunStatementCheck:
             ["Q1", '"85764"', ""],
             ["Q2", '"80333"', ""],
             ["Q2", "", "+1730-00-00T00:00:00Z/9"],
+        ]
+
+    def test_qs_batch_is_written_next_to_the_csv(self, check, tmp_path):
+        run_statement_check("buildings", check)
+
+        lines = (tmp_path / "missing" / "out.qs").read_text().splitlines()
+        assert lines == [
+            'Q1\tP281\t"85764"\tS248\tQ107174967\tS10626\t"id-1"',
+            'Q2\tP281\t"80333"\tS248\tQ107174967\tS10626\t"id-2"',
+            'Q2\tP571\t+1730-00-00T00:00:00Z/9\tS248\tQ107174967\tS10626\t"id-2"',
         ]
 
     def test_output_directory_is_created(self, check, tmp_path):

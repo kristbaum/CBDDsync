@@ -114,6 +114,22 @@ def extract_bildindex(normdata: Any) -> str:
     return ""
 
 
+def extract_gnd(normdata: Any) -> str:
+    """
+    Extract the GND ID from normdata['gnd'].
+
+    Args:
+        normdata: Dictionary containing normdata or None
+
+    Returns:
+        GND ID string or empty string if missing
+    """
+    if not normdata or not isinstance(normdata, dict):
+        return ""
+    val = normdata.get("gnd")
+    return str(val).strip() if val else ""
+
+
 def process_verbal_dating(val: Any) -> str:
     """
     Validate and normalize verbaleDating field.
