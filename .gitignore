@@ -32,6 +32,7 @@ env/
 Thumbs.db
 
 # Tooling caches
+agentic-reconcile/.cache/
 .pytest_cache/
 .ruff_cache/
 .ty_cache/
