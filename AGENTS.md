@@ -49,6 +49,10 @@ CBDDsync/
 │   ├── existing_paintings.csv
 │   ├── existing_rooms.csv
 │   └── existing_room_sequences.csv
+├── agentic-reconcile/          # Agent skill: match missing people/buildings to existing WD items
+│   ├── SKILL.md                # Workflow, evidence rules, output formats
+│   ├── scripts/cbdd_context.py # Per-entity evidence dossier from sources/*.json
+│   └── to_match/               # Output: <type>_<date>.qs (P10626 additions) + .md evidence report
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
 ```
@@ -183,7 +187,7 @@ for future batches that correct wrong statements on existing items.
 | fabrication method                   | P2079                            | Techniques                  |
 | depicted Iconclass                   | P1257                            | Iconography codes           |
 | width / length / height / diameter   | P2049 / P2043 / P2048 / P2386   | Dimensions (cm)             |
-| Bildindex ID                         | P12754                           | Marburg art index           |
+| Bildindex der Kunst und Architektur ID | P2092                          | Marburg art index object number (`obj…` digits) |
 | state of conservation                | P5816                            | Condition                   |
 | applies to part                      | P518                             | Position (ceiling/wall)     |
 

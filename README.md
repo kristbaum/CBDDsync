@@ -69,7 +69,7 @@ Result keys match `src.config.WD_QUERY_KEY_TO_PID`: `item`, `itemDescription_en`
 (**P1257**), `method` (**P2079**), `material` (**P186**), `painter` (**P170**),
 `commissioner` (**P88**), `width` (**P2049**), `length` (**P2043**), `height`
 (**P2048**), `diameter` (**P2386**), `location` (**P276**), `condition`
-(**P5816**), `bildindex` (**P12754**). Save as `sources/query_painting_statements.json`.
+(**P5816**), `bildindex` (**P2092**). Save as `sources/query_painting_statements.json`.
 
 ```sparql
 SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
@@ -90,7 +90,7 @@ SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
   OPTIONAL { ?item wdt:P2386 ?diameter. }
   OPTIONAL { ?item wdt:P276 ?location. }
   OPTIONAL { ?item wdt:P5816 ?condition. }
-  OPTIONAL { ?item wdt:P12754 ?bildindex. }
+  OPTIONAL { ?item wdt:P2092 ?bildindex. }
 }
 ```
 

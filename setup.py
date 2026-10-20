@@ -96,7 +96,7 @@ SELECT DISTINCT ?item ?itemDescription_en ?itemDescription_de ?inception
   OPTIONAL { ?item wdt:P2386 ?diameter. }
   OPTIONAL { ?item wdt:P276 ?location. }
   OPTIONAL { ?item wdt:P5816 ?condition. }
-  OPTIONAL { ?item wdt:P12754 ?bildindex. }
+  OPTIONAL { ?item wdt:P2092 ?bildindex. }
 }
 """
 )
