@@ -29,7 +29,7 @@ DATE_PIDS = {"P571"}
 DIMENSION_PIDS = {"P2049", "P2043", "P2048", "P2386"}  # width/length/height/diameter
 COORDINATE_PIDS = {"P625"}
 # Quoted plain strings: Bildindex, Iconclass, postal code
-STRING_PIDS = {"P2092", "P12754", "P1256", "P1257", "P281"}
+STRING_PIDS = {"P2092", "P1256", "P1257", "P281"}
 
 
 def extract_qid(url: str) -> str:

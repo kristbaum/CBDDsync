@@ -68,7 +68,7 @@ class TestFormatQsValue:
 
     def test_iconclass_and_bildindex_are_quoted(self):
         assert format_qs_value("P1257", "11H") == '"11H"'
-        assert format_qs_value("P12754", "23829038") == '"23829038"'
+        assert format_qs_value("P2092", "23829038") == '"23829038"'
 
     def test_unconfigured_property_is_left_alone(self):
         assert format_qs_value("P9999", "11H") == "11H"

@@ -159,7 +159,8 @@ PAINTING_COLUMN_TO_PID = {
     "productionMethods_wd": "P2079",  # fabrication method #
     "productionMaterials_wd": "P186",  # made from material #
     #    "position": "P518",  # Maybe include later, no good WD property equivalent
-    "normdata": "P12754",  # Bildindex der Kunst und Architektur ID #
+    # CbDD's "obj<digits>" is a Bildindex object number -> P2092, not P12754 (PID)
+    "normdata": "P2092",  # Bildindex der Kunst und Architektur ID #
     "commissioner": "P88",  # commissioned by #
     "painter": "P170",  # creator #
     "width": "P2049",  # width #
@@ -189,7 +190,7 @@ WD_QUERY_KEY_TO_PID = {
     "diameter": "P2386",
     "location": "P276",
     "condition": "P5816",
-    "bildindex": "P12754",
+    "bildindex": "P2092",
 }
 
 # Value maps used when building statements from the existing_*.csv files.
