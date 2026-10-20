@@ -34,7 +34,7 @@ total : 6407
 query.csv exists to prevent unnessecary queries to the WD-query service and has the following format:
 
 All queries below run against [QLever's Wikidata endpoint](https://qlever.dev/wikidata)
-(`https://qlever.dev/api/wikidata`), which `setup.py` uses instead of the
+(`https://qlever.dev/api/wikidata`), which `src/update_queries.py` (and `setup.py`) uses instead of the
 official Wikidata Query Service. Unlike WDQS, QLever has no built-in prefix
 registry or `SERVICE wikibase:label` support, so every prefix used is
 declared explicitly and labels/descriptions are fetched via `schema:description`
@@ -209,9 +209,40 @@ uv run sync.py      # run the analysis
 
 `setup.py` replaces every file in `sources/`: it downloads `entities.json`,
 `relations.json`, and `resources.json` from the deckenmalerei.eu dump on
-GitHub, and runs the SPARQL queries documented below against the Wikidata
-Query Service to (re-)generate `query.csv` and each
-`query_<type>_statements.json`.
+GitHub, and runs the SPARQL queries documented below on QLever to
+(re-)generate `query.csv` and each `query_<type>_statements.json`.
+
+### Updating only the Wikidata query results
+
+The dumps change rarely, Wikidata changes daily. To refresh just `query.csv`
+and the `query_<type>_statements.json` files, run the queries directly on
+[qlever.dev](https://qlever.dev/wikidata):
+
+```bash
+uv run python -m src.update_queries                    # all query files
+uv run python -m src.update_queries entities paintings # only some of them
+```
+
+Names: `entities` (`query.csv`), `people`, `buildings`, `paintings`, `rooms`,
+`room_sequences`. A file is only replaced when its query succeeds. The queries
+live in [src/update_queries.py](src/update_queries.py). They are written for
+QLever; to port a query drafted on query.wikidata.org (label service, implicit
+prefixes), convert it with [To QLever](https://to-qlever.toolforge.org/).
+
+## Agentic reconciliation skill
+
+[agentic-reconcile/](agentic-reconcile/SKILL.md) is an agent skill that
+matches people and buildings from `missing/missing_people.csv` /
+`missing/missing_buildings.csv` against existing Wikidata items and writes a
+QuickStatements batch (adding P10626) plus an evidence report to
+`agentic-reconcile/to_match/`.
+
+Package it as a `.skill` file (a zip of the skill folder, without the
+generated batches and reports):
+
+```bash
+rm -f agentic-reconcile.skill && zip -r agentic-reconcile.skill agentic-reconcile -x 'agentic-reconcile/to_match/*' '*__pycache__*'
+```
 
 ## Development
 

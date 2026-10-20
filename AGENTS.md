@@ -18,11 +18,13 @@ CBDDsync/
 │   ├── test_utils.py
 │   ├── test_entity_check.py
 │   ├── test_quickstatements.py
+│   ├── test_update_queries.py
 │   └── test_statement_check.py
 ├── src/
 │   ├── config.py               # All mappings (sType→label, columns, WD property IDs, value maps)
 │   ├── entity_check.py         # Compares entities between CbDD and Wikidata; writes missing/existing CSVs
 │   ├── statement_check.py      # Generic statement-comparison engine; runs one check per entity type
+│   ├── update_queries.py       # Re-runs the Wikidata queries on qlever.dev → sources/query*.{csv,json}
 │   ├── quickstatements.py      # QuickStatements 3.0 V1 command rendering (+/- prefixes, qualifiers, refs)
 │   └── utils.py                # Pure helper functions (date parsing, field mapping, bildindex extraction)
 ├── sources/                    # Input files (not committed — must be supplied before running)
@@ -53,6 +55,7 @@ CBDDsync/
 │   ├── SKILL.md                # Workflow, evidence rules, output formats
 │   ├── scripts/cbdd_context.py # Per-entity evidence dossier from sources/*.json
 │   └── to_match/               # Output: <type>_<date>.qs (P10626 additions) + .md evidence report
+├── agentic-reconcile.skill     # Packaged skill (zip; rebuild with the command in README.md)
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
 ```
@@ -95,6 +98,17 @@ uv run sync.py
 ```
 
 This runs both analysis steps sequentially and prints a summary to stdout.
+
+To refresh the Wikidata side (`sources/query.csv` and
+`sources/query_<type>_statements.json`) without re-downloading the dumps:
+
+```bash
+uv run python -m src.update_queries [entities|people|buildings|paintings|rooms|room_sequences ...]
+```
+
+`setup.py` downloads the dumps and then calls the same module. The SPARQL
+queries in `src/update_queries.py` are the source of truth (README.md mirrors
+them); they target QLever, so declare every prefix and use no label service.
 
 ### Development commands
 
