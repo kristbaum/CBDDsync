@@ -17,11 +17,13 @@ CBDDsync/
 ├── tests/                      # pytest suite for the pure logic (no I/O against sources/)
 │   ├── test_utils.py
 │   ├── test_entity_check.py
+│   ├── test_quickstatements.py
 │   └── test_statement_check.py
 ├── src/
 │   ├── config.py               # All mappings (sType→label, columns, WD property IDs, value maps)
 │   ├── entity_check.py         # Compares entities between CbDD and Wikidata; writes missing/existing CSVs
 │   ├── statement_check.py      # Generic statement-comparison engine; runs one check per entity type
+│   ├── quickstatements.py      # QuickStatements 3.0 V1 command rendering (+/- prefixes, qualifiers, refs)
 │   └── utils.py                # Pure helper functions (date parsing, field mapping, bildindex extraction)
 ├── sources/                    # Input files (not committed — must be supplied before running)
 │   ├── query.csv               # Wikidata SPARQL result: item URL + deckenmalerei_eu_ID
@@ -39,7 +41,8 @@ CBDDsync/
 │   ├── missing_paintings.csv
 │   ├── missing_rooms.csv
 │   ├── missing_room_sequences.csv
-│   └── missing_*_statements.csv  # QuickStatements-ready CSV, one per entity type
+│   ├── missing_*_statements.csv  # QuickStatements-ready CSV, one per entity type
+│   └── missing_*_statements.qs   # Same statements as a QuickStatements 3.0 V1 batch
 ├── existing/                   # Generated output: entities present in both databases
 │   ├── existing_people.csv
 │   ├── existing_buildings.csv
@@ -153,6 +156,17 @@ QuickStatements CSV format. Columns: `qid` + one column per Wikidata property ID
 - Dimensions: `42.5U174728` (centimetres)
 - Strings: `"value"`
 - Descriptions: plain string under `Den` / `Dde` pseudo-columns
+
+### `missing/missing_*_statements.qs`
+
+QuickStatements 3.0 batch, V1 commands: `<QID>\t<PID>\t<value>[\tS248\tQ107174967\tS10626\t"<CbDD ID>"]`,
+one per statement, same value formats as the CSV but strings (including
+descriptions) always quoted. The reference (stated in CbDD + deckenmalerei.eu
+ID, constants `CBDD_SOURCE_QID` / `CBDD_ID_PID` in `src/config.py`) goes on
+every statement except descriptions. No `+` prefix: QuickStatements merges into
+an existing statement with the same value, so batches are safe to re-run.
+`src.quickstatements.qs_line` also supports `+` (force new) and `-` (remove),
+for future batches that correct wrong statements on existing items.
 
 ---
 

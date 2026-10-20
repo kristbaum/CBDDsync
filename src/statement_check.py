@@ -3,8 +3,10 @@ statement_check.py
 
 Compares statements derived from deckenmalerei.eu data (the existing_*.csv files,
 i.e. entities already linked to Wikidata) against the statements already present
-in Wikidata (cached SPARQL results in sources/), and writes the missing ones in
-QuickStatements CSV format.
+in Wikidata (cached SPARQL results in sources/), and writes the missing ones both
+as QuickStatements CSV and as a QuickStatements 3.0 V1 batch (.qs). The .qs
+batch carries a reference (stated in CbDD + deckenmalerei.eu ID) on every
+statement.
 
 The comparison logic in this module is generic. Everything specific to an entity
 type — which columns map to which properties, which SPARQL result file to read,
@@ -17,7 +19,8 @@ import csv
 import json
 from pathlib import Path
 
-from src.config import STATEMENT_CHECKS
+from src.config import CBDD_ID_PID, CBDD_SOURCE_QID, STATEMENT_CHECKS
+from src.quickstatements import qs_line, qs_string, write_qs_file
 
 # Property groupings that drive value formatting / comparison. These are keyed by
 # Wikidata property ID so they apply uniformly across all entity types.
@@ -25,7 +28,8 @@ DESCRIPTION_PIDS = {"Den", "Dde"}
 DATE_PIDS = {"P571"}
 DIMENSION_PIDS = {"P2049", "P2043", "P2048", "P2386"}  # width/length/height/diameter
 COORDINATE_PIDS = {"P625"}
-STRING_PIDS = {"P2092", "P1256", "P281"}  # quoted plain strings (e.g. postal code)
+# Quoted plain strings: Bildindex, Iconclass, postal code
+STRING_PIDS = {"P2092", "P12754", "P1256", "P1257", "P281"}
 
 
 def extract_qid(url: str) -> str:
@@ -203,6 +207,23 @@ def build_potential_statements(csv_path: str, check: dict) -> dict[str, dict[str
     return potential
 
 
+def load_cbdd_ids(csv_path: str) -> dict[str, str]:
+    """
+    Map each QID in an existing_*.csv to its deckenmalerei.eu ID.
+
+    Used as the reference for generated statements. If several CbDD entities map
+    to the same QID (see errors/duplicates.md), the first one in the file wins.
+    """
+    ids: dict[str, str] = {}
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            qid = row.get("wikidata_qid", "").strip()
+            cbdd_id = row.get("ID", "").strip()
+            if qid and cbdd_id:
+                ids.setdefault(qid, cbdd_id)
+    return ids
+
+
 def compute_missing(
     potential: dict[str, dict[str, set]],
     existing: dict[str, dict[str, set]],
@@ -265,6 +286,42 @@ def write_quickstatements_csv(
     return total
 
 
+def write_quickstatements_v1(
+    missing: dict[str, dict[str, list]],
+    output_path: str,
+    cbdd_ids: dict[str, str],
+) -> int:
+    """
+    Write missing statements as a QuickStatements 3.0 batch (V1 commands).
+
+    One command per statement, items and properties in sorted order. Statements
+    get the reference ``S248 <CbDD>  S10626 "<deckenmalerei.eu ID>"`` when the
+    item's CbDD ID is known; descriptions take no reference. Lines carry no
+    "+" prefix, so values already present are merged rather than duplicated.
+
+    Returns total number of commands written.
+    """
+
+    def lines():
+        for qid in sorted(missing):
+            cbdd_id = cbdd_ids.get(qid)
+            refs = (
+                [("P248", CBDD_SOURCE_QID), (CBDD_ID_PID, qs_string(cbdd_id))]
+                if cbdd_id
+                else []
+            )
+            for pid in sorted(missing[qid]):
+                for val in missing[qid][pid]:
+                    if pid in DESCRIPTION_PIDS:
+                        yield qs_line(qid, pid, qs_string(val))
+                    else:
+                        yield qs_line(
+                            qid, pid, format_qs_value(pid, val), references=refs
+                        )
+
+    return write_qs_file(lines(), output_path)
+
+
 # --------------------------------------------------------------------------- #
 # Per-entity-type runner
 # --------------------------------------------------------------------------- #
@@ -295,6 +352,8 @@ def run_statement_check(label: str, check: dict) -> dict | None:
 
     Path(output_csv).parent.mkdir(parents=True, exist_ok=True)
     count = write_quickstatements_csv(missing, output_csv)
+    output_qs = str(Path(output_csv).with_suffix(".qs"))
+    write_quickstatements_v1(missing, output_qs, load_cbdd_ids(existing_csv))
 
     total_existing = sum(
         len(vals)
@@ -329,6 +388,7 @@ def run_statement_check(label: str, check: dict) -> dict | None:
             pct = f"{(m / p * 100):.1f}%" if p > 0 else "-"
             print(f"    {pid:8s}  {m:>8d} / {p:>9d}  {pct:>6s}")
     print(f"    -> {output_csv}")
+    print(f"    -> {output_qs}")
 
     return {
         "label": label,

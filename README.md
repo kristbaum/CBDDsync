@@ -27,7 +27,7 @@ total : 6407
 ## Scripts
 
 - **entity_check.py**: Python script that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Statements generated per type: people → sex or gender (P21); buildings → inception (P571), postal code (P281), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
+- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Alongside each CSV it writes a QuickStatements V1 batch `missing/missing_<type>_statements.qs` (rendered by `src/quickstatements.py`). Statements generated per type: people → sex or gender (P21); buildings → inception (P571), postal code (P281), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
 
 ## Helpers
 
@@ -256,6 +256,7 @@ Contains entities from deckenmalerei.eu that are NOT yet in Wikidata:
 - `missing_rooms.csv` - Missing room entities
 - `missing_room_sequences.csv` - Missing room sequence entities
 - `missing_<type>_statements.csv` - Missing statements in QuickStatements CSV format, one per entity type (`missing_people_statements.csv`, `missing_building_statements.csv`, `missing_painting_statements.csv`, `missing_room_statements.csv`, `missing_room_sequence_statements.csv`)
+- `missing_<type>_statements.qs` - The same missing statements as a [QuickStatements 3.0](https://qs-dev.toolforge.org/) batch in V1 command format (tab-separated, one command per line). Every statement carries the reference `S248 Q107174967` (stated in: CbDD) + `S10626 "<deckenmalerei.eu ID>"`; descriptions are unreferenced. Lines have no `+` prefix, so values already on the item are merged rather than duplicated. Paste the file into QuickStatements to run it.
 
 ### existing/ directory
 
