@@ -4,25 +4,21 @@ Set of tools (Python scripts) to syncronize data from deckenmalerei.eu with Wiki
 
 ## Projects Stats
 
-2026-05-30
-Summary of missing entities:
-
-| Category       | Count    |
-| -------------- | -------- |
-| people         | 1396     |
-| buildings      | 373      |
-| paintings      | 953      |
-| rooms          | 2215     |
-| room_sequences | 295      |
-| **total**      | **5232** |
+Summary of missing entities (not in query.csv):
+  people    : 1001
+  buildings : 286
+  paintings : 1824
+  rooms     : 2457
+  room_sequences: 310
+  total     : 5878
 
 Summary of existing entities (in query.csv):
-people : 1186
-buildings : 830
-paintings : 4389
-rooms : 1
-room_sequences : 1
-total : 6407
+  people    : 1882
+  buildings : 1110
+  paintings : 4378
+  rooms     : 1
+  room_sequences: 1
+  total     : 7372
 
 ## Scripts
 
