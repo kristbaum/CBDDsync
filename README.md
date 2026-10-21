@@ -234,14 +234,14 @@ prefixes), convert it with [To QLever](https://to-qlever.toolforge.org/).
 [agentic-reconcile/](agentic-reconcile/SKILL.md) is an agent skill that
 matches people and buildings from `missing/missing_people.csv` /
 `missing/missing_buildings.csv` against existing Wikidata items and writes a
-QuickStatements batch (adding P10626) plus an evidence report to
-`agentic-reconcile/to_match/`.
+QuickStatements batch (adding P10626), a repair batch for errors it finds on
+Wikidata, and an evidence report to `agentic-reconcile/to_match/`.
 
 Package it as a `.skill` file (a zip of the skill folder, without the
 generated batches and reports):
 
 ```bash
-rm -f agentic-reconcile.skill && zip -r agentic-reconcile.skill agentic-reconcile -x 'agentic-reconcile/to_match/*' '*__pycache__*'
+rm -f agentic-reconcile.skill && zip -r agentic-reconcile.skill agentic-reconcile -x 'agentic-reconcile/to_match/*' 'agentic-reconcile/.cache/*' '*__pycache__*'
 ```
 
 ## Development

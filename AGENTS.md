@@ -55,6 +55,7 @@ CBDDsync/
 │   ├── SKILL.md                # Workflow, evidence rules, output formats
 │   ├── scripts/cbdd_context.py        # Per-entity evidence dossier from sources/*.json
 │   ├── scripts/building_candidates.py # Bulk Wikidata candidates for buildings (cached in .cache/)
+│   ├── scripts/people_candidates.py   # Bulk Wikidata candidates for people (name search + GND/lobid)
 │   ├── scripts/write_batch.py         # Decisions JSON → .qs, _repair.qs, .md + self-checks
 │   └── to_match/               # Output: <type>_<date>.qs (P10626 additions), _repair.qs, .md report
 ├── agentic-reconcile.skill     # Packaged skill (zip; rebuild with the command in README.md)

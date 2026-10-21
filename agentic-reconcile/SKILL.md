@@ -100,6 +100,27 @@ of a numbered component item). Read it in blocks of 40–60 and decide each
 building directly; look things up only where the block leaves a doubt. Run it
 in the background and start reviewing the slices already cached.
 
+**People in bulk:** the same for people:
+
+```bash
+python3 agentic-reconcile/scripts/people_candidates.py \
+    --csv missing/missing_people.csv --limit 2000 --skip-done > candidates.txt
+```
+
+It searches every name variant ("Given Surname", first given name only,
+"von" forms, Joseph/Josef …) in the Wikidata full text restricted to humans,
+resolves the CbDD GND via `P227` and via the Wikidata link of the lobid
+record, and fetches the candidates' dates, occupations, places and offices
+(~45 minutes for 1 700 people, cached). Flags: `GND` (item has the CbDD GND),
+`GND(lobid,no-P227)` (only the GND record links to the item: a P227 repair),
+`NAME` (all tokens of a name variant are in a label or alias; loose, it also
+fires on partial names), `LIFE+`/`LIFE~`/`LIFE-`/`LIFE?` (lifetime fits /
+fits most works / contradicts / no dates), `SEX-`, `CBDD=…`. The lifetime
+check counts a work as fitting if any year of its dating fits, because CbDD
+datings often list the building's whole history ("1385-1835/42, 1944/45");
+`LIFE-` on a GND match is therefore usually a dating artefact (restorers,
+later residents, paintings bought for a collection), rarely a wrong identity.
+
 If something in the dossier is unclear, read the raw records in
 `sources/entities.json` / `sources/relations.json` (relations are stored in
 both directions; `ID -> relTar` with `sType` as the role, e.g. a painting
