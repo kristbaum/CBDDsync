@@ -20,7 +20,7 @@ Summary of existing entities (in query.csv):
   room_sequences: 1
   total     : 7372
 
-## Scripts
+## Script
 
 - **entity_check.py**: Python script that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
 - **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Alongside each CSV it writes a QuickStatements V1 batch `missing/missing_<type>_statements.qs` (rendered by `src/quickstatements.py`). Statements generated per type: people → sex or gender (P21); buildings → inception (P571), postal code (P281), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
