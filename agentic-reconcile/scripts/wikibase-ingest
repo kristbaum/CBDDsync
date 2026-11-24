@@ -1,0 +1,44 @@
+#!/bin/sh
+# Runs `wikibase-ingest`, the command line of the wikibase-ingest skill
+# (https://gitlab.wikimedia.org/kristbaum/wikibase-ingest), which does every
+# generic step (candidates, verify, route, preflight, decide, next, resolve,
+# como, report). This skill is an adapter (agentic-reconcile/adapter.toml)
+# and ships no copy of it:
+#
+#   agentic-reconcile/scripts/wikibase-ingest --help
+#
+# Looks for, in order:
+#   1. $WIKIBASE_INGEST, a wikibase-ingest executable;
+#   2. the launcher of an installed wikibase-ingest skill;
+#   3. a wikibase-ingest checkout next to the CBDDsync repository;
+#   4. wikibase-ingest on the PATH (uv tool install / pipx).
+set -e
+export WITH_EXTENSION="${WITH_EXTENSION:-0}"  # mwparserfromhell: pure-Python build on new Pythons
+here=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+if [ -n "$WIKIBASE_INGEST" ]; then
+    exec "$WIKIBASE_INGEST" "$@"
+fi
+
+for launcher in \
+    "$here/../../wikibase-ingest/scripts/wikibase-ingest" \
+    "$HOME/.claude/skills/wikibase-ingest/scripts/wikibase-ingest" \
+    "$HOME"/.claude/skills/*/wikibase-ingest/scripts/wikibase-ingest \
+    "$HOME"/.claude/skills/*/*/wikibase-ingest/scripts/wikibase-ingest \
+    /mnt/skills/*/wikibase-ingest/scripts/wikibase-ingest \
+    "$here/../../../wikibase-ingest/skill/scripts/wikibase-ingest"; do
+    if [ -x "$launcher" ]; then
+        exec "$launcher" "$@"
+    fi
+done
+
+if command -v wikibase-ingest >/dev/null 2>&1; then
+    exec wikibase-ingest "$@"
+fi
+
+cat >&2 <<'EOF'
+wikibase-ingest not found. Install the wikibase-ingest skill, clone
+https://gitlab.wikimedia.org/kristbaum/wikibase-ingest next to the CBDDsync
+repository, or set WIKIBASE_INGEST to a wikibase-ingest executable.
+EOF
+exit 2

@@ -1,10 +1,10 @@
 """
-cbdd_bundle.py
+cbdd_ingest.py
 
-Start a reconcile run: write a claim bundle (the format of the
-como-game-creator pipeline, `scripts/claim-bundle schema bundle`) for CbDD
+Start a reconcile run: write an ingest file (the format of the
+wikibase-ingest pipeline, `scripts/wikibase-ingest schema ingest`) for CbDD
 people or buildings that missing/missing_<type>.csv lists without a Wikidata
-item, to agentic-reconcile/to_match/<type>_<date>[_n]/bundle.json.
+item, to agentic-reconcile/to_match/<type>_<date>[_n]/ingest.json.
 
 Each CbDD entity becomes a reconciliation entity `_:cbdd:<UUID>`:
 
@@ -40,11 +40,11 @@ only_if_created and carry the CbDD reference.
 
 Run from the repository root:
 
-    uv run python agentic-reconcile/scripts/cbdd_bundle.py \
+    uv run python agentic-reconcile/scripts/cbdd_ingest.py \
         --csv missing/missing_people.csv --limit 50 [--offset 0] [--skip-done]
-    uv run python agentic-reconcile/scripts/cbdd_bundle.py <ID> [<ID> ...] [--create]
+    uv run python agentic-reconcile/scripts/cbdd_ingest.py <ID> [<ID> ...] [--create]
 
-One entity type per run (the routing policies differ). Prints the bundle path.
+One entity type per run (the routing policies differ). Prints the ingest file path.
 """
 
 import argparse
@@ -368,7 +368,7 @@ def building_entity(b: dict, entities, parent) -> dict:
 
 
 def value_for(pid: str, raw: str) -> dict | str | None:
-    """A sync-tool value (src/config.py conventions) as a bundle value."""
+    """A sync-tool value (src/config.py conventions) as an ingest file value."""
     dtype = PROPERTIES[pid]["datatype"]
     if dtype == "wikibase-item":
         return raw if re.fullmatch(r"Q\d+", raw) else None
@@ -542,7 +542,7 @@ def build(
         bundle_entities[eid] = ent
     today = datetime.date.today().isoformat()
     return {
-        "format": "claim-bundle",
+        "format": "wikibase-ingest",
         "version": 2,
         "id": "",
         "project": f"CbDD → Wikidata: {kind}, {today} ({label})",
@@ -603,7 +603,7 @@ def main() -> None:
     folder = args.out or run_dir(kind)
     bundle["id"] = f"cbdd-{folder.name}"
     folder.mkdir(parents=True, exist_ok=True)
-    path = folder / "bundle.json"
+    path = folder / "ingest.json"
     if path.exists():
         sys.exit(f"{path} exists; pick another --out")
     path.write_text(

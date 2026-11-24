@@ -1,12 +1,12 @@
 """
 finish.py
 
-End a CbDD reconcile session: run claim-bundle's preflight with this
+End a CbDD reconcile session: run wikibase-ingest's preflight with this
 adapter, write the batches, and write the CbDD evidence report.
 
-    uv run python agentic-reconcile/scripts/finish.py <run>/bundle.json [--no-next]
+    uv run python agentic-reconcile/scripts/finish.py <run>/ingest.json [--no-next]
 
-1. `claim-bundle preflight --adapter agentic-reconcile --pipeline <type>
+1. `wikibase-ingest preflight --adapter agentic-reconcile --pipeline <type>
    --write`: the generic live checks (missing or redirected items, an item
    matched twice, an item already carrying another CbDD ID, one GND onto
    several items; statements already there become skips) and the CbDD hook
@@ -18,9 +18,9 @@ adapter, write the batches, and write the CbDD evidence report.
         "removals": [{"line": "-Q1\\tP10626\\t\\"cbdd10059\\"", "why": "…"}],
         "cbdd_corrections": ["…"], "notes": ["…"]}
 
-   Removals are statements to delete on Wikidata (a claim bundle only adds);
+   Removals are statements to delete on Wikidata (an ingest file only adds);
    they go to `<run>/removals.qs` when they still apply.
-3. `claim-bundle next`: batches/direct_NNN.qs (the P10626 links),
+3. `wikibase-ingest next`: batches/direct_NNN.qs (the P10626 links),
    batches/curator_NNN.qs (GND/Bildindex, and CREATE blocks of new items
    with --create) plus review sheets.
 4. `<run>/report.md`: every entity with its evidence, repairs, CbDD
@@ -39,16 +39,16 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ADAPTER = HERE.parent
-CLAIM_BUNDLE = HERE / "claim-bundle"
+WIKIBASE_INGEST = HERE / "wikibase-ingest"
 UA = "CBDDsync-agentic-reconcile/0.4 (https://github.com/kristbaum/CBDDsync)"
 REMOVAL = re.compile(r"^-Q\d+\tP\d+\t\S.*$")
 MARK = {"+": "✓", "-": "✗", "0": "~"}
 PIPELINE = {"person": "people", "building": "buildings"}
 
 
-def claim_bundle(*args: str) -> subprocess.CompletedProcess:
+def wikibase_ingest(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [str(CLAIM_BUNDLE), *args], capture_output=True, text=True, check=False
+        [str(WIKIBASE_INGEST), *args], capture_output=True, text=True, check=False
     )
 
 
@@ -172,7 +172,7 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
         f"# {run.bundle['project']}",
         "",
         (
-            f"Bundle: `{run.path.name}` ({len(ents)} entities). Matched: {len(groups['match'])}, "
+            f"Ingest file: `{run.path.name}` ({len(ents)} entities). Matched: {len(groups['match'])}, "
             f"new items: {len(groups['create'])}, uncertain: {len(groups['reconcile'])}, "
             f"no match: {len(groups['drop'])}."
         ),
@@ -180,7 +180,7 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
     ]
     if batches or removals:
         md += [
-            "Batches (QuickStatements 3, V1 commands; upload, then `claim-bundle resolve` the report):",
+            "Batches (QuickStatements 3, V1 commands; upload, then `wikibase-ingest resolve` the report):",
             "",
         ]
         md += [f"- `{b.relative_to(run.dir)}`" for b in batches]
@@ -307,7 +307,7 @@ def main() -> None:
     args = ap.parse_args()
     run = Run(args.bundle)
 
-    pre = claim_bundle(
+    pre = wikibase_ingest(
         "preflight",
         str(args.bundle),
         "--adapter",
@@ -324,9 +324,9 @@ def main() -> None:
         )
     removals = removals_that_apply(run)
     if not args.no_next:
-        nxt = claim_bundle("next", str(args.bundle))
+        nxt = wikibase_ingest("next", str(args.bundle))
         if nxt.returncode not in (0, 1):
-            sys.exit(f"claim-bundle next failed:\n{nxt.stderr or nxt.stdout}")
+            sys.exit(f"wikibase-ingest next failed:\n{nxt.stderr or nxt.stdout}")
         print(nxt.stdout.strip())
     run = Run(args.bundle)  # reload: preflight and next changed the state
     if removals:

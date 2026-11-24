@@ -15,7 +15,7 @@ Run from the repository root (reads sources/*.json and sources/query.csv):
 
 --skip-done leaves out IDs that already appear in agentic-reconcile/to_match/.
 
-The loaders here are shared by cbdd_bundle.py and cbdd_hints.py.
+The loaders here are shared by cbdd_ingest.py and cbdd_hints.py.
 """
 
 import argparse
@@ -284,8 +284,8 @@ def building_dossier(b, entities, outgoing, incoming, parent, qids) -> list[str]
 
 def done_ids() -> set[str]:
     """CbDD IDs already handled: entities of every run bundle
-    (to_match/<run>/bundle.json) and IDs in the flat .qs/.md files of the
-    runs before the claim-bundle pipeline."""
+    (to_match/<run>/ingest.json) and IDs in the flat .qs/.md files of the
+    runs before the wikibase-ingest pipeline."""
     ids: set[str] = set()
     for f in TO_MATCH.glob("*"):
         if f.suffix in (".qs", ".md"):
@@ -295,7 +295,10 @@ def done_ids() -> set[str]:
                     f.read_text(encoding="utf-8"),
                 )
             )
-    for f in TO_MATCH.glob("*/bundle.json"):
+    for f in [
+        *TO_MATCH.glob("*/ingest.json"),
+        *TO_MATCH.glob("*/bundle.json"),
+    ]:  # bundle: older runs
         bundle = json.loads(f.read_text(encoding="utf-8"))
         ids |= {k.removeprefix("_:cbdd:") for k in bundle.get("entities", {})}
     return ids

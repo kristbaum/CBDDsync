@@ -1,6 +1,6 @@
 ---
 name: agentic-reconcile
-description: Match deckenmalerei.eu (CbDD) people and buildings that the sync tool lists as missing from Wikidata against existing Wikidata items, and optionally prepare new items for the ones that have none. An adapter for the claim-bundle pipeline of the como-game-creator skill (required), which does everything generic - candidate generation, evidence, routing, preflight checks, QuickStatements batches, Como games. This skill adds the CbDD parts - the bundle built from the CbDD dump with the sync tool's statement mapping, lifetime against the CbDD works, lobid GND links, street addresses, monument components, CbDD duplicate checks - and the review rules. Writes a QuickStatements batch adding the deckenmalerei.eu ID (P10626) to matched items, a curator batch with missing GND/Bildindex IDs (and CREATE blocks with --create), and a Markdown evidence report. Use when asked to reconcile, match, link or create items for entries of missing/missing_people.csv or missing/missing_buildings.csv.
+description: Match deckenmalerei.eu (CbDD) people and buildings that the sync tool lists as missing from Wikidata against existing Wikidata items, and optionally prepare new items for the ones that have none. A dataset skill for the wikibase-ingest skill (required), which runs the generic pipeline - candidate generation, verification, triage, preflight checks, QuickStatements batches, Como games. This skill adds what only CbDD knows - the ingest file built from the CbDD dump with the sync tool's statement mapping, the classes and occupations of new items, lifetime against the CbDD works, lobid GND links, street addresses, monument components, CbDD duplicate checks - and the review rules. Writes a QuickStatements batch adding the deckenmalerei.eu ID (P10626) to matched items, a curator batch with missing GND/Bildindex IDs (and CREATE blocks with --create), and a Markdown evidence report. Use when asked to reconcile, match, link or create items for entries of missing/missing_people.csv or missing/missing_buildings.csv.
 ---
 
 # Agentic reconciliation of CbDD entities
@@ -15,37 +15,41 @@ statements from the sync tool's mapping.
 Supported: **people** (`missing/missing_people.csv`, sType `ACTOR_PERSON`) and
 **buildings** (`missing/missing_buildings.csv`, sType `OBJECT_BUILDING`).
 
-## This skill is an adapter
+## This skill is a dataset skill
 
-The **como-game-creator** skill and its `claim-bundle` pipeline own every
-generic step; read its `reference/reconciliation.md`, `evidence.md`,
-`options.md` and `adapters.md` for them, and `glossary.md` for the terms.
-This skill brings only what is specific to CbDD, declared in
-[adapter.toml](adapter.toml):
+The **wikibase-ingest** skill owns the pipeline and every generic step; read
+its README or `SKILL.md` for the stages, `reference/reconciliation.md`,
+`evidence.md`, `options.md` and `adapters.md` for the details, and
+`glossary.md` for the terms (source entity, attributes, claim, evidence,
+triage). This skill adds only what CbDD knows, at the stage where it is
+needed, declared in [adapter.toml](adapter.toml):
 
-| CbDD part | File |
-|---|---|
-| CbDD dump → claim bundle: names and spelling variants, facts, the P10626/GND/Bildindex claims, creation statements (`--create`, reusing `src/config.py` `STATEMENT_CHECKS`) | `scripts/cbdd_bundle.py` |
-| Evidence hook: lobid GND links, lifetime against the CbDD works, gender, street address, monument components, already linked | `scripts/cbdd_hints.py` |
-| Routing policies | `policy/people.json`, `policy/buildings.json` |
-| Preflight hook: duplicate records in CbDD | `scripts/cbdd_preflight.py` |
-| Evidence dossier for the entities left to you | `scripts/cbdd_context.py` |
-| Preflight + batches + CbDD evidence report | `scripts/finish.py` |
+| Stage | CbDD part | File |
+|---|---|---|
+| 0 Intake | the answers that don't change: link property, references, auto-match rules | `adapter.toml` `[options]` |
+| 1 Extraction | CbDD dump → ingest file: names and spelling variants, attributes (GND, Bildindex, life dates, coordinates), the P10626/GND/Bildindex claims | `scripts/cbdd_ingest.py` |
+| 2 Reconciliation, item creation | item structure and Wikidata conventions for new items: class from the CbDD functions, occupation from the CbDD roles, description pattern, the sync tool's statements (`--create`, `src/config.py` `STATEMENT_CHECKS`), the CbDD reference | `scripts/cbdd_ingest.py` |
+| 3 Validation | evidence only CbDD gives: lobid GND links, lifetime against the CbDD works, gender, street address, monument components, already linked | `scripts/cbdd_hints.py` (evidence hook) |
+| 3 Validation | duplicate records in CbDD | `scripts/cbdd_preflight.py` (preflight hook) |
+| 4 Triage, review | when a match is safe; what is never a candidate | `policy/people.json`, `policy/buildings.json` |
+| 4 Triage, review | the evidence dossier for the entities left to you; the review rules below | `scripts/cbdd_context.py` |
+| 5 Upload, feedback | preflight + batches + CbDD evidence report, removals, CbDD corrections | `scripts/finish.py` |
 
-`agentic-reconcile/scripts/claim-bundle` finds the pipeline (the installed
-como-game-creator skill, a `como-game-creator-skill` checkout next to this
-repository, or `$CLAIM_BUNDLE`); if it finds none, ask the user to install
-the como-game-creator skill. Don't reimplement its steps here.
+`agentic-reconcile/scripts/wikibase-ingest` finds the command line (the
+installed wikibase-ingest skill, a `wikibase-ingest` checkout next to this
+repository, or `$WIKIBASE_INGEST`); if it finds none, ask the user to
+install the wikibase-ingest skill. Don't reimplement its steps here.
 
 All commands run from the repository root. Below,
-`CB=agentic-reconcile/scripts/claim-bundle`, `A=agentic-reconcile`,
-`S=agentic-reconcile/scripts`, `T` is `people` or `buildings`, and `B` the
-run's `bundle.json`.
+`WI=agentic-reconcile/scripts/wikibase-ingest`, `A=agentic-reconcile`,
+`S=agentic-reconcile/scripts`, `T` is `people` or `buildings`, and `I` the
+run's `ingest.json`.
+
 
 ## Options
 
 `adapter.toml` `[options]` settles the intake questions of the
-como-game-creator skill (`reference/options.md`). Ask the user only about the
+wikibase-ingest skill (`reference/options.md`). Ask the user only about the
 two that change per run, if the request doesn't say:
 
 - **Create items** for entities without a match (`--create`)? Default: no,
@@ -70,8 +74,8 @@ One folder per run, `agentic-reconcile/to_match/<type>_<YYYY-MM-DD>[_n]/`:
 
 | File | Written by | Holds |
 |---|---|---|
-| `bundle.json` | `cbdd_bundle.py`, then `claim-bundle run` | entities `_:cbdd:<UUID>` with candidates and evidence; claims `<UUID>:P10626` (direct), `<UUID>:P227`/`:P2092` (curator), with `--create` `<UUID>:new:*` (curator, only if created) |
-| `bundle.state.json` | claim-bundle | decisions, batches, uploads, games |
+| `ingest.json` | `cbdd_ingest.py`, then `wikibase-ingest run` | entities `_:cbdd:<UUID>` with candidates and evidence; claims `<UUID>:P10626` (direct), `<UUID>:P227`/`:P2092` (curator), with `--create` `<UUID>:new:*` (curator, only if created) |
+| `ingest.state.json` | wikibase-ingest | decisions, batches, uploads, games |
 | `notes.json` | you | what would settle uncertain cases, removals, CbDD corrections, notes (format in `finish.py`) |
 | `batches/direct_NNN.qs` | `next` | `Q…⇥P10626⇥"<UUID>"`, one line per match |
 | `batches/curator_NNN.qs` + `.md` | `next` | GND/Bildindex the matched item lacks; CREATE blocks of new items (label, description, P10626, P31, …); review sheet |
@@ -84,19 +88,19 @@ The flat `*.qs`/`*.md` files in `to_match/` are runs from before the pipeline;
 
 ## Workflow
 
-### 1. Build the bundle
+### 1. Build the ingest file (extraction)
 
 ```bash
-uv run python $S/cbdd_bundle.py --csv missing/missing_$T.csv --limit 50 --skip-done [--create]
-# or explicit IDs: uv run python $S/cbdd_bundle.py <UUID> <UUID> … [--create]
+uv run python $S/cbdd_ingest.py --csv missing/missing_$T.csv --limit 50 --skip-done [--create]
+# or explicit IDs: uv run python $S/cbdd_ingest.py <UUID> <UUID> … [--create]
 ```
 
-It prints the bundle path. Entities already linked in `query.csv` are left
+It prints the ingest file path. Entities already linked in `query.csv` are left
 out. People get their CbDD name in natural order as label, the CbDD
 alternative names as aliases, and spelling variants (first given name only,
 "von" forms, Joseph/Josef …) as `search_names`, which are searched but never
 uploaded; life dates written into a name ("Kopp, Gottfried (1652–1723)")
-become P569/P570 facts.
+become P569/P570 attributes.
 
 With `--create`, each entity also gets the statements of a new item, marked
 `only_if_created` (dropped if it is matched), all with the CbDD reference:
@@ -106,10 +110,10 @@ statements (`STATEMENT_CHECKS`: gender; inception, postal code, coordinates)
 and P106 for artists (painter, plasterer, architect, master builder,
 sculptor). The P10626 link joins the CREATE block.
 
-### 2. Candidates, CbDD evidence, verify, route
+### 2. Candidates, CbDD evidence, verify, route (reconciliation, validation, triage)
 
 ```bash
-$CB run $A $T $B
+$WI run $A $T $I
 ```
 
 Runs, with the adapter's settings: candidate generation (people: identifier,
@@ -117,7 +121,7 @@ label; buildings: identifier, geo within 300 m of the building types),
 `cbdd_hints.py` (below), `verify`, `route` with `policy/$T.json`, `check`.
 `--step <name>` repeats one step, `--dry-run` prints the commands.
 For a building whose CbDD point is far off (Duttenstein points 6.5 km away at
-Schloss Taxis), add `$CB candidates $B --method label --entity <id> --write`
+Schloss Taxis), add `$WI candidates $I --method label --entity <id> --write`
 and repeat `--step evidence --step verify`.
 
 `cbdd_hints.py` adds, as verified evidence:
@@ -150,10 +154,10 @@ left, you decide), `curator` (none left; review the hidden ones), with
 `--create` also `create` (nothing found: a new item, still reviewed in the
 curator batch).
 
-`$CB status $B` shows the counts. **Never `route --force`**: it re-routes the
+`$WI status $I` shows the counts. **Never `route --force`**: it re-routes the
 claims too. To undo an automatic match, use `decide` (step 3).
 
-### 3. Review
+### 3. Review (your part of triage)
 
 **Spot-check automatic matches first**: read 10 random ones (`route_reason`,
 the candidate's evidence) against the dossier. A wrong kind of match means a
@@ -168,7 +172,7 @@ Then decide every entity still `reconcile`. Build dossiers in blocks:
 uv run python $S/cbdd_context.py <UUID> [<UUID> …]
 ```
 
-and read each entity's candidates in the bundle: shown ones with their ✓/✗
+and read each entity's candidates in the ingest file: shown ones with their ✓/✗
 evidence and score, **hidden ones with the reason** (`hidden`). A candidate
 hidden for "other GND" or a lifetime ✗ is often still the right one (see the
 rules below), so look at those yourself. Look things up where the evidence
@@ -176,24 +180,24 @@ leaves a doubt ("Wikidata lookups"). Then:
 
 | Your verdict | Record it |
 |---|---|
-| **high** (rules below) | `$CB decide $B _:cbdd:<UUID>=Q… --reason "<the evidence, one line>"` |
-| **no match**, link only | `$CB decide $B _:cbdd:<UUID>=drop --reason "searched …; candidates Q… (why not)"` |
-| **no match**, `--create` | `$CB decide $B _:cbdd:<UUID>=create --reason "searched …"` |
+| **high** (rules below) | `$WI decide $I _:cbdd:<UUID>=Q… --reason "<the evidence, one line>"` |
+| **no match**, link only | `$WI decide $I _:cbdd:<UUID>=drop --reason "searched …; candidates Q… (why not)"` |
+| **no match**, `--create` | `$WI decide $I _:cbdd:<UUID>=create --reason "searched …"` |
 | **medium** | leave it `reconcile`; put what would settle it into `notes.json` → `uncertain` |
-| automatic match or creation is wrong | `$CB decide $B _:cbdd:<UUID>=reconcile` (or `=Q…` for the right item) |
+| automatic match or creation is wrong | `$WI decide $I _:cbdd:<UUID>=reconcile` (or `=Q…` for the right item) |
 
 Write the reason as evidence, not opinion: "GND 118… on item; painter; works
 1776–1790 fit 1757–1805; text: 'einer Gammertinger Malerfamilie'". It goes
 into the report. Collect removals, Wikidata duplicates and CbDD errors in
 `notes.json` as you go.
 
-### 4. Finish
+### 4. Finish (preflight, batches)
 
 ```bash
-uv run python $S/finish.py $B
+uv run python $S/finish.py $I
 ```
 
-It runs `claim-bundle preflight` with the adapter, and refuses (writes
+It runs `wikibase-ingest preflight` with the adapter, and refuses (writes
 nothing) when a matched item is missing or redirected, already carries
 another CbDD ID, or is the match of two entities; when one GND or Bildindex
 value would go onto two items (CbDD gives a parish's GND to several
@@ -202,7 +206,7 @@ second record with the matched entity's GND (a CbDD duplicate, "Bys" and
 "Byss": undo the match or name the other UUID in `cbdd_corrections`). A
 malformed P10626 next to the valid one is a warning with the removal line for
 `notes.json`. Otherwise statements already on their items become skips, and
-it runs `claim-bundle next` and writes `removals.qs` and `report.md`.
+it runs `wikibase-ingest next` and writes `removals.qs` and `report.md`.
 
 ### 5. Hand over
 
@@ -211,8 +215,8 @@ no match, repairs, and the file paths. Don't upload; the user reviews and
 uploads:
 
 1. `batches/direct_NNN.qs` to QuickStatements 3, then
-   `$CB resolve $B batch-<id>-report.csv` (records what went through;
-   `$CB report $B` shows what is left);
+   `$WI resolve $I batch-<id>-report.csv` (records what went through;
+   `$WI report $I` shows what is left);
 2. `batches/curator_NNN.qs` after reading its review sheet (CREATE blocks
    first; `resolve` its report too, so new QIDs are recorded);
 3. `removals.qs` after reading the report's Repairs section.
@@ -223,13 +227,13 @@ When many entities stay medium with 2–4 plausible candidates, players can
 pick the right one. The match is the edit, so the game writes P10626 itself:
 
 ```bash
-$CB como $B --link-property P10626            # como/reconcile_person.json or reconcile_building.json
-$CB validate-game agentic-reconcile/to_match/<run>/como/reconcile_person.json
+$WI como $I --link-property P10626            # como/reconcile_person.json or reconcile_building.json
+$WI validate-game agentic-reconcile/to_match/<run>/como/reconcile_person.json
 ```
 
-Review the file's settings first (the como-game-creator skill covers game
+Review the file's settings first (the wikibase-ingest skill covers game
 design). The user creates the game from the file. Later,
-`$CB como-sync $B <game URL>` applies the answers. "None of these" rules the
+`$WI como-sync $I <game URL>` applies the answers. "None of these" rules the
 shown candidates out for good; with `--create` it makes the entity a new
 item, which the next `finish.py` puts into the curator batch.
 
@@ -332,7 +336,7 @@ looked up.
 
 | Found | Where it goes |
 |---|---|
-| Matched item lacks the CbDD GND / Bildindex | nothing to do: the bundle's `<UUID>:P227`/`:P2092` claims go into the curator batch with the CbDD reference (`S248 Q107174967 S10626 "<UUID>"`); values already present are skipped by preflight. If the GND names something else (lobid hint), `$CB decide $B <UUID>:P227=reject --reason …` and add a CbDD correction |
+| Matched item lacks the CbDD GND / Bildindex | nothing to do: the ingest file's `<UUID>:P227`/`:P2092` claims go into the curator batch with the CbDD reference (`S248 Q107174967 S10626 "<UUID>"`); values already present are skipped by preflight. If the GND names something else (lobid hint), `$WI decide $I <UUID>:P227=reject --reason …` and add a CbDD correction |
 | Malformed value on Wikidata (a P10626 that is no UUID, `"cbdd10059"`, next to the valid one) | `notes.json` → `removals`: `{"line": "-Q…\tP10626\t\"cbdd10059\"", "why": "…"}` |
 | A demonstrably wrong statement (identifier of another building, wrong P131) | `removals` (plus the correct value in `notes` if known) |
 | Two Wikidata items for the same building/person | `notes`: merging is not reversible by batch; the user merges via Special:MergeItems |

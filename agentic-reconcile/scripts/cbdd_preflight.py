@@ -2,7 +2,7 @@
 cbdd_preflight.py
 
 Preflight hook of the CbDD adapter (adapter.toml), run by
-`claim-bundle preflight --adapter agentic-reconcile --pipeline <type>` after
+`wikibase-ingest preflight --adapter agentic-reconcile --pipeline <type>` after
 the generic checks. It checks what only the CbDD dump knows:
 
   CbDD duplicates  another CbDD record of the same type has the matched
@@ -13,7 +13,7 @@ the generic checks. It checks what only the CbDD dump knows:
 Exit 1 with one line per problem, 0 if there is none. Run from the
 repository root:
 
-    uv run python agentic-reconcile/scripts/cbdd_preflight.py <run>/bundle.json
+    uv run python agentic-reconcile/scripts/cbdd_preflight.py <run>/ingest.json
 """
 
 import json

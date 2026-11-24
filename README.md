@@ -230,21 +230,21 @@ prefixes), convert it with [To QLever](https://to-qlever.toolforge.org/).
 [agentic-reconcile/](agentic-reconcile/SKILL.md) is an agent skill that
 matches people and buildings from `missing/missing_people.csv` /
 `missing/missing_buildings.csv` against existing Wikidata items and, with
-`--create`, prepares new items for the ones that have none. It is an
-**adapter** for the reconciliation pipeline `claim-bundle` of the
-[como-game-creator skill](https://gitlab.wikimedia.org/kristbaum/como-game-creator-skill),
-which does everything generic (candidate generation, evidence, routing,
-preflight checks, QuickStatements batches, Como games).
+`--create`, prepares new items for the ones that have none. It is a
+**dataset skill** for the
+[wikibase-ingest skill](https://gitlab.wikimedia.org/kristbaum/wikibase-ingest),
+which runs the generic pipeline (candidate generation, verification,
+triage, preflight checks, QuickStatements batches, Como games).
 [agentic-reconcile/adapter.toml](agentic-reconcile/adapter.toml) declares
-the CbDD parts: the bundle builder (reusing the sync tool's statement
+the CbDD parts: the ingest file builder (reusing the sync tool's statement
 mapping), CbDD evidence (lifetime against the works, lobid GND links, street
 addresses, monument components), the routing policies and the CbDD checks.
 Each run gets a folder in `agentic-reconcile/to_match/` with the batches and
 an evidence report.
 
-It needs the como-game-creator skill installed (or a
-`como-game-creator-skill` checkout next to this repository, or
-`$CLAIM_BUNDLE`); `agentic-reconcile/scripts/claim-bundle` finds it.
+It needs the wikibase-ingest skill installed (or a
+`wikibase-ingest` checkout next to this repository, or
+`$WIKIBASE_INGEST`); `agentic-reconcile/scripts/wikibase-ingest` finds it.
 
 Package it as a `.skill` file (a zip of the skill folder, without the
 generated runs):

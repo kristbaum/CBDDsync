@@ -7,8 +7,8 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parent.parent / "agentic-reconcile" / "scripts")
 )
 
-import cbdd_bundle
 import cbdd_hints
+import cbdd_ingest
 
 UUID_P = "11111111-1111-4111-8111-111111111111"
 UUID_W = "22222222-2222-4222-8222-222222222222"
@@ -25,7 +25,7 @@ def item(**props):
 
 
 def test_variants_natural_order_and_swaps():
-    v = cbdd_bundle.variants("Reiser, Joseph Anton")
+    v = cbdd_ingest.variants("Reiser, Joseph Anton")
     assert v[0] == "Joseph Anton Reiser"
     assert "Joseph Reiser" in v
     assert "Josef Anton Reiser" in v
@@ -33,20 +33,20 @@ def test_variants_natural_order_and_swaps():
 
 def test_variants_particle_and_title():
     assert (
-        cbdd_bundle.variants("Mengersen, Franz Josef von")[0]
+        cbdd_ingest.variants("Mengersen, Franz Josef von")[0]
         == "Franz Josef von Mengersen"
     )
-    v = cbdd_bundle.variants("Baden-Durlach, Albertina Friederike, Markgräfin")
+    v = cbdd_ingest.variants("Baden-Durlach, Albertina Friederike, Markgräfin")
     assert "Albertina Friederike von Baden-Durlach" in v
 
 
 def test_variants_drop_dates_and_life_in_name():
-    assert cbdd_bundle.variants("Kopp, Gottfried (1652–1723)") == ["Gottfried Kopp"]
-    assert cbdd_bundle.life_in_name(["Kopp, Gottfried (1652–1723)"]) == (1652, 1723)
-    assert cbdd_bundle.life_in_name(["Kopp, Gottfried"]) == (None, None)
+    assert cbdd_ingest.variants("Kopp, Gottfried (1652–1723)") == ["Gottfried Kopp"]
+    assert cbdd_ingest.life_in_name(["Kopp, Gottfried (1652–1723)"]) == (1652, 1723)
+    assert cbdd_ingest.life_in_name(["Kopp, Gottfried"]) == (None, None)
 
 
-# --- bundle ------------------------------------------------------------------
+# --- ingest file ---------------------------------------------------------------
 
 
 def fake_dump():
@@ -87,11 +87,11 @@ def fake_dump():
 
 def test_build_people_bundle():
     entities, incoming, parent = fake_dump()
-    bundle, kind = cbdd_bundle.build([UUID_P], entities, incoming, parent, {}, "test")
+    bundle, kind = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "test")
     assert kind == "people"
     e = bundle["entities"][f"_:cbdd:{UUID_P}"]
     assert e["labels"]["de"] == "Joseph Anton Reiser"
-    assert e["types"] == [cbdd_bundle.HUMAN]
+    assert e["types"] == [cbdd_ingest.HUMAN]
     assert "Maler" in e["descriptions"]["de"] and "1780" in e["descriptions"]["de"]
     props = {f["property"]: f["value"] for f in e["facts"]}
     assert props["P10626"]["value"] == UUID_P
@@ -110,10 +110,10 @@ def test_build_people_bundle():
 
 def test_build_buildings_bundle_skips_malformed_gnd_claim():
     entities, incoming, parent = fake_dump()
-    bundle, kind = cbdd_bundle.build([UUID_B], entities, incoming, parent, {}, "test")
+    bundle, kind = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "test")
     assert kind == "buildings"
     e = bundle["entities"][f"_:cbdd:{UUID_B}"]
-    assert e["types"] == cbdd_bundle.BUILDING_TYPES
+    assert e["types"] == cbdd_ingest.BUILDING_TYPES
     props = {f["property"]: f["value"] for f in e["facts"]}
     assert props["P625"] == {"type": "coordinate", "lat": 48.06, "lon": 9.61}
     assert props["P2092"]["value"] == "20012345"
@@ -124,12 +124,12 @@ def test_build_buildings_bundle_skips_malformed_gnd_claim():
 
 def test_build_skips_linked_and_refuses_mixed_types():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_bundle.build(
+    bundle, _ = cbdd_ingest.build(
         [UUID_P, UUID_B], entities, incoming, parent, {UUID_B: "Q1"}, "t"
     )
     assert list(bundle["entities"]) == [f"_:cbdd:{UUID_P}"]
     try:
-        cbdd_bundle.build([UUID_P, UUID_B], entities, incoming, parent, {}, "t")
+        cbdd_ingest.build([UUID_P, UUID_B], entities, incoming, parent, {}, "t")
     except SystemExit as ex:
         assert "one entity type" in str(ex)
     else:
@@ -203,7 +203,7 @@ def test_hint_replaces_gnd_line():
 def test_people_names_split_into_aliases_and_search_names():
     entities, incoming, parent = fake_dump()
     entities[UUID_P]["alternativeNames"] = ["Reißer, Joseph Anton"]
-    bundle, _ = cbdd_bundle.build([UUID_P], entities, incoming, parent, {}, "t")
+    bundle, _ = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "t")
     e = bundle["entities"][f"_:cbdd:{UUID_P}"]
     assert e["labels"]["de"] == "Joseph Anton Reiser"
     assert e["aliases"] == {"de": ["Joseph Anton Reißer"]}
@@ -213,7 +213,7 @@ def test_people_names_split_into_aliases_and_search_names():
 
 def test_create_mode_people():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_bundle.build(
+    bundle, _ = cbdd_ingest.build(
         [UUID_P], entities, incoming, parent, {}, "t", create=True
     )
     assert bundle["create_requires"] == ["P31"]
@@ -230,7 +230,7 @@ def test_create_mode_people():
 
 def test_create_mode_buildings_uses_sync_mapping():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_bundle.build(
+    bundle, _ = cbdd_ingest.build(
         [UUID_B], entities, incoming, parent, {}, "t", create=True
     )
     e = bundle["entities"][f"_:cbdd:{UUID_B}"]
@@ -250,7 +250,7 @@ def test_create_mode_buildings_uses_sync_mapping():
 
 def test_without_create_no_creation_claims():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_bundle.build([UUID_B], entities, incoming, parent, {}, "t")
+    bundle, _ = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "t")
     assert not any(c.get("only_if_created") for c in bundle["claims"])
     assert bundle["entities"][f"_:cbdd:{UUID_B}"]["on_no_match"] == "curator"
 

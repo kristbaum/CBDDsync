@@ -1,9 +1,9 @@
 """
 cbdd_hints.py
 
-CbDD-specific evidence for a run bundle, the part claim-bundle's generic
-`verify` cannot compute. Run it after `claim-bundle candidates` and before
-`claim-bundle verify`:
+CbDD-specific evidence for a run's ingest file, the part wikibase-ingest's generic
+`verify` cannot compute. Run it after `wikibase-ingest candidates` and before
+`wikibase-ingest verify`:
 
   people     - the Wikidata item the CbDD GND record links to (lobid sameAs)
                becomes a candidate, also when it lacks P227 (a repair);
@@ -25,7 +25,7 @@ policy/ hide candidates with a verified contradiction ("custom", "date"). A
 matching address is shown, never matched on (parts of a complex share it). Wikidata items and lobid records are cached in
 agentic-reconcile/.cache/ (items for a week).
 
-    uv run python agentic-reconcile/scripts/cbdd_hints.py <run>/bundle.json [--write]
+    uv run python agentic-reconcile/scripts/cbdd_hints.py <run>/ingest.json [--write]
 """
 
 import argparse
@@ -484,7 +484,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[1])
     ap.add_argument("bundle", type=Path)
     ap.add_argument(
-        "--write", action="store_true", help="write the evidence into the bundle"
+        "--write", action="store_true", help="write the evidence into the ingest file"
     )
     args = ap.parse_args()
     bundle = json.loads(args.bundle.read_text(encoding="utf-8"))

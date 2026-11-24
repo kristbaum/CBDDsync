@@ -51,17 +51,17 @@ CBDDsync/
 │   ├── existing_paintings.csv
 │   ├── existing_rooms.csv
 │   └── existing_room_sequences.csv
-├── agentic-reconcile/          # Agent skill: an adapter for the claim-bundle pipeline (como-game-creator skill)
-│   ├── SKILL.md                # CbDD workflow and review rules; generic steps live in claim-bundle
-│   ├── adapter.toml            # claim-bundle adapter manifest: pipelines, hooks, policies, options
-│   ├── policy/<type>.json      # claim-bundle routing policies (auto-match rules, hidden candidates)
-│   ├── scripts/claim-bundle    # Launcher: finds the installed pipeline (no copy shipped)
-│   ├── scripts/cbdd_bundle.py  # CbDD dump → claim bundle; --create reuses src/config.py STATEMENT_CHECKS
+├── agentic-reconcile/          # Dataset skill + adapter for the wikibase-ingest skill
+│   ├── SKILL.md                # CbDD workflow and review rules; generic steps live in wikibase-ingest
+│   ├── adapter.toml            # wikibase-ingest adapter manifest: pipelines, hooks, policies, options
+│   ├── policy/<type>.json      # Triage policies (auto-match rules, hidden candidates)
+│   ├── scripts/wikibase-ingest # Launcher: finds the installed wikibase-ingest (no copy shipped)
+│   ├── scripts/cbdd_ingest.py  # CbDD dump → ingest file; --create reuses src/config.py STATEMENT_CHECKS
 │   ├── scripts/cbdd_hints.py   # Evidence hook: lobid, lifetime vs. works, address, monument parts
 │   ├── scripts/cbdd_preflight.py # Preflight hook: duplicate records in CbDD
 │   ├── scripts/cbdd_context.py # Per-entity evidence dossier from sources/*.json
-│   ├── scripts/finish.py       # claim-bundle preflight + next, report.md, removals.qs
-│   └── to_match/<type>_<date>/ # One run: bundle.json, state, batches/, notes.json, report.md
+│   ├── scripts/finish.py       # wikibase-ingest preflight + next, report.md, removals.qs
+│   └── to_match/<type>_<date>/ # One run: ingest.json, state, batches/, notes.json, report.md
 ├── agentic-reconcile.skill     # Packaged skill (zip; rebuild with the command in README.md)
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
