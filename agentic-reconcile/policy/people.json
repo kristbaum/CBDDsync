@@ -1,0 +1,5 @@
+{
+  "auto_match": [["identifier:P227", "class"]],
+  "exclude": ["identifier", "date", "class", "custom"],
+  "min_name": {"person": 0.6}
+}

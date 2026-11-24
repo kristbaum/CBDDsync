@@ -20,3 +20,7 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.ty.environment]
+# The agentic-reconcile scripts import each other as top-level modules.
+extra-paths = ["agentic-reconcile/scripts"]

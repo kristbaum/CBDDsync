@@ -1,0 +1,39 @@
+# claim-bundle adapter for deckenmalerei.eu (CbDD) → Wikidata.
+# The generic pipeline (candidates, verify, route, preflight, batches, games)
+# is claim-bundle's; this manifest only declares the CbDD parts.
+# `agentic-reconcile/scripts/claim-bundle adapter agentic-reconcile` shows it.
+
+name = "cbdd"
+description = "deckenmalerei.eu (CbDD) people and buildings missing on Wikidata"
+cwd = ".."  # the CBDDsync repository root: the scripts read sources/
+
+[options]  # answers to the intake questions (claim-bundle reference/options.md)
+goal = "link; create with cbdd_bundle.py --create"
+link_property = "P10626"
+on_no_match = "curator (create with --create)"
+creation = "P31 + sync-tool statements (gender | inception, postal code, coordinates) + occupation, curator batch"
+auto_match = "people: CbDD GND on a human; buildings: identifier + 300 m + building class"
+unclear = "agent review (curator); Como game optional"
+references = "stated in CbDD (Q107174967) + deckenmalerei.eu ID"
+language = "de"
+
+[pipelines.people]
+description = "CbDD people (ACTOR_PERSON) from missing/missing_people.csv"
+build = "uv run python agentic-reconcile/scripts/cbdd_bundle.py --csv missing/missing_people.csv --limit 50 --skip-done"
+policy = "policy/people.json"
+candidates = [{method = "identifier"}, {method = "label"}]
+evidence = ["uv run python agentic-reconcile/scripts/cbdd_hints.py {bundle} --write"]
+preflight = ["uv run python agentic-reconcile/scripts/cbdd_preflight.py {bundle}"]
+link_property = "P10626"
+link_format = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+
+[pipelines.buildings]
+description = "CbDD buildings (OBJECT_BUILDING) from missing/missing_buildings.csv"
+build = "uv run python agentic-reconcile/scripts/cbdd_bundle.py --csv missing/missing_buildings.csv --limit 50 --skip-done"
+policy = "policy/buildings.json"
+candidates = [{method = "identifier"}, {method = "geo", radius = 0.3, limit = 20, keep = 25}]
+verify = {radius = 0.3, far = 10}
+evidence = ["uv run python agentic-reconcile/scripts/cbdd_hints.py {bundle} --write"]
+preflight = ["uv run python agentic-reconcile/scripts/cbdd_preflight.py {bundle}"]
+link_property = "P10626"
+link_format = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"

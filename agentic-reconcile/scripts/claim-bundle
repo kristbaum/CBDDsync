@@ -1,0 +1,44 @@
+#!/bin/sh
+# Runs `claim-bundle`, the reconciliation pipeline of the como-game-creator
+# skill (https://gitlab.wikimedia.org/kristbaum/como-game-creator-skill).
+# This skill keeps only the CbDD-specific parts and runs every generic step
+# (candidates, verify, route, decide, next, resolve, como, report) with it:
+#
+#   agentic-reconcile/scripts/claim-bundle --help
+#
+# This skill is an adapter (agentic-reconcile/adapter.toml); it ships no copy
+# of the pipeline. Looks for, in order:
+#   1. $CLAIM_BUNDLE, a claim-bundle executable;
+#   2. the launcher of an installed como-game-creator skill;
+#   3. a como-game-creator-skill checkout next to the CBDDsync repository;
+#   4. claim-bundle on the PATH (uv tool install / pipx).
+set -e
+export WITH_EXTENSION="${WITH_EXTENSION:-0}"  # mwparserfromhell: pure-Python build on new Pythons
+here=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+if [ -n "$CLAIM_BUNDLE" ]; then
+    exec "$CLAIM_BUNDLE" "$@"
+fi
+
+for launcher in \
+    "$here/../../como-game-creator/scripts/claim-bundle" \
+    "$HOME/.claude/skills/como-game-creator/scripts/claim-bundle" \
+    "$HOME"/.claude/skills/*/como-game-creator/scripts/claim-bundle \
+    "$HOME"/.claude/skills/*/*/como-game-creator/scripts/claim-bundle \
+    /mnt/skills/*/como-game-creator/scripts/claim-bundle \
+    "$here/../../../como-game-creator-skill/skill/scripts/claim-bundle"; do
+    if [ -x "$launcher" ]; then
+        exec "$launcher" "$@"
+    fi
+done
+
+if command -v claim-bundle >/dev/null 2>&1; then
+    exec claim-bundle "$@"
+fi
+
+cat >&2 <<'EOF'
+claim-bundle not found. Install the como-game-creator skill, clone
+https://gitlab.wikimedia.org/kristbaum/como-game-creator-skill next to the
+CBDDsync repository, or set CLAIM_BUNDLE to a claim-bundle executable.
+EOF
+exit 2

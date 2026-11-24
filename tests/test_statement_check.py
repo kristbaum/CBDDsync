@@ -8,11 +8,14 @@ import pytest
 from src.statement_check import (
     build_potential_statements,
     compute_missing,
+    coordinate_distance_m,
+    coordinate_is_close,
     extract_qid,
     format_qs_value,
     load_cbdd_ids,
     normalize_coordinate,
     normalize_for_comparison,
+    parse_coordinate,
     run_statement_check,
     unify_wikidata_results,
     write_quickstatements_csv,
@@ -95,6 +98,45 @@ class TestNormalizeCoordinate:
     def test_unparseable_value_is_returned_unchanged(self):
         assert normalize_coordinate("somewhere") == "somewhere"
         assert normalize_coordinate("Point(a b)") == "Point(a b)"
+
+
+class TestParseCoordinate:
+    def test_wkt_point_is_parsed_as_lat_lng(self):
+        assert parse_coordinate("Point(11.5679 48.2482)") == (48.2482, 11.5679)
+
+    def test_internal_slash_form_is_parsed(self):
+        assert parse_coordinate("48.2482/11.5679") == (48.2482, 11.5679)
+
+    def test_unparseable_value_gives_none(self):
+        assert parse_coordinate("somewhere") is None
+        assert parse_coordinate("Point(a b)") is None
+
+
+class TestCoordinateDistance:
+    def test_same_point_is_zero(self):
+        assert coordinate_distance_m((48.0, 11.0), (48.0, 11.0)) == 0
+
+    def test_one_millidegree_of_latitude_is_about_111_metres(self):
+        d = coordinate_distance_m((48.0, 11.0), (48.001, 11.0))
+        assert d == pytest.approx(111.2, abs=0.5)
+
+
+class TestCoordinateIsClose:
+    def test_nearby_existing_coordinate_is_close(self):
+        # ~55 m north
+        assert coordinate_is_close("48.2487/11.5679", {"Point(11.5679 48.2482)"})
+
+    def test_distant_existing_coordinate_is_not_close(self):
+        # ~1.1 km north
+        assert not coordinate_is_close("48.2582/11.5679", {"Point(11.5679 48.2482)"})
+
+    def test_any_of_several_existing_values_suffices(self):
+        existing = {"Point(0 0)", "Point(11.5679 48.2482)"}
+        assert coordinate_is_close("48.2483/11.5680", existing)
+
+    def test_unparseable_values_are_never_close(self):
+        assert not coordinate_is_close("somewhere", {"Point(11.5679 48.2482)"})
+        assert not coordinate_is_close("48.2482/11.5679", {"somewhere"})
 
 
 class TestNormalizeForComparison:
@@ -271,6 +313,18 @@ class TestComputeMissing:
         potential = {"Q1": {"P625": {"48.248213/11.567891"}}}
         existing = {"Q1": {"P625": {"Point(11.56789 48.24821)"}}}
         assert compute_missing(potential, existing) == {}
+
+    def test_nearby_coordinate_is_not_reported(self):
+        potential = {"Q1": {"P625": {"48.2487/11.5679"}}}
+        existing = {"Q1": {"P625": {"Point(11.5679 48.2482)"}}}
+        assert compute_missing(potential, existing) == {}
+
+    def test_distant_coordinate_is_reported(self):
+        potential = {"Q1": {"P625": {"48.2582/11.5679"}}}
+        existing = {"Q1": {"P625": {"Point(11.5679 48.2482)"}}}
+        assert compute_missing(potential, existing) == {
+            "Q1": {"P625": ["48.2582/11.5679"]}
+        }
 
     def test_other_items_statements_do_not_mask_a_gap(self):
         potential = {"Q1": {"P571": {"1720"}}}

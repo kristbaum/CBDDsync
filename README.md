@@ -229,12 +229,25 @@ prefixes), convert it with [To QLever](https://to-qlever.toolforge.org/).
 
 [agentic-reconcile/](agentic-reconcile/SKILL.md) is an agent skill that
 matches people and buildings from `missing/missing_people.csv` /
-`missing/missing_buildings.csv` against existing Wikidata items and writes a
-QuickStatements batch (adding P10626), a repair batch for errors it finds on
-Wikidata, and an evidence report to `agentic-reconcile/to_match/`.
+`missing/missing_buildings.csv` against existing Wikidata items and, with
+`--create`, prepares new items for the ones that have none. It is an
+**adapter** for the reconciliation pipeline `claim-bundle` of the
+[como-game-creator skill](https://gitlab.wikimedia.org/kristbaum/como-game-creator-skill),
+which does everything generic (candidate generation, evidence, routing,
+preflight checks, QuickStatements batches, Como games).
+[agentic-reconcile/adapter.toml](agentic-reconcile/adapter.toml) declares
+the CbDD parts: the bundle builder (reusing the sync tool's statement
+mapping), CbDD evidence (lifetime against the works, lobid GND links, street
+addresses, monument components), the routing policies and the CbDD checks.
+Each run gets a folder in `agentic-reconcile/to_match/` with the batches and
+an evidence report.
+
+It needs the como-game-creator skill installed (or a
+`como-game-creator-skill` checkout next to this repository, or
+`$CLAIM_BUNDLE`); `agentic-reconcile/scripts/claim-bundle` finds it.
 
 Package it as a `.skill` file (a zip of the skill folder, without the
-generated batches and reports):
+generated runs):
 
 ```bash
 rm -f agentic-reconcile.skill && zip -r agentic-reconcile.skill agentic-reconcile -x 'agentic-reconcile/to_match/*' 'agentic-reconcile/.cache/*' '*__pycache__*'

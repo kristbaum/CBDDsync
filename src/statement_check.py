@@ -17,9 +17,15 @@ room sequences).
 
 import csv
 import json
+import math
 from pathlib import Path
 
-from src.config import CBDD_ID_PID, CBDD_SOURCE_QID, STATEMENT_CHECKS
+from src.config import (
+    CBDD_ID_PID,
+    CBDD_SOURCE_QID,
+    COORDINATE_TOLERANCE_M,
+    STATEMENT_CHECKS,
+)
 from src.quickstatements import qs_line, qs_string, write_qs_file
 
 # Property groupings that drive value formatting / comparison. These are keyed by
@@ -28,6 +34,7 @@ DESCRIPTION_PIDS = {"Den", "Dde"}
 DATE_PIDS = {"P571"}
 DIMENSION_PIDS = {"P2049", "P2043", "P2048", "P2386"}  # width/length/height/diameter
 COORDINATE_PIDS = {"P625"}
+EARTH_RADIUS_M = 6_371_000
 # Quoted plain strings: Bildindex, Iconclass, postal code
 STRING_PIDS = {"P2092", "P1256", "P1257", "P281"}
 
@@ -79,13 +86,13 @@ def format_qs_value(pid: str, val: str) -> str:
     return val
 
 
-def normalize_coordinate(val: str) -> str:
+def parse_coordinate(val: str) -> tuple[float, float] | None:
     """
-    Normalize a coordinate to a comparable "lat,lng" string rounded to 4 decimals.
+    Parse a coordinate into (lat, lng), or None if it cannot be parsed.
 
     Accepts the WKT form Wikidata query services return ("Point(lng lat)" from
     WDQS, "POINT(lng lat)" from QLever) and the internal "lat/lng" form built
-    from the CSV. Returns the input unchanged if it cannot be parsed.
+    from the CSV.
     """
     val = val.strip()
     try:
@@ -94,10 +101,50 @@ def normalize_coordinate(val: str) -> str:
         elif "/" in val:
             lat, lng = val.split("/", 1)
         else:
-            return val
-        return f"{round(float(lat), 4)},{round(float(lng), 4)}"
+            return None
+        return float(lat), float(lng)
     except ValueError:
-        return val
+        return None
+
+
+def normalize_coordinate(val: str) -> str:
+    """
+    Normalize a coordinate to a comparable "lat,lng" string rounded to 4 decimals.
+
+    Accepts the same forms as parse_coordinate. Returns the input unchanged if it
+    cannot be parsed.
+    """
+    parsed = parse_coordinate(val)
+    if parsed is None:
+        return val.strip()
+    lat, lng = parsed
+    return f"{round(lat, 4)},{round(lng, 4)}"
+
+
+def coordinate_distance_m(a: tuple[float, float], b: tuple[float, float]) -> float:
+    """Great-circle (haversine) distance in metres between two (lat, lng) pairs."""
+    lat1, lng1 = map(math.radians, a)
+    lat2, lng2 = map(math.radians, b)
+    h = (
+        math.sin((lat2 - lat1) / 2) ** 2
+        + math.cos(lat1) * math.cos(lat2) * math.sin((lng2 - lng1) / 2) ** 2
+    )
+    return 2 * EARTH_RADIUS_M * math.asin(math.sqrt(h))
+
+
+def coordinate_is_close(val: str, existing_values: set[str]) -> bool:
+    """True if ``val`` lies within COORDINATE_TOLERANCE_M of any existing value."""
+    point = parse_coordinate(val)
+    if point is None:
+        return False
+    for other in existing_values:
+        other_point = parse_coordinate(other)
+        if (
+            other_point is not None
+            and coordinate_distance_m(point, other_point) <= COORDINATE_TOLERANCE_M
+        ):
+            return True
+    return False
 
 
 def normalize_for_comparison(pid: str, val: str) -> str:
@@ -244,8 +291,11 @@ def compute_missing(
 
             for val in values:
                 val_normalized = normalize_for_comparison(pid, val)
-                if val_normalized not in existing_normalized:
-                    missing.setdefault(qid, {}).setdefault(pid, []).append(val)
+                if val_normalized in existing_normalized:
+                    continue
+                if pid in COORDINATE_PIDS and coordinate_is_close(val, existing_values):
+                    continue
+                missing.setdefault(qid, {}).setdefault(pid, []).append(val)
 
     return missing
 

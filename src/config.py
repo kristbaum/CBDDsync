@@ -206,6 +206,10 @@ GENDER_MAP = {
 CBDD_SOURCE_QID = "Q107174967"  # Corpus of Baroque Ceiling Painting in Germany
 CBDD_ID_PID = "P10626"  # deckenmalerei.eu ID
 
+# A CbDD coordinate within this many metres of an existing P625 value on the
+# item counts as already present, so no new coordinate statement is proposed.
+COORDINATE_TOLERANCE_M = 100
+
 # Per-entity-type configuration for statement_check.py.
 #
 # The comparison logic in statement_check.py is generic; everything specific to
