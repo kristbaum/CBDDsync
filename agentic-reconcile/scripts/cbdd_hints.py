@@ -11,8 +11,8 @@ CbDD-specific evidence for a run's ingest file, the part wikibase-ingest's gener
                + fits, - contradicts most works with their own dating,
                0 fits most but not all (datings list a building's phases);
              - gender differs from CbDD (custom, P21, -)
-  buildings  - the CbDD street address equals the item's P6375 or label
-               (custom, P6375, +);
+  buildings  - the CbDD street address equals the item's P6375 or label,
+               and the item is in the same town (custom, P6375, +);
              - the item is a numbered component of a Bavarian monument
                ("… (D-1-81-122-26#1)"): custom P361 -, and the monument
                it is part of becomes a candidate (custom P361 +)
@@ -31,6 +31,7 @@ agentic-reconcile/.cache/ (items for a week).
 import argparse
 import datetime
 import json
+import math
 import re
 import sys
 import time
@@ -46,7 +47,18 @@ CACHE = Path("agentic-reconcile/.cache")
 ITEM_DAYS = 7
 UA = "CBDDsync-agentic-reconcile/0.3 (https://github.com/kristbaum/CBDDsync)"
 WD_API = "https://www.wikidata.org/w/api.php"
-PROPS = ["P31", "P21", "P569", "P570", "P1317", "P2031", "P2032", "P6375", "P361"]
+PROPS = [
+    "P31",
+    "P21",
+    "P569",
+    "P570",
+    "P1317",
+    "P2031",
+    "P2032",
+    "P6375",
+    "P361",
+    "P625",
+]
 GENDER = {"MALE": "Q6581097", "FEMALE": "Q6581072"}
 COMPONENT = re.compile(r"\(D-\d-\d+-\d+-\d+#\d+\)")
 
@@ -147,7 +159,9 @@ def items(qids: set[str]) -> dict[str, dict]:
                 vals = []
                 for c in e.get("claims", {}).get(prop, []):
                     v = c["mainsnak"].get("datavalue", {}).get("value")
-                    if isinstance(v, dict):
+                    if isinstance(v, dict) and "latitude" in v:
+                        v = [v["latitude"], v["longitude"]]
+                    elif isinstance(v, dict):
                         v = v.get("id") or v.get("time") or v.get("text")
                     if v:
                         vals.append(v)
@@ -245,6 +259,26 @@ def norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s)
 
 
+def same_town(src: dict, item: dict, description: str) -> bool:
+    """The item is in the CbDD record's town: its P625 within 5 km of the
+    CbDD point, or, without P625, the locality in its label or description
+    ("Markt 9" exists in dozens of towns)."""
+    try:
+        here = (float(src["locationLat"]), float(src["locationLng"]))
+    except (KeyError, TypeError, ValueError):
+        here = None
+    points = [v for v in item.get("P625", []) if isinstance(v, list)]
+    if points and here:
+        return any(km(*here, a, b) <= 5 for a, b in points)
+    town = norm(src.get("addressLocality", ""))
+    return bool(town) and town in norm(item["label"] + " " + description)
+
+
+def km(a: float, b: float, c: float, d: float) -> float:
+    x = math.radians(d - b) * math.cos(math.radians((a + c) / 2))
+    return 6371 * math.hypot(x, math.radians(c - a))
+
+
 def address_match(street: str, item: dict) -> bool:
     """CbDD street + number equals an item address or appears in its label."""
     key = norm(street)
@@ -291,7 +325,7 @@ def add_candidate(e: dict, qid: str, ev: dict) -> bool:
 
 
 def fact(e: dict, prop: str) -> str | None:
-    for f in e.get("facts") or []:
+    for f in e.get("attributes") or []:
         if f.get("property") == prop and isinstance(f.get("value"), dict):
             return f["value"].get("value")
     return None
@@ -308,10 +342,12 @@ def hint(e: dict, text: str) -> None:
     e["hint"] = " · ".join(dict.fromkeys(parts + [text]))
 
 
-def run(bundle: dict) -> dict[str, int]:
+def run(ingest: dict) -> dict[str, int]:
     entities, _, incoming, parent, _ = load()
     todo = {
-        k: e for k, e in bundle["entities"].items() if e.get("status") == "reconcile"
+        k: e
+        for k, e in ingest["source_entities"].items()
+        if e.get("status") == "reconcile"
     }
     counts: dict[str, int] = {}
 
@@ -440,7 +476,11 @@ def run(bundle: dict) -> dict[str, int]:
                 it = data.get(c["id"])
                 if not it:
                     continue
-                if street and address_match(street, it):
+                if (
+                    street
+                    and address_match(street, it)
+                    and same_town(src, it, c.get("description", ""))
+                ):
                     c.setdefault("evidence", []).append(
                         evidence(
                             "custom",
@@ -482,17 +522,17 @@ def run(bundle: dict) -> dict[str, int]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[1])
-    ap.add_argument("bundle", type=Path)
+    ap.add_argument("ingest", type=Path)
     ap.add_argument(
         "--write", action="store_true", help="write the evidence into the ingest file"
     )
     args = ap.parse_args()
-    bundle = json.loads(args.bundle.read_text(encoding="utf-8"))
-    counts = run(bundle)
+    ingest = json.loads(args.ingest.read_text(encoding="utf-8"))
+    counts = run(ingest)
     print(", ".join(f"{k}: {v}" for k, v in sorted(counts.items())) or "nothing found")
     if args.write:
-        args.bundle.write_text(
-            json.dumps(bundle, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        args.ingest.write_text(
+            json.dumps(ingest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
         )
     else:
         print("(dry run: add --write to save)")

@@ -16,6 +16,8 @@ auto_match = "people: CbDD GND on a human; buildings: identifier + 300 m + build
 unclear = "agent review (curator); Como game optional"
 references = "stated in CbDD (Q107174967) + deckenmalerei.eu ID"
 language = "de"
+audit = "off (the default; CbDD sources are short articles, so the per-source minimum would hold back most direct claims)"
+batch_urls = "off (the default; batches are uploaded as files)"
 
 [pipelines.people]
 description = "CbDD people (ACTOR_PERSON) from missing/missing_people.csv"
@@ -31,7 +33,7 @@ link_format = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 description = "CbDD buildings (OBJECT_BUILDING) from missing/missing_buildings.csv"
 build = "uv run python agentic-reconcile/scripts/cbdd_ingest.py --csv missing/missing_buildings.csv --limit 50 --skip-done"
 policy = "policy/buildings.json"
-candidates = [{method = "identifier"}, {method = "geo", radius = 0.3, limit = 20, keep = 25}]
+candidates = [{method = "identifier"}, {method = "label", limit = 5}, {method = "geo", radius = 0.3, limit = 20, keep = 30}]  # label first: keep caps the total
 verify = {radius = 0.3, far = 10}
 evidence = ["uv run python agentic-reconcile/scripts/cbdd_hints.py {ingest} --write"]
 preflight = ["uv run python agentic-reconcile/scripts/cbdd_preflight.py {ingest}"]

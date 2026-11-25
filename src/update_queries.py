@@ -64,10 +64,10 @@ SELECT DISTINCT ?item ?gender WHERE {
 BUILDING_STATEMENTS_QUERY = (
     PREFIXES
     + """
-SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {
+SELECT DISTINCT ?item ?inception ?streetAddress ?coordinate WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
   OPTIONAL { ?item wdt:P571 ?inception. }
-  OPTIONAL { ?item wdt:P281 ?postalCode. }
+  OPTIONAL { ?item wdt:P6375 ?streetAddress. }
   OPTIONAL { ?item wdt:P625 ?coordinate. }
 }
 """

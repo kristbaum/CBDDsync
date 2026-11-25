@@ -23,7 +23,7 @@ Summary of existing entities (in query.csv):
 ## Script
 
 - **entity_check.py**: Python script that uses the query.csv file to check if an entity exists both in deckenmalerei.eu db and Wikidata. It outputs tables of the entities missing in Wikidata. There should be three tables: people (sType: ACTOR_PERSON), buildings (sType: OBJECT_BUILDING), paintings (sType: OBJECT_PAINTING). The resulting table have the csv format and contain the "appelation" field as well as the ID field.
-- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Alongside each CSV it writes a QuickStatements V1 batch `missing/missing_<type>_statements.qs` (rendered by `src/quickstatements.py`). Statements generated per type: people → sex or gender (P21); buildings → inception (P571), postal code (P281), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
+- **statement_check.py**: Compares potential statements derived from deckenmalerei.eu data against what already exists in Wikidata, and outputs the missing ones in QuickStatements CSV format. It is a generic engine that runs one check per entity type (people, buildings, paintings, rooms, room sequences), driven by the `STATEMENT_CHECKS` config. Each type reads its `existing/existing_<type>.csv` and a cached Wikidata query `sources/query_<type>_statements.json`, and writes `missing/missing_<type>_statements.csv`. Types whose query file is absent are skipped with a note. Alongside each CSV it writes a QuickStatements V1 batch `missing/missing_<type>_statements.qs` (rendered by `src/quickstatements.py`). Statements generated per type: people → sex or gender (P21); buildings → inception (P571), street address (P6375, German monolingual text, with the postal code as P281 qualifier), coordinate location (P625); paintings → creator/inception/materials/dimensions/etc.; rooms & room sequences → inception (P571).
 
 ## Helpers
 
@@ -104,13 +104,13 @@ SELECT DISTINCT ?item ?gender WHERE {
 
 ### Building Statement Query
 
-Result keys: `item`, `inception` (**P571**), `postalCode` (**P281**), `coordinate` (**P625**, returned as a `POINT(lng lat)` WKT literal — QLever uses uppercase `POINT`, unlike WDQS's `Point`; `normalize_coordinate` in `src/statement_check.py` accepts both). Save as `sources/query_building_statements.json`.
+Result keys: `item`, `inception` (**P571**), `streetAddress` (**P6375**), `coordinate` (**P625**, returned as a `POINT(lng lat)` WKT literal — QLever uses uppercase `POINT`, unlike WDQS's `Point`; `normalize_coordinate` in `src/statement_check.py` accepts both). Save as `sources/query_building_statements.json`.
 
 ```sparql
-SELECT DISTINCT ?item ?inception ?postalCode ?coordinate WHERE {
+SELECT DISTINCT ?item ?inception ?streetAddress ?coordinate WHERE {
   ?item wdt:P10626 ?deckenmalerei_eu_ID.
   OPTIONAL { ?item wdt:P571 ?inception. }
-  OPTIONAL { ?item wdt:P281 ?postalCode. }
+  OPTIONAL { ?item wdt:P6375 ?streetAddress. }
   OPTIONAL { ?item wdt:P625 ?coordinate. }
 }
 ```
@@ -215,7 +215,8 @@ and the `query_<type>_statements.json` files, run the queries directly on
 [qlever.dev](https://qlever.dev/wikidata):
 
 ```bash
-uv run python -m src.update_queries                    # all query files
+uv run setup.py --wikidata-only                        # all query files
+uv run python -m src.update_queries                    # same
 uv run python -m src.update_queries entities paintings # only some of them
 ```
 
@@ -242,16 +243,11 @@ addresses, monument components), the routing policies and the CbDD checks.
 Each run gets a folder in `agentic-reconcile/to_match/` with the batches and
 an evidence report.
 
-It needs the wikibase-ingest skill installed (or a
-`wikibase-ingest` checkout next to this repository, or
-`$WIKIBASE_INGEST`); `agentic-reconcile/scripts/wikibase-ingest` finds it.
-
-Package it as a `.skill` file (a zip of the skill folder, without the
-generated runs):
-
-```bash
-rm -f agentic-reconcile.skill && zip -r agentic-reconcile.skill agentic-reconcile -x 'agentic-reconcile/to_match/*' 'agentic-reconcile/.cache/*' '*__pycache__*'
-```
+It is not packaged or copied anywhere: it holds instructions for this
+dataset only and runs from this repository. The generic part runs from a
+[wikibase-ingest](https://gitlab.wikimedia.org/kristbaum/wikibase-ingest)
+checkout next to this repository (`../wikibase-ingest`), or from
+`$WIKIBASE_INGEST`; `agentic-reconcile/scripts/wikibase-ingest` finds it.
 
 ## Development
 

@@ -85,19 +85,19 @@ def fake_dump():
     return entities, incoming, parent
 
 
-def test_build_people_bundle():
+def test_build_people_ingest():
     entities, incoming, parent = fake_dump()
-    bundle, kind = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "test")
+    ingest, kind = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "test")
     assert kind == "people"
-    e = bundle["entities"][f"_:cbdd:{UUID_P}"]
+    e = ingest["source_entities"][f"_:cbdd:{UUID_P}"]
     assert e["labels"]["de"] == "Joseph Anton Reiser"
     assert e["types"] == [cbdd_ingest.HUMAN]
     assert "Maler" in e["descriptions"]["de"] and "1780" in e["descriptions"]["de"]
-    props = {f["property"]: f["value"] for f in e["facts"]}
+    props = {f["property"]: f["value"] for f in e["attributes"]}
     assert props["P10626"]["value"] == UUID_P
     assert props["P227"]["value"] == "118599283"
     assert props["P569"]["time"].startswith("+1757")
-    claims = {c["id"]: c for c in bundle["claims"]}
+    claims = {c["id"]: c for c in ingest["claims"]}
     assert claims[f"{UUID_P}:P10626"]["route"] == "direct"
     assert "reference" not in claims[f"{UUID_P}:P10626"]
     gnd = claims[f"{UUID_P}:P227"]
@@ -108,26 +108,27 @@ def test_build_people_bundle():
     }
 
 
-def test_build_buildings_bundle_skips_malformed_gnd_claim():
+def test_build_buildings_ingest_skips_malformed_gnd_claim():
     entities, incoming, parent = fake_dump()
-    bundle, kind = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "test")
+    ingest, kind = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "test")
     assert kind == "buildings"
-    e = bundle["entities"][f"_:cbdd:{UUID_B}"]
+    e = ingest["source_entities"][f"_:cbdd:{UUID_B}"]
     assert e["types"] == cbdd_ingest.BUILDING_TYPES
-    props = {f["property"]: f["value"] for f in e["facts"]}
+    props = {f["property"]: f["value"] for f in e["attributes"]}
     assert props["P625"] == {"type": "coordinate", "lat": 48.06, "lon": 9.61}
     assert props["P2092"]["value"] == "20012345"
-    ids = {c["id"] for c in bundle["claims"]}
+    ids = {c["id"] for c in ingest["claims"]}
     assert f"{UUID_B}:P2092" in ids and f"{UUID_B}:P227" not in ids
     assert "malformed" in e["hint"]
+    assert e["search_names"] == {"de": ["Schlossplatz 1"]}
 
 
 def test_build_skips_linked_and_refuses_mixed_types():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_ingest.build(
+    ingest, _ = cbdd_ingest.build(
         [UUID_P, UUID_B], entities, incoming, parent, {UUID_B: "Q1"}, "t"
     )
-    assert list(bundle["entities"]) == [f"_:cbdd:{UUID_P}"]
+    assert list(ingest["source_entities"]) == [f"_:cbdd:{UUID_P}"]
     try:
         cbdd_ingest.build([UUID_P, UUID_B], entities, incoming, parent, {}, "t")
     except SystemExit as ex:
@@ -181,6 +182,15 @@ def test_address_match():
     assert not cbdd_hints.address_match("Kirchplatz", item(label="Kirchplatz"))
 
 
+def test_same_town():
+    src = {"addressLocality": "Lübeck", "locationLat": "53.87", "locationLng": "10.69"}
+    no_point = item(label="Engelsgrube 12")
+    assert cbdd_hints.same_town(src, no_point, "Bauwerk in der Lübecker Altstadt")
+    assert not cbdd_hints.same_town(src, no_point, "Bauwerk in Göttingen")
+    assert cbdd_hints.same_town(src, item(P625=[[53.871, 10.688]]), "")
+    assert not cbdd_hints.same_town(src, item(P625=[[51.53, 9.93]]), "in Lübeck")
+
+
 def test_add_candidate_respects_rejected():
     e = {"rejected": [{"id": "Q1"}], "candidates": []}
     ev = cbdd_hints.evidence("custom", "+", "x", "P227")
@@ -203,8 +213,8 @@ def test_hint_replaces_gnd_line():
 def test_people_names_split_into_aliases_and_search_names():
     entities, incoming, parent = fake_dump()
     entities[UUID_P]["alternativeNames"] = ["Reißer, Joseph Anton"]
-    bundle, _ = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "t")
-    e = bundle["entities"][f"_:cbdd:{UUID_P}"]
+    ingest, _ = cbdd_ingest.build([UUID_P], entities, incoming, parent, {}, "t")
+    e = ingest["source_entities"][f"_:cbdd:{UUID_P}"]
     assert e["labels"]["de"] == "Joseph Anton Reiser"
     assert e["aliases"] == {"de": ["Joseph Anton Reißer"]}
     assert "Joseph Reiser" in e["search_names"]["de"]
@@ -213,15 +223,17 @@ def test_people_names_split_into_aliases_and_search_names():
 
 def test_create_mode_people():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_ingest.build(
+    ingest, _ = cbdd_ingest.build(
         [UUID_P], entities, incoming, parent, {}, "t", create=True
     )
-    assert bundle["create_requires"] == ["P31"]
-    assert bundle["entities"][f"_:cbdd:{UUID_P}"]["on_no_match"] == "create"
-    new = {c["property"]: c for c in bundle["claims"] if c.get("only_if_created")}
+    assert ingest["create_requires"] == ["P31"]
+    assert ingest["source_entities"][f"_:cbdd:{UUID_P}"]["on_no_match"] == "create"
+    new = {c["property"]: c for c in ingest["claims"] if c.get("only_if_created")}
     assert new["P31"]["value"] == "Q5"
     assert new["P21"]["value"] == "Q6581097"
     assert new["P106"]["value"] == "Q1028181"  # PAINTERS
+    assert new["P569"]["value"]["time"] == "+1757-00-00T00:00:00Z"  # from the name
+    assert new["P570"]["value"]["precision"] == 9
     assert all(
         c["route"] == "curator" and c["reference"]["source"] == "src:cbdd"
         for c in new.values()
@@ -230,41 +242,49 @@ def test_create_mode_people():
 
 def test_create_mode_buildings_uses_sync_mapping():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_ingest.build(
+    ingest, _ = cbdd_ingest.build(
         [UUID_B], entities, incoming, parent, {}, "t", create=True
     )
-    e = bundle["entities"][f"_:cbdd:{UUID_B}"]
+    e = ingest["source_entities"][f"_:cbdd:{UUID_B}"]
     assert e["descriptions"]["de"] == "Kirchengebäude in Bad Buchau"
-    new = {
-        c["property"]: c["value"] for c in bundle["claims"] if c.get("only_if_created")
-    }
+    claims = {c["property"]: c for c in ingest["claims"] if c.get("only_if_created")}
+    new = {pid: c["value"] for pid, c in claims.items()}
     assert new["P31"] == "Q16970"
     assert new["P571"] == {
         "type": "time",
         "time": "+1773-00-00T00:00:00Z",
         "precision": 9,
     }
-    assert new["P281"] == {"type": "string", "value": "88422"}
+    # The postal code is a qualifier of the street address, not a statement.
+    assert "P281" not in new
+    assert new["P6375"] == {
+        "type": "monolingualtext",
+        "text": "Schlossplatz 1",
+        "lang": "de",
+    }
+    assert claims["P6375"]["qualifiers"] == [
+        {"property": "P281", "value": {"type": "string", "value": "88422"}}
+    ]
     assert new["P625"] == {"type": "coordinate", "lat": 48.06, "lon": 9.61}
 
 
 def test_without_create_no_creation_claims():
     entities, incoming, parent = fake_dump()
-    bundle, _ = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "t")
-    assert not any(c.get("only_if_created") for c in bundle["claims"])
-    assert bundle["entities"][f"_:cbdd:{UUID_B}"]["on_no_match"] == "curator"
+    ingest, _ = cbdd_ingest.build([UUID_B], entities, incoming, parent, {}, "t")
+    assert not any(c.get("only_if_created") for c in ingest["claims"])
+    assert ingest["source_entities"][f"_:cbdd:{UUID_B}"]["on_no_match"] == "curator"
 
 
 def test_cbdd_duplicate_check():
     import cbdd_preflight
 
-    bundle = {
-        "entities": {
+    ingest = {
+        "source_entities": {
             f"_:cbdd:{UUID_P}": {
                 "kind": "person",
                 "status": "match",
                 "qid": "Q1",
-                "facts": [{"property": "P227", "value": {"value": "118"}}],
+                "attributes": [{"property": "P227", "value": {"value": "118"}}],
             }
         }
     }
@@ -277,5 +297,45 @@ def test_cbdd_duplicate_check():
             "normdata": {"gnd": "118"},
         },
     ]
-    assert len(cbdd_preflight.duplicates(bundle, {}, dump, "")) == 1
-    assert cbdd_preflight.duplicates(bundle, {}, dump, f"duplicate of {UUID_W}") == []
+    assert len(cbdd_preflight.duplicates(ingest, {}, dump, "")) == 1
+    assert cbdd_preflight.duplicates(ingest, {}, dump, f"duplicate of {UUID_W}") == []
+
+
+def test_create_mode_cbdd_author():
+    entities, incoming, parent = fake_dump()
+    author = "55555555-5555-4555-8555-555555555555"
+    entities[author] = {
+        "ID": author,
+        "sType": "ACTOR_PERSON",
+        "appellation": "Muster, Erika",
+        "gender": "FEMALE",
+    }
+    incoming[author] = [
+        {"ID": UUID_W, "relTar": author, "sType": "AUTHORS", "relDir": "->"}
+    ]
+    ingest, _ = cbdd_ingest.build(
+        [author], entities, incoming, parent, {}, "t", create=True
+    )
+    e = ingest["source_entities"][f"_:cbdd:{author}"]
+    assert e["descriptions"]["de"] == (
+        "Autorin im Corpus der barocken Deckenmalerei in Deutschland"
+    )
+    new = {
+        c["property"]: c["value"] for c in ingest["claims"] if c.get("only_if_created")
+    }
+    assert new["P106"] == "Q482980" and new["P21"] == "Q6581072"
+
+
+def test_work_year_ignores_building_history():
+    wy = cbdd_ingest.work_year
+    hist = {"sType": "OBJECT_BUILDING", "verbaleDating": "1132, 1603-1605, 1706-1712"}
+    assert wy(hist, hist) == (1603, False)  # medieval founding skipped, fallback only
+    phase = {"sType": "OBJECT_BUILDING", "verbaleDating": "1750-1752"}
+    assert wy(phase, phase) == (1750, True)
+    long = {"sType": "OBJECT_BUILDING", "verbaleDating": "1354-1979"}
+    assert wy(long, long) == (None, False)
+    room = {"sType": "OBJECT_ROOM"}  # undated: the host building's dating
+    assert wy(room, phase) == (1750, True)
+    painting = {"sType": "OBJECT_PAINTING", "verbaleDating": "1618"}
+    assert wy(painting, long) == (1618, True)
+    assert not cbdd_ingest.single_phase("1184, 1750-1752")

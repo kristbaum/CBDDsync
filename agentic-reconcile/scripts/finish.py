@@ -75,7 +75,7 @@ class Run:
     def __init__(self, path: Path):
         self.path = path
         self.dir = path.parent
-        self.bundle = json.loads(path.read_text(encoding="utf-8"))
+        self.ingest = json.loads(path.read_text(encoding="utf-8"))
         state = path.with_name(path.stem + ".state.json")
         self.state = (
             json.loads(state.read_text(encoding="utf-8")) if state.exists() else {}
@@ -86,11 +86,11 @@ class Run:
         )
 
     def entity(self, eid: str) -> dict:
-        merged = dict(self.bundle["entities"][eid])
+        merged = dict(self.ingest["source_entities"][eid])
         merged.update(
             {
                 k: v
-                for k, v in self.state.get("entities", {}).get(eid, {}).items()
+                for k, v in self.state.get("source_entities", {}).get(eid, {}).items()
                 if v is not None
             }
         )
@@ -106,7 +106,7 @@ class Run:
         return self.state.get("claims", {}).get(cid, {}).get("status", "new")
 
     def pipeline(self) -> str:
-        kinds = {e.get("kind") for e in self.bundle["entities"].values()}
+        kinds = {e.get("kind") for e in self.ingest["source_entities"].values()}
         if len(kinds) != 1 or next(iter(kinds)) not in PIPELINE:
             sys.exit(f"cannot tell the adapter pipeline from the entity kinds {kinds}")
         return PIPELINE[next(iter(kinds))]
@@ -158,7 +158,7 @@ def shown_value(v: object) -> str:
 
 
 def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
-    ents = run.bundle["entities"]
+    ents = run.ingest["source_entities"]
     groups: dict[str, list[str]] = {
         "match": [],
         "create": [],
@@ -169,7 +169,7 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
         groups[run.entity(eid)["status"]].append(eid)
     uncertain = run.notes.get("uncertain", {})
     md = [
-        f"# {run.bundle['project']}",
+        f"# {run.ingest['project']}",
         "",
         (
             f"Ingest file: `{run.path.name}` ({len(ents)} entities). Matched: {len(groups['match'])}, "
@@ -226,7 +226,7 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
             e = run.entity(eid)
             stmts = [
                 f"{c['property']} {shown_value(c['value'])}"
-                for c in run.bundle["claims"]
+                for c in run.ingest["claims"]
                 if c["subject"] == eid
                 and run.claim_status(c["id"]) not in ("skip", "rejected")
             ]
@@ -267,7 +267,7 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
         md += [""]
     repairs = [
         c
-        for c in run.bundle["claims"]
+        for c in run.ingest["claims"]
         if c["property"] in ("P227", "P2092")
         and run.entity(c["subject"]).get("status") == "match"
         and run.claim_status(c["id"]) not in ("skip", "rejected")
@@ -300,16 +300,16 @@ def report(run: Run, batches: list[Path], removals: list[dict]) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[1])
-    ap.add_argument("bundle", type=Path)
+    ap.add_argument("ingest", type=Path)
     ap.add_argument(
         "--no-next", action="store_true", help="only preflight and report, no batches"
     )
     args = ap.parse_args()
-    run = Run(args.bundle)
+    run = Run(args.ingest)
 
     pre = wikibase_ingest(
         "preflight",
-        str(args.bundle),
+        str(args.ingest),
         "--adapter",
         str(ADAPTER),
         "--pipeline",
@@ -324,11 +324,11 @@ def main() -> None:
         )
     removals = removals_that_apply(run)
     if not args.no_next:
-        nxt = wikibase_ingest("next", str(args.bundle))
+        nxt = wikibase_ingest("next", str(args.ingest))
         if nxt.returncode not in (0, 1):
             sys.exit(f"wikibase-ingest next failed:\n{nxt.stderr or nxt.stdout}")
         print(nxt.stdout.strip())
-    run = Run(args.bundle)  # reload: preflight and next changed the state
+    run = Run(args.ingest)  # reload: preflight and next changed the state
     if removals:
         (run.dir / "removals.qs").write_text(
             "\n".join(r["line"] for r in removals) + "\n", encoding="utf-8"

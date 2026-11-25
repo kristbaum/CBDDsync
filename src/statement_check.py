@@ -33,10 +33,17 @@ from src.quickstatements import qs_line, qs_string, write_qs_file
 DESCRIPTION_PIDS = {"Den", "Dde"}
 DATE_PIDS = {"P571"}
 DIMENSION_PIDS = {"P2049", "P2043", "P2048", "P2386"}  # width/length/height/diameter
+# CbDD dimensions are in metres (Q11573), as are the existing Wikidata values.
+DIMENSION_UNIT = "U11573"
 COORDINATE_PIDS = {"P625"}
 EARTH_RADIUS_M = 6_371_000
 # Quoted plain strings: Bildindex, Iconclass, postal code
 STRING_PIDS = {"P2092", "P1256", "P1257", "P281"}
+# Monolingual text properties and the language their CbDD values are in
+MONOLINGUAL_PIDS = {"P6375": "de"}  # street address
+
+# {qid: {pid: {value: [(qualifier pid, raw qualifier value), ...]}}}
+Qualifiers = dict[str, dict[str, dict[str, list[tuple[str, str]]]]]
 
 
 def extract_qid(url: str) -> str:
@@ -55,13 +62,16 @@ def format_qs_value(pid: str, val: str) -> str:
 
     - Q-items stay as-is
     - Dates get formatted with precision
-    - Quantities get formatted with the centimetre unit
+    - Quantities get formatted with the metre unit
     - Coordinates get the @LAT/LNG form
     - Configured string properties get quoted
+    - Monolingual text properties get the lang:"text" form
     """
     if pid in DESCRIPTION_PIDS:
         # Descriptions are plain strings
         return val
+    if pid in MONOLINGUAL_PIDS:
+        return f"{MONOLINGUAL_PIDS[pid]}:{qs_string(val)}"
     if val.startswith("Q"):
         return val
     if pid in COORDINATE_PIDS:
@@ -77,12 +87,12 @@ def format_qs_value(pid: str, val: str) -> str:
     if pid in DIMENSION_PIDS:
         try:
             float(val)
-            return f"{val}U174728"  # U174728 = centimetre
+            return f"{val}{DIMENSION_UNIT}"
         except ValueError:
             return val
     # Plain string (normdata/bildindex, iconclass, postal code)
     if pid in STRING_PIDS:
-        return f'"{val}"'
+        return qs_string(val)
     return val
 
 
@@ -153,6 +163,12 @@ def normalize_for_comparison(pid: str, val: str) -> str:
     val = val.strip('"')
     if pid in COORDINATE_PIDS:
         return normalize_coordinate(val)
+    # Compare dimensions numerically ("3" from CbDD equals "3.0" from Wikidata)
+    if pid in DIMENSION_PIDS:
+        try:
+            return repr(float(val))
+        except ValueError:
+            return val
     # Normalize dates to just year for comparison
     if pid in DATE_PIDS:
         val = val.removeprefix("+")
@@ -254,6 +270,43 @@ def build_potential_statements(csv_path: str, check: dict) -> dict[str, dict[str
     return potential
 
 
+def load_qualifiers(csv_path: str, check: dict) -> Qualifiers:
+    """
+    Read the qualifiers configured in the check's ``qualifiers`` from an
+    existing_*.csv.
+
+    For every statement value a row yields for a qualified pid, the row's
+    qualifier columns (when non-empty) are attached to that value.
+    """
+    config: dict[str, dict[str, str]] = check.get("qualifiers", {})
+    if not config:
+        return {}
+    column_to_pid: dict[str, str] = check["column_to_pid"]
+    pid_to_column = {pid: col for col, pid in column_to_pid.items()}
+
+    qualifiers: Qualifiers = {}
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            qid = row.get("wikidata_qid", "").strip()
+            if not qid:
+                continue
+            for pid, qualifier_columns in config.items():
+                raw = row.get(pid_to_column.get(pid, ""), "") or ""
+                values = [v.strip() for v in raw.split(";") if v.strip()]
+                pairs = [
+                    (q_pid, q_val)
+                    for q_pid, q_col in qualifier_columns.items()
+                    if (q_val := (row.get(q_col, "") or "").strip())
+                ]
+                if not pairs:
+                    continue
+                for val in values:
+                    qualifiers.setdefault(qid, {}).setdefault(pid, {}).setdefault(
+                        val, pairs
+                    )
+    return qualifiers
+
+
 def load_cbdd_ids(csv_path: str) -> dict[str, str]:
     """
     Map each QID in an existing_*.csv to its deckenmalerei.eu ID.
@@ -274,16 +327,28 @@ def load_cbdd_ids(csv_path: str) -> dict[str, str]:
 def compute_missing(
     potential: dict[str, dict[str, set]],
     existing: dict[str, dict[str, set]],
+    overwrite_descriptions: bool = False,
 ) -> dict[str, dict[str, list]]:
     """
     Compare potential statements against existing ones.
     Returns only the missing statements.
+
+    An item holds one description per language, so a differing CbDD
+    description would replace the existing one. Unless
+    ``overwrite_descriptions`` is set, descriptions are only proposed for
+    items that have none in that language.
     """
     missing: dict[str, dict[str, list]] = {}
 
     for qid, props in potential.items():
         for pid, values in props.items():
             existing_values = existing.get(qid, {}).get(pid, set())
+            if (
+                pid in DESCRIPTION_PIDS
+                and existing_values
+                and not overwrite_descriptions
+            ):
+                continue
             # Normalize existing values for comparison
             existing_normalized = {
                 normalize_for_comparison(pid, v) for v in existing_values
@@ -300,36 +365,64 @@ def compute_missing(
     return missing
 
 
+def statement_qualifiers(
+    qualifiers: Qualifiers, qid: str, pid: str, val: str
+) -> list[tuple[str, str]]:
+    """Formatted (qualifier pid, value) pairs for one statement."""
+    return [
+        (q_pid, format_qs_value(q_pid, q_val))
+        for q_pid, q_val in qualifiers.get(qid, {}).get(pid, {}).get(val, [])
+    ]
+
+
 def write_quickstatements_csv(
     missing: dict[str, dict[str, list]],
     output_path: str,
+    qualifiers: Qualifiers | None = None,
 ) -> int:
     """
     Write missing statements as QuickStatements CSV.
 
-    Uses proper QS format: qid as first column, property IDs as column headers.
-    One row per statement (only the relevant property column is filled).
+    Uses proper QS format: qid as first column, property IDs as column headers,
+    each followed by its qualifier columns (``qal<number>``). One row per
+    statement (only the relevant property and qualifier columns are filled).
 
     Returns total number of statements written.
     """
-    # Collect all property IDs used
+    qualifiers = qualifiers or {}
+    # Collect all property IDs used, and the qualifier pids used per property
     all_pids: set[str] = set()
-    for props in missing.values():
+    qualifier_pids: dict[str, set[str]] = {}
+    for qid, props in missing.items():
         all_pids.update(props.keys())
-    sorted_pids = sorted(all_pids)
+        for pid, vals in props.items():
+            for val in vals:
+                for q_pid, _ in statement_qualifiers(qualifiers, qid, pid, val):
+                    qualifier_pids.setdefault(pid, set()).add(q_pid)
+
+    header = ["qid"]
+    column_index: dict[tuple[str, str], int] = {}
+    for pid in sorted(all_pids):
+        column_index[(pid, "")] = len(header)
+        header.append(pid)
+        for q_pid in sorted(qualifier_pids.get(pid, ())):
+            column_index[(pid, q_pid)] = len(header)
+            header.append("qal" + q_pid.removeprefix("P"))
 
     total = 0
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["qid"] + sorted_pids)
+        w.writerow(header)
 
         for qid in sorted(missing.keys()):
             props = missing[qid]
-            for pid in sorted_pids:
+            for pid in sorted(all_pids):
                 for val in props.get(pid, []):
-                    row = [""] * (len(sorted_pids) + 1)
+                    row = [""] * len(header)
                     row[0] = qid
-                    row[sorted_pids.index(pid) + 1] = format_qs_value(pid, val)
+                    row[column_index[(pid, "")]] = format_qs_value(pid, val)
+                    for q_pid, q_val in statement_qualifiers(qualifiers, qid, pid, val):
+                        row[column_index[(pid, q_pid)]] = q_val
                     w.writerow(row)
                     total += 1
 
@@ -340,17 +433,21 @@ def write_quickstatements_v1(
     missing: dict[str, dict[str, list]],
     output_path: str,
     cbdd_ids: dict[str, str],
+    qualifiers: Qualifiers | None = None,
 ) -> int:
     """
     Write missing statements as a QuickStatements 3.0 batch (V1 commands).
 
-    One command per statement, items and properties in sorted order. Statements
+    One command per statement, items and properties in sorted order, with the
+    statement's configured qualifiers (see ``load_qualifiers``). Statements
     get the reference ``S248 <CbDD>  S10626 "<deckenmalerei.eu ID>"`` when the
     item's CbDD ID is known; descriptions take no reference. Lines carry no
     "+" prefix, so values already present are merged rather than duplicated.
 
     Returns total number of commands written.
     """
+
+    qualifiers = qualifiers or {}
 
     def lines():
         for qid in sorted(missing):
@@ -366,7 +463,11 @@ def write_quickstatements_v1(
                         yield qs_line(qid, pid, qs_string(val))
                     else:
                         yield qs_line(
-                            qid, pid, format_qs_value(pid, val), references=refs
+                            qid,
+                            pid,
+                            format_qs_value(pid, val),
+                            qualifiers=statement_qualifiers(qualifiers, qid, pid, val),
+                            references=refs,
                         )
 
     return write_qs_file(lines(), output_path)
@@ -377,12 +478,15 @@ def write_quickstatements_v1(
 # --------------------------------------------------------------------------- #
 
 
-def run_statement_check(label: str, check: dict) -> dict | None:
+def run_statement_check(
+    label: str, check: dict, overwrite_descriptions: bool = False
+) -> dict | None:
     """
     Run the statement check for one entity type.
 
     Returns a stats dict, or None if required input files are missing (in which
-    case a note is printed and the check is skipped).
+    case a note is printed and the check is skipped). See ``compute_missing``
+    for ``overwrite_descriptions``.
     """
     existing_csv = check["existing_csv"]
     wd_query_json = check["wd_query_json"]
@@ -398,12 +502,15 @@ def run_statement_check(label: str, check: dict) -> dict | None:
     existing = unify_wikidata_results(wd_raw, check["wd_query_key_to_pid"])
 
     potential = build_potential_statements(existing_csv, check)
-    missing = compute_missing(potential, existing)
+    missing = compute_missing(potential, existing, overwrite_descriptions)
 
     Path(output_csv).parent.mkdir(parents=True, exist_ok=True)
-    count = write_quickstatements_csv(missing, output_csv)
+    qualifiers = load_qualifiers(existing_csv, check)
+    count = write_quickstatements_csv(missing, output_csv, qualifiers)
     output_qs = str(Path(output_csv).with_suffix(".qs"))
-    write_quickstatements_v1(missing, output_qs, load_cbdd_ids(existing_csv))
+    write_quickstatements_v1(
+        missing, output_qs, load_cbdd_ids(existing_csv), qualifiers
+    )
 
     total_existing = sum(
         len(vals)
@@ -448,12 +555,12 @@ def run_statement_check(label: str, check: dict) -> dict | None:
     }
 
 
-def main() -> None:
+def main(overwrite_descriptions: bool = False) -> None:
     """Run the statement check for every configured entity type."""
     results: list[dict] = []
     for label, check in STATEMENT_CHECKS.items():
         print(f"\nChecking statements for {label}...")
-        stats = run_statement_check(label, check)
+        stats = run_statement_check(label, check, overwrite_descriptions)
         if stats:
             results.append(stats)
 
@@ -476,4 +583,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    main(overwrite_descriptions="--overwrite-descriptions" in sys.argv[1:])

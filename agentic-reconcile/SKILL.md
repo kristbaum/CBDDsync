@@ -35,10 +35,12 @@ needed, declared in [adapter.toml](adapter.toml):
 | 4 Triage, review | the evidence dossier for the entities left to you; the review rules below | `scripts/cbdd_context.py` |
 | 5 Upload, feedback | preflight + batches + CbDD evidence report, removals, CbDD corrections | `scripts/finish.py` |
 
-`agentic-reconcile/scripts/wikibase-ingest` finds the command line (the
-installed wikibase-ingest skill, a `wikibase-ingest` checkout next to this
-repository, or `$WIKIBASE_INGEST`); if it finds none, ask the user to
-install the wikibase-ingest skill. Don't reimplement its steps here.
+`agentic-reconcile/scripts/wikibase-ingest` runs the command line from the
+wikibase-ingest checkout next to this repository (`../wikibase-ingest`), or
+`$WIKIBASE_INGEST`; if it finds neither, ask the user to clone it. Read the
+generic docs there (`../wikibase-ingest/README.md`, `skill/`). This skill
+is not packaged or copied anywhere: it lives and runs in this repository.
+Don't reimplement the generic steps here.
 
 All commands run from the repository root. Below,
 `WI=agentic-reconcile/scripts/wikibase-ingest`, `A=agentic-reconcile`,
@@ -74,7 +76,7 @@ One folder per run, `agentic-reconcile/to_match/<type>_<YYYY-MM-DD>[_n]/`:
 
 | File | Written by | Holds |
 |---|---|---|
-| `ingest.json` | `cbdd_ingest.py`, then `wikibase-ingest run` | entities `_:cbdd:<UUID>` with candidates and evidence; claims `<UUID>:P10626` (direct), `<UUID>:P227`/`:P2092` (curator), with `--create` `<UUID>:new:*` (curator, only if created) |
+| `ingest.json` | `cbdd_ingest.py`, then `wikibase-ingest run` | source entities `_:cbdd:<UUID>` with candidates and evidence; claims `<UUID>:P10626` (direct), `<UUID>:P227`/`:P2092` (curator), with `--create` `<UUID>:new:*` (curator, only if created) |
 | `ingest.state.json` | wikibase-ingest | decisions, batches, uploads, games |
 | `notes.json` | you | what would settle uncertain cases, removals, CbDD corrections, notes (format in `finish.py`) |
 | `batches/direct_NNN.qs` | `next` | `Q…⇥P10626⇥"<UUID>"`, one line per match |
@@ -107,18 +109,19 @@ With `--create`, each entity also gets the statements of a new item, marked
 P31 (human; for buildings a class from the CbDD functions, e.g.
 `CHURCHES_BUILDINGS` → church building, else building), the sync tool's
 statements (`STATEMENT_CHECKS`: gender; inception, postal code, coordinates)
-and P106 for artists (painter, plasterer, architect, master builder,
-sculptor). The P10626 link joins the CREATE block.
+P106 for artists (painter, plasterer, architect, master builder,
+sculptor), and P569/P570 when the CbDD name carries life dates. The P10626 link joins the CREATE block.
 
-### 2. Candidates, CbDD evidence, verify, route (reconciliation, validation, triage)
+### 2. Candidates, CbDD evidence, verify, triage (reconciliation, validation, triage)
 
 ```bash
 $WI run $A $T $I
 ```
 
 Runs, with the adapter's settings: candidate generation (people: identifier,
-label; buildings: identifier, geo within 300 m of the building types),
-`cbdd_hints.py` (below), `verify`, `route` with `policy/$T.json`, `check`.
+label; buildings: identifier, geo within 300 m of the building types,
+label with the street address as search name),
+`cbdd_hints.py` (below), `verify`, `triage` with `policy/$T.json`, `check`.
 `--step <name>` repeats one step, `--dry-run` prints the commands.
 For a building whose CbDD point is far off (Duttenstein points 6.5 km away at
 Schloss Taxis), add `$WI candidates $I --method label --entity <id> --write`
@@ -154,7 +157,7 @@ left, you decide), `curator` (none left; review the hidden ones), with
 `--create` also `create` (nothing found: a new item, still reviewed in the
 curator batch).
 
-`$WI status $I` shows the counts. **Never `route --force`**: it re-routes the
+`$WI status $I` shows the counts. **Never `triage --force`**: it re-routes the
 claims too. To undo an automatic match, use `decide` (step 3).
 
 ### 3. Review (your part of triage)
@@ -285,8 +288,13 @@ Patterns seen in practice (565-building run, 2026-10):
 - **Town houses** match by address (✓ address from `cbdd_hints`); compare
   street *and* number exactly, and check the item is the house, not its
   complex or a museum in it. The neighbours of a house usually have
-  items, the house itself often not (Lübeck, Lüneburg: most CbDD houses have no
-  item yet → no match).
+  items, the house itself often not (Lübeck, Lüneburg: many CbDD houses have no
+  item yet → no match). Monument items labelled with the bare address
+  ("Mengstraße 19", P131 Lübecker Altstadt, P1435) often have **no P625**:
+  only the label generator finds them. Label = CbDD street and number + same
+  town (P131) + P31 building + no other P10626 is high (2026-11: 8 of 50
+  October leftovers were such items). Check `P131`: "Markt 9" exists in
+  dozens of towns.
 - **Bavarian monument items come in layers**: the monument item (name or
   "Baudenkmal D-…", address in `P6375`) and numbered components ("Pfarrhof
   Kirchplatz 8 … (D-1-81-122-26#1)") with `P361` → the monument. Match the

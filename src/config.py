@@ -223,6 +223,10 @@ COORDINATE_TOLERANCE_M = 100
 #   value_maps           optional {pid: {raw_value: wikidata_value}}
 #   coordinate           optional P625 helper combining two lat/lng columns:
 #                        {"pid": ..., "lat": <column>, "lng": <column>}
+#   qualifiers           optional {pid: {qualifier pid: <column>}} — qualifiers
+#                        taken from the same row and attached to every
+#                        statement of that pid (rows with an empty column get
+#                        no qualifier)
 STATEMENT_CHECKS = {
     "people": {
         "existing_csv": "existing/existing_people.csv",
@@ -240,12 +244,15 @@ STATEMENT_CHECKS = {
         "output_csv": "missing/missing_building_statements.csv",
         "column_to_pid": {
             "processedDating": "P571",  # inception
-            "addressZip": "P281",  # postal code
+            "addressStreet": "P6375",  # street address
         },
+        # Postal code goes on the street address as a qualifier, not as a
+        # separate P281 statement.
+        "qualifiers": {"P6375": {"P281": "addressZip"}},
         "coordinate": {"pid": "P625", "lat": "locationLat", "lng": "locationLng"},
         "wd_query_key_to_pid": {
             "inception": "P571",
-            "postalCode": "P281",
+            "streetAddress": "P6375",
             "coordinate": "P625",
         },
     },

@@ -62,7 +62,6 @@ CBDDsync/
 │   ├── scripts/cbdd_context.py # Per-entity evidence dossier from sources/*.json
 │   ├── scripts/finish.py       # wikibase-ingest preflight + next, report.md, removals.qs
 │   └── to_match/<type>_<date>/ # One run: ingest.json, state, batches/, notes.json, report.md
-├── agentic-reconcile.skill     # Packaged skill (zip; rebuild with the command in README.md)
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
 ```
@@ -105,6 +104,9 @@ uv run sync.py
 ```
 
 This runs both analysis steps sequentially and prints a summary to stdout.
+Descriptions (`Den`/`Dde`) are only proposed for items that have none in that
+language; `uv run sync.py --overwrite-descriptions` also proposes replacing
+existing ones.
 
 To refresh the Wikidata side (`sources/query.csv` and
 `sources/query_<type>_statements.json`) without re-downloading the dumps:
@@ -113,7 +115,8 @@ To refresh the Wikidata side (`sources/query.csv` and
 uv run python -m src.update_queries [entities|people|buildings|paintings|rooms|room_sequences ...]
 ```
 
-`setup.py` downloads the dumps and then calls the same module. The SPARQL
+`setup.py` downloads the dumps and then calls the same module
+(`uv run setup.py --wikidata-only` skips the download). The SPARQL
 queries in `src/update_queries.py` are the source of truth (README.md mirrors
 them); they target QLever, so declare every prefix and use no label service.
 
@@ -178,7 +181,7 @@ QuickStatements CSV format. Columns: `qid` + one column per Wikidata property ID
 
 - Q-items: `Q12345`
 - Dates: `+1820-00-00T00:00:00Z/9` (year precision)
-- Dimensions: `42.5U174728` (centimetres)
+- Dimensions: `7.1U11573` (metres, as in CbDD)
 - Strings: `"value"`
 - Descriptions: plain string under `Den` / `Dde` pseudo-columns
 
@@ -207,7 +210,7 @@ for future batches that correct wrong statements on existing items.
 | made from material                   | P186                             | Materials                   |
 | fabrication method                   | P2079                            | Techniques                  |
 | depicted Iconclass                   | P1257                            | Iconography codes           |
-| width / length / height / diameter   | P2049 / P2043 / P2048 / P2386   | Dimensions (cm)             |
+| width / length / height / diameter   | P2049 / P2043 / P2048 / P2386   | Dimensions (m)              |
 | Bildindex der Kunst und Architektur ID | P2092                          | Marburg art index object number (`obj…` digits) |
 | state of conservation                | P5816                            | Condition                   |
 | applies to part                      | P518                             | Position (ceiling/wall)     |

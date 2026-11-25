@@ -23,10 +23,10 @@ from pathlib import Path
 STYPE = {"person": "ACTOR_PERSON", "building": "OBJECT_BUILDING"}
 
 
-def matched(bundle: dict, state: dict) -> dict[str, str]:
+def matched(ingest: dict, state: dict) -> dict[str, str]:
     out = {}
-    for eid, e in bundle["entities"].items():
-        st = state.get("entities", {}).get(eid, {})
+    for eid, e in ingest["source_entities"].items():
+        st = state.get("source_entities", {}).get(eid, {})
         status = st.get("status") or e.get("status")
         qid = state.get("ids", {}).get(eid) or st.get("qid") or e.get("qid")
         if status == "match" and qid:
@@ -34,7 +34,7 @@ def matched(bundle: dict, state: dict) -> dict[str, str]:
     return out
 
 
-def duplicates(bundle: dict, state: dict, dump: list[dict], noted: str) -> list[str]:
+def duplicates(ingest: dict, state: dict, dump: list[dict], noted: str) -> list[str]:
     same_gnd: dict[tuple[str, str], list[str]] = {}
     for x in dump:
         g = (
@@ -46,12 +46,12 @@ def duplicates(bundle: dict, state: dict, dump: list[dict], noted: str) -> list[
                 f"{x['ID']} ({x.get('appellation', '')})"
             )
     problems = []
-    for eid, q in matched(bundle, state).items():
-        e = bundle["entities"][eid]
+    for eid, q in matched(ingest, state).items():
+        e = ingest["source_entities"][eid]
         g = next(
             (
                 f["value"]["value"]
-                for f in e.get("facts", [])
+                for f in e.get("attributes", [])
                 if f.get("property") == "P227"
             ),
             None,
@@ -73,7 +73,7 @@ def duplicates(bundle: dict, state: dict, dump: list[dict], noted: str) -> list[
 
 def main() -> None:
     path = Path(sys.argv[1])
-    bundle = json.loads(path.read_text(encoding="utf-8"))
+    ingest = json.loads(path.read_text(encoding="utf-8"))
     state_path = path.with_name(path.stem + ".state.json")
     state = (
         json.loads(state_path.read_text(encoding="utf-8"))
@@ -88,7 +88,7 @@ def main() -> None:
     )
     dump = json.loads(Path("sources/entities.json").read_text(encoding="utf-8"))
     problems = duplicates(
-        bundle, state, dump, " ".join(notes.get("cbdd_corrections", []))
+        ingest, state, dump, " ".join(notes.get("cbdd_corrections", []))
     )
     for line in problems:
         print(f"ERROR {line}")

@@ -13,6 +13,7 @@ from src.statement_check import (
     extract_qid,
     format_qs_value,
     load_cbdd_ids,
+    load_qualifiers,
     normalize_coordinate,
     normalize_for_comparison,
     parse_coordinate,
@@ -60,14 +61,20 @@ class TestFormatQsValue:
     def test_full_date_gets_day_precision(self):
         assert format_qs_value("P571", "1720-05-01") == "+1720-05-01T00:00:00Z/11"
 
-    def test_dimensions_get_centimetre_unit(self):
-        assert format_qs_value("P2049", "120.5") == "120.5U174728"
+    def test_dimensions_get_metre_unit(self):
+        assert format_qs_value("P2049", "7.1") == "7.1U11573"
 
     def test_non_numeric_dimension_is_left_alone(self):
         assert format_qs_value("P2049", "unknown") == "unknown"
 
     def test_configured_string_properties_are_quoted(self):
         assert format_qs_value("P281", "85764") == '"85764"'
+
+    def test_street_address_is_german_monolingual_text(self):
+        assert format_qs_value("P6375", "Schloßplatz 2") == 'de:"Schloßplatz 2"'
+
+    def test_street_address_starting_with_q_is_not_taken_for_an_item(self):
+        assert format_qs_value("P6375", "Quellenweg 3") == 'de:"Quellenweg 3"'
 
     def test_iconclass_and_bildindex_are_quoted(self):
         assert format_qs_value("P1257", "11H") == '"11H"'
@@ -142,6 +149,11 @@ class TestCoordinateIsClose:
 class TestNormalizeForComparison:
     def test_quotes_are_stripped(self):
         assert normalize_for_comparison("P281", '"85764"') == "85764"
+
+    def test_dimensions_compare_numerically(self):
+        assert normalize_for_comparison("P2043", "3") == normalize_for_comparison(
+            "P2043", "3.0"
+        )
 
     def test_dates_are_reduced_to_the_year(self):
         assert normalize_for_comparison("P571", "+1720-00-00T00:00:00Z") == "1720"
@@ -326,6 +338,23 @@ class TestComputeMissing:
             "Q1": {"P625": ["48.2582/11.5679"]}
         }
 
+    def test_existing_description_is_not_overwritten_by_default(self):
+        potential = {"Q1": {"Dde": {"Malerei in Schloss"}}}
+        existing = {"Q1": {"Dde": {"Deckengemälde von X"}}}
+        assert compute_missing(potential, existing) == {}
+
+    def test_missing_description_is_filled(self):
+        potential = {"Q1": {"Dde": {"Malerei in Schloss"}, "Den": {"painting"}}}
+        existing = {"Q1": {"Dde": {"Deckengemälde von X"}}}
+        assert compute_missing(potential, existing) == {"Q1": {"Den": ["painting"]}}
+
+    def test_existing_description_is_overwritten_on_request(self):
+        potential = {"Q1": {"Dde": {"Malerei in Schloss"}}}
+        existing = {"Q1": {"Dde": {"Deckengemälde von X"}}}
+        assert compute_missing(potential, existing, overwrite_descriptions=True) == {
+            "Q1": {"Dde": ["Malerei in Schloss"]}
+        }
+
     def test_other_items_statements_do_not_mask_a_gap(self):
         potential = {"Q1": {"P571": {"1720"}}}
         existing = {"Q2": {"P571": {"1720"}}}
@@ -405,6 +434,54 @@ class TestWriteQuickstatementsV1:
         write_quickstatements_v1({"Q1": {"P170": ["Q42"]}}, str(out), {})
 
         assert out.read_text(encoding="utf-8") == "Q1\tP170\tQ42\n"
+
+
+QUALIFIER_CHECK = {
+    "column_to_pid": {"addressStreet": "P6375"},
+    "qualifiers": {"P6375": {"P281": "addressZip"}},
+}
+
+
+class TestQualifiers:
+    def test_postal_code_is_attached_to_the_street_address(self, tmp_path):
+        path = write_csv(
+            tmp_path / "e.csv",
+            ["wikidata_qid", "addressStreet", "addressZip"],
+            [
+                ["Q1", "Schloßplatz 2", "88422"],
+                ["Q2", "Hauptstraße 1", ""],
+                ["Q3", "", "80333"],
+            ],
+        )
+
+        assert load_qualifiers(path, QUALIFIER_CHECK) == {
+            "Q1": {"P6375": {"Schloßplatz 2": [("P281", "88422")]}}
+        }
+
+    def test_no_qualifier_config_yields_nothing(self, tmp_path):
+        path = write_csv(tmp_path / "e.csv", ["wikidata_qid"], [["Q1"]])
+        assert load_qualifiers(path, {"column_to_pid": {}}) == {}
+
+    def test_writers_emit_the_qualifier(self, tmp_path):
+        missing = {"Q1": {"P6375": ["Schloßplatz 2"]}, "Q2": {"P6375": ["Weg 1"]}}
+        quals = {"Q1": {"P6375": {"Schloßplatz 2": [("P281", "88422")]}}}
+
+        write_quickstatements_v1(missing, str(tmp_path / "o.qs"), {"Q1": "id-1"}, quals)
+        write_quickstatements_csv(missing, str(tmp_path / "o.csv"), quals)
+
+        assert (tmp_path / "o.qs").read_text(encoding="utf-8").splitlines() == [
+            (
+                'Q1\tP6375\tde:"Schloßplatz 2"\tP281\t"88422"'
+                '\tS248\tQ107174967\tS10626\t"id-1"'
+            ),
+            'Q2\tP6375\tde:"Weg 1"',
+        ]
+        rows = list(csv.reader((tmp_path / "o.csv").open(encoding="utf-8")))
+        assert rows == [
+            ["qid", "P6375", "qal281"],
+            ["Q1", 'de:"Schloßplatz 2"', '"88422"'],
+            ["Q2", 'de:"Weg 1"', ""],
+        ]
 
 
 class TestRunStatementCheck:

@@ -11,11 +11,12 @@ Each CbDD entity becomes a reconciliation entity `_:cbdd:<UUID>`:
   labels          the CbDD name in natural order ("Given Surname")
   aliases         the CbDD alternative names, in natural order
   search_names    spelling variants (first given name only, "von" forms,
-                  Joseph/Josef …): searched and compared, never uploaded
+                  Joseph/Josef …), for buildings the street address
+                  ("Mengstraße 19"): searched and compared, never uploaded
   descriptions    roles and activity period (people); class and locality
                   (buildings); fit for Wikidata, because --create uploads them
   hint            places of work (people), the CbDD parent (buildings)
-  facts           P10626 (the CbDD ID itself: a candidate carrying another
+  attributes      P10626 (the CbDD ID itself: a candidate carrying another
                   value is ruled out), GND (P227), Bildindex (P2092),
                   coordinates (P625), life dates written into the name
                   ("Kopp, Gottfried (1652–1723)": P569/P570)
@@ -31,10 +32,10 @@ and gets the claims that go out once it is matched:
   <UUID>:P2092    the CbDD Bildindex number (buildings), route curator
 
 With --create, an entity no item fits becomes a new item (CREATE block in the
-curator batch, once `route`, a game or `decide` says so). Its statements come
+curator batch, once `triage`, a game or `decide` says so). Its statements come
 from the same mapping the sync tool uses for linked items
-(src/config.py STATEMENT_CHECKS: gender; inception, postal code,
-coordinates), plus a class (P31: human; a building class from the CbDD
+(src/config.py STATEMENT_CHECKS: gender; inception, street address with
+the postal code as qualifier, coordinates), plus a class (P31: human; a building class from the CbDD
 functions) and, for artists, an occupation (P106). All are marked
 only_if_created and carry the CbDD reference.
 
@@ -93,6 +94,7 @@ PROPERTIES = {
     "P106": {"label": "Tätigkeit", "datatype": "wikibase-item"},
     "P571": {"label": "Gründung, Erstellung bzw. Entstehung", "datatype": "time"},
     "P281": {"label": "Postleitzahl", "datatype": "string"},
+    "P6375": {"label": "Postanschrift", "datatype": "monolingualtext"},
 }
 # Classes for new building items, from the CbDD functions (first that maps
 # wins; QIDs looked up on Wikidata 2026-11). Anything else: building.
@@ -119,6 +121,7 @@ OCCUPATION = {
     "ARCHITECTS": "Q42973",  # architect
     "BUILDERS": "Q1340643",  # master builder
     "SCULPTORS": "Q1281618",  # sculptor
+    "AUTHORS": "Q482980",  # author (of a CbDD text)
 }
 # Wikidata's format constraint of P227; a value that fails it is a CbDD error.
 GND_FORMAT = re.compile(
@@ -251,12 +254,50 @@ def roles_of(pid: str, incoming) -> dict[str, int]:
     return out
 
 
+ARTWORK_TYPES = {"OBJECT_PAINTING", "OBJECT_PAINTING_PART", "OBJECT_PICTURE_CYCLE"}
+MAX_ACTIVE_YEARS = 70
+
+
+def single_phase(dating: str) -> bool:
+    """One building phase ("1750-1752", "um 1600"), not a history ("1184, 1750",
+    "1354-1979")."""
+    years = [int(y) for y in re.findall(r"\b1\d{3}\b", dating)]
+    return (
+        bool(years)
+        and max(years) - min(years) <= 30
+        and not re.search(r"[,;]|\bUmbau\b|\bund\b", dating)
+    )
+
+
+def work_year(w: dict, building: dict | None) -> tuple[int | None, bool]:
+    """First year of a work, and whether that year is reliable.
+
+    Artworks and single-phase datings ("1750-1752") are reliable. Buildings,
+    rooms and ensembles often carry their whole history ("1132, 1603-1605, …,
+    1724-1744"), whose first year is a medieval founding, not the person's:
+    from those only the earliest year of the corpus period (1500–1899) is
+    kept, as a fallback.
+    """
+    dating = w.get("verbaleDating") or ""
+    if not dating:  # undated room or painting: the host building's dating
+        dating = (building or {}).get("verbaleDating") or ""
+    if not dating:
+        return None, False
+    if (w.get("sType") in ARTWORK_TYPES and w.get("verbaleDating")) or single_phase(
+        dating
+    ):
+        return first_year(dating), True
+    later = [int(y) for y in re.findall(r"\b1[5-8]\d\d\b", dating)]
+    return (min(later) if later else None), False
+
+
 def person_entity(p: dict, entities, incoming, parent) -> dict:
     names = [p.get("appellation", "")] + list(p.get("alternativeNames", []))
     natural = list(dict.fromkeys(term(variants(n)[0]) for n in names if variants(n)))
     all_names = list(dict.fromkeys(term(v) for n in names for v in variants(n)))
     roles: dict[str, int] = {}
     years: list[int] = []
+    fallback: list[int] = []
     places: dict[str, int] = {}
     for r in incoming.get(p["ID"], []):
         w = entities.get(r["ID"])
@@ -269,9 +310,10 @@ def person_entity(p: dict, entities, incoming, parent) -> dict:
             if w.get("sType") == "OBJECT_BUILDING"
             else host_building(w["ID"], entities, parent)
         )
-        y = first_year(w.get("verbaleDating") or (b or {}).get("verbaleDating", ""))
-        if y and role not in NON_CONTEMPORARY_ROLES:
-            years.append(y)
+        if role not in NON_CONTEMPORARY_ROLES:
+            y, reliable = work_year(w, b)
+            if y:
+                (years if reliable else fallback).append(y)
         if b and place(b):
             places[place(b).split(",")[0]] = places.get(place(b).split(",")[0], 0) + 1
     role_text = ", ".join(
@@ -279,11 +321,19 @@ def person_entity(p: dict, entities, incoming, parent) -> dict:
         for k, _ in sorted(roles.items(), key=lambda x: -x[1])[:3]
     )
     desc = role_text or "Person"
+    years = years or fallback
+    if years and max(years) - min(years) > MAX_ACTIVE_YEARS:
+        years = []  # longer than one working life: not this person's datings
     if years:
         span = (
             f"{min(years)}–{max(years)}" if min(years) != max(years) else str(years[0])
         )
         desc += f", tätig {span}"
+    if set(roles) == {
+        "AUTHORS"
+    }:  # authors of CbDD texts, not people in the works (no dating)
+        noun = "Autorin" if p.get("gender") == "FEMALE" else "Autor"
+        desc = f"{noun} im Corpus der barocken Deckenmalerei in Deutschland"
     top = [k for k, _ in sorted(places.items(), key=lambda x: -x[1])[:3]]
     label = natural[0] if natural else term(p.get("appellation", ""))
     e = {
@@ -292,7 +342,7 @@ def person_entity(p: dict, entities, incoming, parent) -> dict:
         "on_no_match": "curator",
         "labels": {"de": label},
         "descriptions": {"de": term(desc if desc != label else f"Person, {desc}")},
-        "facts": [{"property": CBDD_ID_PID, "value": string(p["ID"])}],
+        "attributes": [{"property": CBDD_ID_PID, "value": string(p["ID"])}],
         "types": [HUMAN],
         "source": "src:cbdd",
         "url": f"https://www.deckenmalerei.eu/{p['ID']}",
@@ -306,7 +356,7 @@ def person_entity(p: dict, entities, incoming, parent) -> dict:
         e["hint"] = "CbDD: Werke in " + ", ".join(top)
     for prop, y in zip(("P569", "P570"), life_in_name(names), strict=True):
         if y:
-            e["facts"].append(
+            e["attributes"].append(
                 {
                     "property": prop,
                     "value": {
@@ -334,7 +384,7 @@ def building_entity(b: dict, entities, parent) -> dict:
         "on_no_match": "curator",
         "labels": {"de": term(b.get("appellation", ""))},
         "descriptions": {"de": term(desc)},
-        "facts": [{"property": CBDD_ID_PID, "value": string(b["ID"])}],
+        "attributes": [{"property": CBDD_ID_PID, "value": string(b["ID"])}],
         "types": list(BUILDING_TYPES),
         "source": "src:cbdd",
         "url": f"https://www.deckenmalerei.eu/{b['ID']}",
@@ -344,9 +394,18 @@ def building_entity(b: dict, entities, parent) -> dict:
     ]
     if alt:
         e["aliases"] = {"de": list(dict.fromkeys(alt))}
+    street = term(b.get("addressStreet") or "")
+    if re.search(r"\d", street):
+        # Town-house items are often labelled with the bare address and
+        # have no P625 (Lübeck, Altenburg), so the geo generator misses them.
+        e["search_names"] = {
+            "de": list(
+                dict.fromkeys([street, re.sub(r"(\d+)-(\d+)", r"\1/\2", street)])
+            )
+        }
     try:
         lat, lon = float(b["locationLat"]), float(b["locationLng"])
-        e["facts"].append(
+        e["attributes"].append(
             {
                 "property": "P625",
                 "value": {"type": "coordinate", "lat": lat, "lon": lon},
@@ -372,6 +431,8 @@ def value_for(pid: str, raw: str) -> dict | str | None:
     dtype = PROPERTIES[pid]["datatype"]
     if dtype == "wikibase-item":
         return raw if re.fullmatch(r"Q\d+", raw) else None
+    if dtype == "monolingualtext":
+        return {"type": "monolingualtext", "text": raw, "lang": "de"}
     if dtype == "time":
         return (
             {"type": "time", "time": f"+{raw}-00-00T00:00:00Z", "precision": 9}
@@ -386,12 +447,21 @@ def creation_claims(eid: str, e: dict, kind: str, incoming) -> list[dict]:
     uuid = e["ID"]
     check: dict[str, Any] = STATEMENT_CHECKS[kind]
     value_maps: dict[str, dict[str, str]] = check.get("value_maps", {})
+    qualifier_columns: dict[str, dict[str, str]] = check.get("qualifiers", {})
     values: list[tuple[str, dict | str]] = []
+    qualifiers: dict[int, list[dict]] = {}  # index into values -> qualifiers
     if kind == "people":
         values.append(("P31", HUMAN))
         roles = roles_of(uuid, incoming)
         for occ in dict.fromkeys(OCCUPATION[r] for r in roles if r in OCCUPATION):
             values.append(("P106", occ))
+        names = [e.get("appellation", "")] + list(e.get("alternativeNames", []))
+        for pid, y in zip(("P569", "P570"), life_in_name(names), strict=True):
+            if (
+                y
+            ):  # life dates written into the CbDD name: "Kopp, Gottfried (1652–1723)"
+                time = {"type": "time", "time": f"+{y}-00-00T00:00:00Z", "precision": 9}
+                values.append((pid, time))
     else:
         values.append(("P31", building_class(e)[0]))
     row = {**e, "processedDating": process_verbal_dating(e.get("verbaleDating"))}
@@ -404,6 +474,14 @@ def creation_claims(eid: str, e: dict, kind: str, incoming) -> list[dict]:
         v = value_for(pid, raw) if raw else None
         if v is not None:
             values.append((pid, v))
+            quals = [
+                {"property": q_pid, "value": q_val}
+                for q_pid, q_col in qualifier_columns.get(pid, {}).items()
+                if (q_raw := str(row.get(q_col) or "").strip())
+                and (q_val := value_for(q_pid, q_raw)) is not None
+            ]
+            if quals:
+                qualifiers[len(values) - 1] = quals
     coord = check.get("coordinate")
     if coord:
         try:
@@ -425,6 +503,7 @@ def creation_claims(eid: str, e: dict, kind: str, incoming) -> list[dict]:
                 "subject": eid,
                 "property": pid,
                 "value": value,
+                **({"qualifiers": qualifiers[n]} if n in qualifiers else {}),
                 "reference": ref,
                 "route": "curator",
                 "route_reason": "Statement of the new item, from the CbDD record (sync-tool mapping).",
@@ -456,7 +535,7 @@ def claims_for(eid: str, e: dict, ent: dict, kind: str) -> list[dict]:
     }
     g = gnd(e)
     if g:
-        ent["facts"].append({"property": "P227", "value": string(g)})
+        ent["attributes"].append({"property": "P227", "value": string(g)})
         if GND_FORMAT.match(g):
             out.append(
                 {
@@ -478,7 +557,7 @@ def claims_for(eid: str, e: dict, ent: dict, kind: str) -> list[dict]:
             ).lstrip(" ·")
     bi = bildindex(e) if kind == "buildings" else None
     if bi:
-        ent["facts"].append({"property": "P2092", "value": string(bi)})
+        ent["attributes"].append({"property": "P2092", "value": string(bi)})
         out.append(
             {
                 "id": f"{uuid}:P2092",
@@ -527,7 +606,7 @@ def build(
     if len(kinds) != 1:
         sys.exit("one entity type per run: people or buildings")
     (kind,) = kinds
-    bundle_entities, claims = {}, []
+    source_entities, claims = {}, []
     for e in chosen:
         eid = f"_:cbdd:{e['ID']}"
         ent = (
@@ -539,7 +618,7 @@ def build(
         if create:
             ent["on_no_match"] = "create"
             claims += creation_claims(eid, e, kind, incoming)
-        bundle_entities[eid] = ent
+        source_entities[eid] = ent
     today = datetime.date.today().isoformat()
     return {
         "format": "wikibase-ingest",
@@ -557,7 +636,7 @@ def build(
             }
         },
         "properties": PROPERTIES,
-        "entities": bundle_entities,
+        "source_entities": source_entities,
         "claims": claims,
     }, kind
 
@@ -599,19 +678,19 @@ def main() -> None:
         sys.exit("no IDs to process")
 
     entities, _, incoming, parent, qids = load()
-    bundle, kind = build(ids, entities, incoming, parent, qids, label, args.create)
+    ingest, kind = build(ids, entities, incoming, parent, qids, label, args.create)
     folder = args.out or run_dir(kind)
-    bundle["id"] = f"cbdd-{folder.name}"
+    ingest["id"] = f"cbdd-{folder.name}"
     folder.mkdir(parents=True, exist_ok=True)
     path = folder / "ingest.json"
     if path.exists():
         sys.exit(f"{path} exists; pick another --out")
     path.write_text(
-        json.dumps(bundle, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        json.dumps(ingest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
     )
     print(path)
     print(
-        f"{len(bundle['entities'])} {kind}, {len(bundle['claims'])} claims",
+        f"{len(ingest['source_entities'])} {kind}, {len(ingest['claims'])} claims",
         file=sys.stderr,
     )
 

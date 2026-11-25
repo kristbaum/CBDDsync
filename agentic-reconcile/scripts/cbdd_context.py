@@ -283,7 +283,7 @@ def building_dossier(b, entities, outgoing, incoming, parent, qids) -> list[str]
 
 
 def done_ids() -> set[str]:
-    """CbDD IDs already handled: entities of every run bundle
+    """CbDD IDs already handled: entities of every run ingest
     (to_match/<run>/ingest.json) and IDs in the flat .qs/.md files of the
     runs before the wikibase-ingest pipeline."""
     ids: set[str] = set()
@@ -295,12 +295,9 @@ def done_ids() -> set[str]:
                     f.read_text(encoding="utf-8"),
                 )
             )
-    for f in [
-        *TO_MATCH.glob("*/ingest.json"),
-        *TO_MATCH.glob("*/bundle.json"),
-    ]:  # bundle: older runs
-        bundle = json.loads(f.read_text(encoding="utf-8"))
-        ids |= {k.removeprefix("_:cbdd:") for k in bundle.get("entities", {})}
+    for f in TO_MATCH.glob("*/ingest.json"):
+        ingest = json.loads(f.read_text(encoding="utf-8"))
+        ids |= {k.removeprefix("_:cbdd:") for k in ingest.get("source_entities", {})}
     return ids
 
 
