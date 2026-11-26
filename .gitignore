@@ -41,3 +41,15 @@ agentic-reconcile/.cache/
 .ipynb_checkpoints
 
 __pycache__
+# QuickStatements upload reports
+batch-*-report.csv
+
+# agentic-reconcile run intermediates: keep only the report, notes and the
+# batches (minus the not-yet-split *_pending.qs); ingest/state files, logs,
+# candidate caches and ad-hoc helper scripts are regenerable
+agentic-reconcile/to_match/*/*
+!agentic-reconcile/to_match/*/report.md
+!agentic-reconcile/to_match/*/notes.json
+!agentic-reconcile/to_match/*/removals.qs
+!agentic-reconcile/to_match/*/batches/
+agentic-reconcile/to_match/*/batches/*_pending.qs

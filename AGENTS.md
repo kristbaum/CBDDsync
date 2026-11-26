@@ -44,7 +44,8 @@ CBDDsync/
 │   ├── missing_rooms.csv
 │   ├── missing_room_sequences.csv
 │   ├── missing_*_statements.csv  # QuickStatements-ready CSV, one per entity type
-│   └── missing_*_statements.qs   # Same statements as a QuickStatements 3.0 V1 batch
+│   ├── missing_*_statements.qs   # Same statements as a QuickStatements 3.0 V1 batch
+│   └── unmatched_entities.md     # Report excerpts for every still-missing person/building/painting
 ├── existing/                   # Generated output: entities present in both databases
 │   ├── existing_people.csv
 │   ├── existing_buildings.csv
@@ -61,6 +62,7 @@ CBDDsync/
 │   ├── scripts/cbdd_preflight.py # Preflight hook: duplicate records in CbDD
 │   ├── scripts/cbdd_context.py # Per-entity evidence dossier from sources/*.json
 │   ├── scripts/finish.py       # wikibase-ingest preflight + next, report.md, removals.qs
+│   ├── scripts/unmatched_report.py # all reports on still-missing entities → missing/unmatched_entities.md
 │   └── to_match/<type>_<date>/ # One run: ingest.json, state, batches/, notes.json, report.md
 └── errors/
     └── duplicates.md           # Known data quality issues (e.g. duplicate buildings)
